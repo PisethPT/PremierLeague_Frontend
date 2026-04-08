@@ -31,7 +31,14 @@ npm run build
 #screenshot
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c69f7baa-b38d-4fdc-b066-56a120b3f94f" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/36c8a9a2-e1e5-4414-a390-9d424b432c4e" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d31c4508-3fcb-4ee2-a2ef-d12c26d78b89" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a99fdb59-ee43-48f7-a815-2e0ff32c46d5" />
+
+#match
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c26f6de1-c620-4ca9-ab2a-364b35564387" />
+
+#table
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f41a64ef-2ba0-416f-aa2f-397410af8471" />
 
 #news

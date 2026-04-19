@@ -1,4 +1,4 @@
-# epl
+# Premier League
 
 This template should help get you started developing with Vue 3 in Vite.
 
@@ -30,6 +30,23 @@ npm run build
 
 #screenshot
 
-<img width="1920" height="1080" alt="client_screenshot" src="https://github.com/user-attachments/assets/25980612-1aa4-408f-9b55-9ce65ddec6fd" />
-<img width="1920" height="1080" alt="client_screenshot_1" src="https://github.com/user-attachments/assets/6f8c7bf8-4842-4132-8c58-28e538d75e9e" />
-<img width="1920" height="1080" alt="client_screenshot_2" src="https://github.com/user-attachments/assets/3ab2e651-b3b9-45b0-b01b-d42f59774f7a" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c69f7baa-b38d-4fdc-b066-56a120b3f94f" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/36c8a9a2-e1e5-4414-a390-9d424b432c4e" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d31c4508-3fcb-4ee2-a2ef-d12c26d78b89" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a99fdb59-ee43-48f7-a815-2e0ff32c46d5" />
+
+#match
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c26f6de1-c620-4ca9-ab2a-364b35564387" />
+
+#table
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f41a64ef-2ba0-416f-aa2f-397410af8471" />
+
+#news
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/fe43bf62-c300-4d80-a94c-844e54f0160c" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/629c3c2a-d25c-49f9-8516-37a9bd4b65b0" />
+
+#videos
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/21c02e4c-4e53-4971-ae99-fcaa0599938e" />
+
+
+

@@ -2,7 +2,7 @@
 import { ref, onMounted, onUpdated, computed } from 'vue';
 import ClubCard from '@/components/ClubCard.vue';
 import PageTitleBase from '@/components/PageTitleBase.vue';
-import { useTeamStore } from "@/stores/teamStore";
+import { useClubStore } from '@/stores/clubStore';
 import { ElMessage } from 'element-plus';
 import
 {
@@ -13,7 +13,7 @@ import SponsorBar from '@/components/SponsorBar.vue';
 import BaseFilter from '@/components/BaseFilter.vue';
 
 const title = ref('Clubs');
-const teamStore = useTeamStore();
+const clubStore = useClubStore();
 const TEAM_LOGO_DIR = ref('');
 const query = ref('');
 const loading = ref(false);
@@ -31,8 +31,8 @@ onMounted(async () =>
 {
     try
     {
-        await teamStore.getTeams();
-        TEAM_LOGO_DIR.value = teamStore.TEAM_LOGOS_DIR;
+        await clubStore.getSeasonClubs({ season: '4' });
+        await clubStore.getAllTimePremierLeagueClubs();
     } catch (error)
     {
         console.log('error: ' + error);
@@ -43,7 +43,7 @@ onMounted(async () =>
     }
 });
 
-const clubs = computed(() => teamStore.searchTeams(query.value));
+// const clubs = computed(() => clubStore.searchClubs(query.value));
 </script>
 
 <template>
@@ -58,7 +58,7 @@ const clubs = computed(() => teamStore.searchTeams(query.value));
 
         <h1 class="m-3 font-bold text-2xl text-white">2025/26 Season Clubs</h1>
         <div class="flex justify-center w-full flex-wrap grid-cols-5 gap-3 mt-2">
-            <div v-for="club in clubs" :key="club.id">
+            <div v-for="club in clubStore.seasonClubs" :key="club.clubId">
                 <ClubCard :club="club"></ClubCard>
             </div>
         </div>
@@ -81,28 +81,28 @@ const clubs = computed(() => teamStore.searchTeams(query.value));
             </template>
 
             <div class="divide-y divide-[#4b1254]">
-                <div v-for="club in clubs" :key="club.id"
+                <div v-for="club in clubStore.allTimePremierLeagueClubs" :key="club.clubId"
                     class="flex items-center justify-between py-3 px-2 transition">
                     <div class="flex items-center gap-2 w-1/3">
                         <div class="flex justify-center items-center rounded-[14px] px-[2px] w-14 h-12"
-                            :style="{ backgroundColor: club.teamThemeColor }">
-                            <img :src="TEAM_LOGO_DIR + club.clubCrest" alt="Club Crest"
+                            :style="{ backgroundColor: club.clubTheme }">
+                            <img :src="club.clubCrest" alt="Club Crest"
                                 class="w-auto h-11 p-1 object-contain mx-auto" />
                         </div>
-                        <RouterLink class="flex gap-2 items-center w-full"
-                            :to="{ name: 'clubs-overview', params: { clubId: club.id, clubName: club.name.toLowerCase() } }">
+                        <router-link class="flex gap-2 items-center w-full"
+                            :to="{ name: 'clubs-overview', params: { clubId: club.clubId, clubName: club.clubName.toLowerCase().replace(/\s+/g, '-') } }">
                             <h3
                                 class="text-md font-bold text-center text-white text-wrap hover:underline hover:cursor-pointer">
-                                {{ club.name }}</h3>
+                                {{ club.clubName }}</h3>
                             <el-icon>
                                 <ArrowRightBold class="text-white text-xs " />
                             </el-icon>
-                        </RouterLink>
+                        </router-link>
                     </div>
                     <div class="flex w-1/3 gap-4 float-end">
-                        <span class="text-white w-1/3 text-xs">{{ club.homeStadium }}</span>
+                        <span class="text-white w-1/3 text-xs">{{ club.clubStadium }}</span>
                         <div class="text-white w-1/3">
-                            <a v-if="club.websiteUrl !== ''" :href="club.websiteUrl" target="_blank"
+                            <a v-if="club.clubOfficialWebsite !== ''" :href="club.clubOfficialWebsite" target="_blank"
                                 class="text-xs border-1 text-white rounded-3xl py-2 px-6 hover:bg-white hover:text-black w-full text-center hover:cursor-pointer">
                                 Visit website
                                 <el-icon>
@@ -111,7 +111,7 @@ const clubs = computed(() => teamStore.searchTeams(query.value));
                             </a>
                         </div>
                         <div class="text-white w-1/3">
-                            <a :href="club.websiteUrl" target="_blank"
+                            <a :href="club.clubOfficialWebsite" target="_blank"
                                 class="text-xs border-1 text-white rounded-3xl py-2 px-6 hover:bg-white hover:text-black w-full text-center hover:cursor-pointer">
                                 Follow
                             </a>
@@ -131,5 +131,8 @@ body {
 }
 .custom-card :deep(.el-card__header) {
     border-bottom: none !important;
+}
+.custom-card :deep(.el-card__body) {
+    padding-top: 0 !important;
 }
 </style>

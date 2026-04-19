@@ -9,7 +9,7 @@ const props = defineProps({
     },
     related: {
         type: Object,
-        required: true,
+        required: false,
         default: () => ({
             relatedId: 0,
             title: '',

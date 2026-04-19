@@ -10,9 +10,16 @@ export function useFetch() {
    * @param {string} url
    * @param {string} method
    * @param {object|null} payload
+   * @param {object|null} query
    * @param {object} headers
    */
-  const execute = async (url, method = "GET", payload = null, headers = {}) => {
+  const execute = async (
+    url,
+    method = "GET",
+    payload = null,
+    query = null,
+    headers = {},
+  ) => {
     loading.value = true;
     error.value = null;
 
@@ -21,9 +28,13 @@ export function useFetch() {
         url,
         method,
         data: payload,
+        params: query,
         headers: {
           "Content-Type": "application/json",
           ...headers,
+        },
+        paramsSerializer: {
+          indexes: null,
         },
       });
       data.value = response.data;

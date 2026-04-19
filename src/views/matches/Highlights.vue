@@ -1,49 +1,39 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { useMatchStore } from '@/stores';
+import BaseViewMoreTopicCard from '@/components/BaseViewMoreTopicCard.vue';
 import
 {
     CaretRight,
 } from '@element-plus/icons-vue';
 
-const videoUrl = ref('/src/assets/clubs/arsenal/video/');
-const allVideos = ref(0);
-const takeCount = ref(12);
+const matchStore = useMatchStore();
+const route = useRoute();
+const matchId = ref(route.params.matchId);
 
 onMounted(async () =>
 {
-    allVideos.value = takeCount.value;
+    try
+    {
+        await matchStore.getMatchHighlight({ matchId: matchId.value });
+    } catch (error)
+    {
+        console.error(error);
+
+    }
 });
 
 function viewMore()
 {
-    takeCount.value = 6;
-    allVideos.value += takeCount.value;
+    console.log('View more news clicked!');
 }
 
 </script>
 
 <template>
-    <div class="!bg-[#28002b] flex flex-1 items-center flex-col rounded-2xl h-fit w-full p-4 gap-4">
-        <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4 rounded-2xl h-fit">
-            <div v-for="(value, index) in allVideos" :key="index" class="flex flex-col gap-2 rounded-2xl h-fit">
-                <div class="flex bg-[#4b1254] rounded-2xl h-[205px] relative overflow-hidden">
-                    <a href="#"
-                        class="hover:bg-[#edaef777] flex justify-center items-center w-full h-full overflow-hidden">
-                        <img :src="videoUrl + (index + 1) + '.webp'" :alt="(index + 1)" class="w-full object-contain">
-                    </a>
-                    <div
-                        class="absolute text-center bg-[#28002b] !w-7 !h-7 rounded-full !bottom-2 !right-2 flex justify-center items-center">
-                        <el-icon>
-                            <CaretRight class="text-white" />
-                        </el-icon>
-                    </div>
-                </div>
-                <span class="text-white text-md font-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Maxime, inventore.</span>
-            </div>
-        </div>
-        <button class="text-sm bg-white text-[#37003c] mt-4 px-4 py-2.5 rounded-3xl cursor-pointer w-fit"
-            @click="viewMore">View
-            More</button>
+    <div class="!bg-[#28002b] flex items-center flex-col rounded-2xl h-fit w-full p-4 gap-4">
+        <BaseViewMoreTopicCard card-grids="sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3" class-modify="''"
+            :topics="matchStore.matchHighlight" :viewMore="viewMore" :viewMoreButtonTitle="'View more'" />
     </div>
 </template>

@@ -1,108 +1,61 @@
 <script setup>
-import { defineProps } from 'vue';
-import { useApiConfig } from '@/stores/apiConfig';
-import
-{
-    ArrowLeft
-} from '@element-plus/icons-vue'
-
-const apiConfig = useApiConfig();
 const props = defineProps({
-    player: {
-        type: Object,
-        required: true,
-        default: () => (
-            {
-                info: {
-                    id: 0,
-                    name: 'Player Name',
-                    photo: 'player.png',
-                    nationality: 'Nationality',
-                    number: 0,
-                },
-                forwardMinutes: {
-                    type: String,
-                    required: false,
-                },
-                isYellowCard: {
-                    type: Boolean,
-                    required: false,
-                },
-                isCaption: {
-                    type: Boolean,
-                    required: false,
-                },
-                isGoal: {
-                    type: Boolean,
-                    required: false,
-                },
-                isAssist: {
-                    type: Boolean,
-                    required: false,
-                }
-            }
-        )
-    }
-
-})
+    player: { type: Object, required: true }
+});
 </script>
 
 <template>
-    <div class="flex flex-col justify-center items-center gap-1 relative">
-        <a :href="`/${props.player.info.id}`"
-            class="absolute rounded-xl w-17 h-21 hover:cursor-pointer hover:bg-[rgba(58,0,64,0.3)] z-100">
-        </a>
-        <div v-if="props.player.forwardMinutes" class="absolute">
+    <div class="flex flex-col justify-center items-center gap-1 relative scale-90 sm:scale-100">
+        <router-link
+            :to="{ name: 'player-overview', params: { playerId: player.playerId, playerName: player.firstName.toString().toLowerCase() + '_' + player.lastName.toString().toLowerCase() } }"
+            class="absolute rounded-xl w-15 h-19 hover:cursor-pointer hover:bg-[rgba(58,0,64,0.3)] z-[50]">
+        </router-link>
+
+        <div v-if="player.forwardOnMinute" class="absolute">
             <div
-                class="absolute bg-[#37003c] rounded-2xl w-fit h-[18px] right-3 bottom-6 z-10 flex justify-between items-center gap-1">
-                <span class="text-white text-xs font-bold ps-1.5">{{ props.player.forwardMinutes }}</span>
-                <el-icon>
-                    <ArrowLeft class="text-red-600 !h-3" />
-                </el-icon>
+                class="absolute bg-[#37003c] rounded-2xl w-fit h-[18px] right-2 bottom-5 z-10 flex items-center gap-1 px-1 border border-white/10">
+                <span class="text-white text-[9px] font-bold">{{ player.forwardOnMinute }}</span>
+                <i class="fa-solid fa-reply text-red-600 text-[8px]"></i>
             </div>
         </div>
 
-        <div v-if="props.player.isYellowCard === false" class="absolute">
+        <div v-if="player.hasCard === 'Y' || player.hasCard === 'R'" class="absolute">
             <div
-                class="absolute bg-[#37003c] rounded-full w-4.5 h-4.5 right-3.5 bottom-1 z-10 flex justify-center items-center">
-                <div class="bg-yellow-400 w-2 h-3"></div>
-            </div>
-        </div>
-        <div v-else-if="props.player.isYellowCard === true" class="absolute">
-            <div
-                class="absolute bg-[#37003c] rounded-full w-4.5 h-4.5 right-3.5  bottom-1 z-10 flex justify-center items-center">
-                <div class="bg-red-700 w-2 h-3"></div>
+                class="absolute bg-[#37003c] rounded-full w-4 h-4 right-3 bottom-0.5 z-10 flex justify-center items-center">
+                <div :class="[player.hasCard === 'Y' ? 'bg-yellow-400' : 'bg-red-700', 'w-[7px] h-2.5']"></div>
             </div>
         </div>
 
-        <div v-if="props.player.isCaption" class="absolute">
+        <div v-if="player.isCaption" class="absolute">
             <div
-                class="absolute bg-[#37003c] rounded-full w-4.5 h-4.5 right-3.5 top-[-7px] z-10 flex justify-center items-center">
-                <span class="text-white text-sm font-bold">C</span>
+                class="absolute bg-[#37003c] rounded-full w-4.5 h-4.5 right-3 top-[-8px] z-10 flex justify-center items-center">
+                <span class="text-white text-[13px] font-bold">C</span>
             </div>
         </div>
 
-        <div v-if="props.player.isGoal" class="absolute">
+        <div v-if="player.isHasGoal" class="absolute">
             <div
-                class="absolute bg-[#37003c] rounded-full w-4.5 h-4.5 left-3.5 top-[-7px] z-10 flex justify-center items-center">
-                <span class="text-white text-sm font-bold">⚽</span>
+                class="absolute bg-[#37003c] rounded-full w-4.5 h-4.5 left-3 top-[-8px] z-10 flex justify-center items-center">
+                <i class="fa-solid fa-futbol text-white text-xs"></i>
             </div>
         </div>
 
-        <div v-if="props.player.isAssist" class="absolute">
+        <div v-if="player.isHasAssist" class="absolute">
             <div
                 class="absolute bg-[#37003c] rounded-full w-4.5 h-4.5 left-3.5 bottom-1 z-10 flex justify-center items-center">
-                <span class="text-white text-xs rotate-x-0 rotate-y-180">👟</span>
+                <img src="/src/assets/icons/assists_white.png" class="w-4 object-contain -rotate-25 scale-x-100" />
             </div>
         </div>
 
-        <div class="flex justify-center bg-[#37003c] rounded-[4px] w-12 h-12 overflow-hidden pt-1 relative">
-            <img :src="apiConfig.PLAYER_LOGOS_DIR + props.player.info.photo" alt="" class="w-auto h-fit object-contain">
+        <div class="flex justify-center bg-[#37003c] rounded-[4px] w-12 h-12 overflow-hidden pt-1 relative shadow-md">
+            <img :src="player.playerPhoto" class="w-auto h-fit object-contain" />
         </div>
-        <div class="flex justify-center gap-1">
-            <span class="text-gray-400 text-xs">{{ props.player.info.number }}</span>
-            <span class="text-white text-xs font-bold">{{ props.player.info.name.split(' ')[1]
-            }}</span>
+
+        <div class="flex flex-row items-center gap-1 leading-none">
+            <span class="text-gray-400 text-[10px]">{{ player.playerNumber }}</span>
+            <span class="text-white text-[10px] font-bold">
+                {{ player.lastName }}
+            </span>
         </div>
     </div>
 </template>

@@ -1,43 +1,106 @@
 import { defineStore } from "pinia";
 import { useApiConfig } from "./apiConfig";
+import { useApi } from "./api";
+import { useFetch } from "@/composables/useFetch";
 import axios from "axios";
 
 export const usePlayerStore = defineStore("PlayerStore", {
   state: () => {
     const apiConfig = useApiConfig();
+    const api = useApi();
     return {
+      api,
       apiConfig,
       players: [],
       fileList: [],
       teamItemSelect: [],
       playerItemSelect: [],
+      playerClub: null,
+      playerInformation: null,
+      teammates: [],
       PLAYER_PHOTO_DIR: apiConfig.PLAYER_LOGOS_DIR,
       TEAM_LOGOS_DIR: apiConfig.TEAM_LOGOS_DIR,
     };
   },
   getters: {},
   actions: {
-    async getPlayers() {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          this.apiConfig.ENDPOINTS.PLAYER_ENDPOINTS.GET_PLAYERS_ENDPOINT,
-          //+"?teamId=2",
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        this.players = [];
-        if (response.status == 200) this.players = await response.data.content;
-        return this.players;
-      } catch (error) {
-        console.error("Failed to fetch teams:", error);
-        return null;
+    async getPlayers(query) {
+      const { data, error, execute } = useFetch();
+      await execute(
+        this.api.ENDPOINTS.PLAYER_ENDPOINTS.GET_PLAYERS,
+        "GET",
+        null,
+        query,
+        { "Content-Type": "application/json" },
+      );
+
+      if (!error.value && data.value) {
+        this.players = JSON.parse(JSON.stringify(data.value.contents));
+      } else {
+        console.error("Fetch Error:", error.value);
+        return error.value;
       }
     },
+
+    async getPlayerClub(query) {
+      const { data, error, execute } = useFetch();
+      await execute(
+        this.api.ENDPOINTS.PLAYER_ENDPOINTS.GET_PLAYER_CLUB,
+        "GET",
+        null,
+        query,
+        { "Content-Type": "application/json" },
+      );
+
+      if (!error.value && data.value) {
+        this.playerClub = JSON.parse(
+          JSON.stringify(data.value.contents),
+        );
+      } else {
+        console.error("Fetch Error:", error.value);
+        return error.value;
+      }
+    },
+
+    async getPlayerInfo(query) {
+      const { data, error, execute } = useFetch();
+      await execute(
+        this.api.ENDPOINTS.PLAYER_ENDPOINTS.GET_PLAYER_INFO,
+        "GET",
+        null,
+        query,
+        { "Content-Type": "application/json" },
+      );
+
+      if (!error.value && data.value) {
+        this.playerInformation = JSON.parse(
+          JSON.stringify(data.value.contents),
+        );
+      } else {
+        console.error("Fetch Error:", error.value);
+        return error.value;
+      }
+    },
+
+    async getPlayerTeammates(query) {
+      const { data, error, execute } = useFetch();
+      await execute(
+        this.api.ENDPOINTS.PLAYER_ENDPOINTS.GET_PLAYER_TEAMMATES,
+        "GET",
+        null,
+        query,
+        { "Content-Type": "application/json" },
+      );
+
+      if (!error.value && data.value) {
+        this.teammates = JSON.parse(JSON.stringify(data.value.contents));
+      } else {
+        console.error("Fetch Error:", error.value);
+        return error.value;
+      }
+    },
+
+    // BEFORE
     async getTeamSelectListItem() {
       try {
         const token = localStorage.getItem("token");
@@ -48,7 +111,7 @@ export const usePlayerStore = defineStore("PlayerStore", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
         this.teamItemSelect = [];
         if (response.status == 200) {
@@ -73,7 +136,7 @@ export const usePlayerStore = defineStore("PlayerStore", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
         this.playerItemSelect = [];
         if (response.status === 200) {
@@ -109,7 +172,7 @@ export const usePlayerStore = defineStore("PlayerStore", {
         formData.append("lastName", form.lastName);
         formData.append(
           "dateOfBirth",
-          new Date(form.dateOfBirth).toLocaleDateString()
+          new Date(form.dateOfBirth).toLocaleDateString(),
         );
         formData.append("nationality", form.nationality);
         formData.append("preferredFoot", form.preferredFoot);
@@ -137,7 +200,7 @@ export const usePlayerStore = defineStore("PlayerStore", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
         console.log(JSON.stringify(response.data), " ", response.status);
         return response.status;
@@ -153,7 +216,7 @@ export const usePlayerStore = defineStore("PlayerStore", {
         formData.append("lastName", form.lastName);
         formData.append(
           "dateOfBirth",
-          new Date(form.dateOfBirth).toLocaleDateString()
+          new Date(form.dateOfBirth).toLocaleDateString(),
         );
         formData.append("nationality", form.nationality);
         formData.append("preferredFoot", form.preferredFoot);
@@ -178,7 +241,7 @@ export const usePlayerStore = defineStore("PlayerStore", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
         console.log(JSON.stringify(response.data), " ", response.status);
         return response.status;
@@ -198,7 +261,7 @@ export const usePlayerStore = defineStore("PlayerStore", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
         console.log(response.data.message, " ,", response.status);
         return response.status;
@@ -218,7 +281,7 @@ export const usePlayerStore = defineStore("PlayerStore", {
               Authorization: "Bearer " + token,
               "Content-Type": "application/json",
             },
-          }
+          },
         );
         if (response.status === 200) return await response.data.content; // return player, club
         return null;
@@ -235,14 +298,17 @@ export const usePlayerStore = defineStore("PlayerStore", {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          this.apiConfig.ENDPOINTS.PLAYER_ENDPOINTS.GET_TEAMMATES_BY_PLAYER_ID_AND_CLUB_ID +
-            playerId + '/clubId/' + clubId,
+          this.apiConfig.ENDPOINTS.PLAYER_ENDPOINTS
+            .GET_TEAMMATES_BY_PLAYER_ID_AND_CLUB_ID +
+            playerId +
+            "/clubId/" +
+            clubId,
           {
             headers: {
               Authorization: "Bearer " + token,
               "Content-Type": "application/json",
             },
-          }
+          },
         );
         if (response.status === 200) return await response.data.content;
         return null;

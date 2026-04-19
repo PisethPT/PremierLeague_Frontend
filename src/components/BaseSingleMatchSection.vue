@@ -1,16 +1,15 @@
 <script setup>
-import { ref, defineProps } from 'vue';
-import { ArrowRightBold } from '@element-plus/icons-vue';
+import { defineProps } from 'vue';
 
 const props = defineProps({
     matchDate: {
         type: String,
         required: true
     },
-    matches: {
-        type: Array,
+    match: {
+        type: Object,
         required: true,
-        default: () => [{
+        default: () => ({
             matchId: '',
             homeClubName: '',
             awayClubName: '',
@@ -20,7 +19,7 @@ const props = defineProps({
             kickoffStatus: '',
             homeClubGoal: '',
             awayClubGoal: '',
-        }]
+        })
     },
 })
 </script>
@@ -31,18 +30,10 @@ const props = defineProps({
             <span class="text-white text-md font-bold">
                 {{ props.matchDate }}
             </span>
-
-            <button
-                class="flex items-center gap-1 text-xs font-bold text-white bg-[#37003c] px-3 py-2 rounded-2xl hover:bg-[#410544] transition cursor-pointer">
-                See all
-                <el-icon>
-                    <ArrowRightBold class="text-xs" />
-                </el-icon>
-            </button>
         </div>
 
         <div class="flex flex-col items-center w-full">
-            <div v-for="match in matches" :key="match.matchId" class="w-full flex justify-center">
+            <div v-if="match" class="w-full flex justify-center">
                 <router-link :to="{
                     name: 'matches-detail',
                     params: {
@@ -71,15 +62,12 @@ const props = defineProps({
                             </div>
                             <span v-if="match.kickoffStatus === 'Upcoming'"
                                 class="text-white text-center font-bold text-lg">
-                                {{ match.matchTime }}
+                                {{ match.kickoffTime }}
                             </span>
 
                             <div v-else-if="match.kickoffStatus === 'FT'" class="flex flex-col items-center gap-1">
                                 <span class="bg-[#1e0021] text-white text-lg font-bold px-2 py-[2px] rounded-md">
                                     {{ match.homeClubGoal }} : {{ match.awayClubGoal }}
-                                </span>
-                                <span class="text-white text-xs font-bold">
-                                    {{ match.kickoffStatus }}
                                 </span>
                             </div>
                             <div class="flex justify-start items-center gap-2">
@@ -92,18 +80,7 @@ const props = defineProps({
                                 </span>
                             </div>
                         </div>
-
-                        <div class="flex justify-center md:justify-end items-center">
-                            <div
-                                class="bg-white rounded-sm px-2 py-[2px] shadow-sm hover:scale-105 hover:shadow-md transition">
-                                <img src="/src/assets/others/truevisi.png" alt="broadcast"
-                                    class="w-10 object-contain" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-center">
-                        <div class="bg-[#54025c] h-[2px] w-[200px] sm:w-[300px] md:w-[400px] lg:w-[500px] xl:w-[600px]">
+                        <div class="w-15">
                         </div>
                     </div>
                 </router-link>

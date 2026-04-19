@@ -19,18 +19,22 @@ export const useMatchStore = defineStore("match", {
       ],
       matchTables: [],
       seasonSelectListItem: [],
+      matchInfoDetail: null,
       matchDetails: null,
+      matchRecap: null,
+      matchHighlight: null,
       TEAM_LOGOS_DIR: apiConfig.TEAM_LOGOS_DIR,
       PLAYER_PHOTO_DIR: apiConfig.PLAYER_LOGOS_DIR,
     };
   },
   getters: {},
   actions: {
- async getMatches(query) {
+    async getMatches(query) {
       const { data, error, execute } = useFetch();
 
       await execute(
-        this.api.ENDPOINTS.MATCH_ENDPOINTS.GET_MATCHES_ENDPOINT + `?matchWeek=${query.matchWeek}`,
+        this.api.ENDPOINTS.MATCH_ENDPOINTS.GET_MATCHES_ENDPOINT +
+          `?matchWeek=${query.matchWeek}`,
         "GET",
         null,
         { "Content-Type": "application/json" },
@@ -44,7 +48,62 @@ export const useMatchStore = defineStore("match", {
       }
     },
 
+    async getMatchInfoDetail(query) {
+      const { data, error, execute } = useFetch();
 
+      await execute(
+        this.api.ENDPOINTS.MATCH_ENDPOINTS.GET_MATCHES_INFO_DETAIL_ENDPOINT,
+        "GET",
+        null,
+        query,
+        { "Content-Type": "application/json" },
+      );
+
+      if (!error.value && data.value) {
+        this.matchInfoDetail = JSON.parse(JSON.stringify(data.value.contents));
+      } else {
+        console.error("Fetch Error:", error.value);
+        return error.value;
+      }
+    },
+
+    async getMatchRecap(query) {
+      const { data, error, execute } = useFetch();
+
+      await execute(
+        this.api.ENDPOINTS.MATCH_ENDPOINTS.GET_MATCHES_RECAP_ENDPOINT,
+        "GET",
+        null,
+        query,
+        { "Content-Type": "application/json" },
+      );
+
+      if (!error.value && data.value) {
+        this.matchRecap = JSON.parse(JSON.stringify(data.value.contents));
+      } else {
+        console.error("Fetch Error:", error.value);
+        return error.value;
+      }
+    },
+
+    async getMatchHighlight(query) {
+      const { data, error, execute } = useFetch();
+
+      await execute(
+        this.api.ENDPOINTS.MATCH_ENDPOINTS.GET_MATCHES_HIGHLIGHT_ENDPOINT,
+        "GET",
+        null,
+        query,
+        { "Content-Type": "application/json" },
+      );
+
+      if (!error.value && data.value) {
+        this.matchHighlight = JSON.parse(JSON.stringify(data.value.contents));
+      } else {
+        console.error("Fetch Error:", error.value);
+        return error.value;
+      }
+    },
 
     // async getMatches() {
     //   try {
@@ -78,7 +137,7 @@ export const useMatchStore = defineStore("match", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
         if (response.status === 200) {
           return response.data.content;
@@ -103,7 +162,7 @@ export const useMatchStore = defineStore("match", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
         const data = response.data.content ?? [];
         console.log("season data " + data);
@@ -133,7 +192,7 @@ export const useMatchStore = defineStore("match", {
               Authorization: "Bearer " + token,
               "Content-Type": "application/json",
             },
-          }
+          },
         );
         if (response.status === 200) {
           this.matchDetails = await response.data.content;
@@ -148,7 +207,7 @@ export const useMatchStore = defineStore("match", {
         var formData = new FormData();
         formData.append(
           "matchDate",
-          new Date(form.matchDate).toLocaleDateString()
+          new Date(form.matchDate).toLocaleDateString(),
         );
         formData.append("matchTime", form.matchTime);
         formData.append("homeTeamId", form.homeTeamId);
@@ -161,7 +220,7 @@ export const useMatchStore = defineStore("match", {
 
         console.log(
           "Creating match with form data:",
-          new Date(form.matchDate).toLocaleDateString()
+          new Date(form.matchDate).toLocaleDateString(),
         );
 
         const token = localStorage.getItem("token");
@@ -173,7 +232,7 @@ export const useMatchStore = defineStore("match", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
 
         return response.status;
@@ -187,7 +246,7 @@ export const useMatchStore = defineStore("match", {
         const formData = new FormData();
         formData.append(
           "matchDate",
-          new Date(form.matchDate).toLocaleDateString()
+          new Date(form.matchDate).toLocaleDateString(),
         );
         formData.append("matchTime", form.matchTime);
         formData.append("homeTeamId", form.homeTeamId);
@@ -207,7 +266,7 @@ export const useMatchStore = defineStore("match", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
         return response.status;
       } catch (error) {
@@ -226,7 +285,7 @@ export const useMatchStore = defineStore("match", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
         return response.status;
       } catch (error) {
@@ -245,7 +304,7 @@ export const useMatchStore = defineStore("match", {
               Authorization: "Bearer " + token,
               "Content-Type": "application/json",
             },
-          }
+          },
         );
         if (response.status === 200) {
           let pos = 1;

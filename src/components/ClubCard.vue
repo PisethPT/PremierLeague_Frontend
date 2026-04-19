@@ -1,6 +1,5 @@
 <script setup>
 import { defineProps } from 'vue';
-import { useApiConfig } from '@/stores/apiConfig';
 import { RouterLink } from 'vue-router';
 import 
 {
@@ -14,20 +13,15 @@ const props = defineProps({
         type: Object,
         required: true,
         default: () => ({
-            id: 0,
-            name: '',
+            clubId: 0,
+            clubName: '',
             clubCrest: '',
-            city: '',
-            founded: 0,
-            homeStadium: '',
-            headCoach: '',
-            teamThemeColor: '',
-            websiteUrl: '',
+            clubTheme: '',
+            clubStadium: '',
+            clubOfficialWebsite: '',
         })
     }
 });
-const apiConfigStore = useApiConfig();
-const TEAM_LOGOS_DIR = apiConfigStore.TEAM_LOGOS_DIR;
 </script>
 
 <template>
@@ -35,17 +29,17 @@ const TEAM_LOGOS_DIR = apiConfigStore.TEAM_LOGOS_DIR;
         class="!bg-gradient-to-br from-[#28002b] to-[#330d36] !border-0 !rounded-2xl w-[90vw] sm:w-[45vw]  md:w-[45vw] lg:w-[30vw] xl:w-[24vw]">
         <div class="flex items-center gap-4">
             <div class="flex justify-center items-center rounded-[14px] mt-2 px-1 w-14 h-12"
-                :style="{ backgroundColor: club.teamThemeColor }">
-                <img :src="TEAM_LOGOS_DIR + club.clubCrest" alt="Club Crest"
+                :style="{ backgroundColor: club.clubTheme }">
+                <img :src="club.clubCrest" alt="Club Crest"
                     class="w-auto h-10 object-contain mx-auto" />
             </div>
             <div class="flex justify-between items-center w-full">
                 <RouterLink
-                    :to="{ name: 'clubs-overview', params: { clubId: club.id, clubName: club.name.toString().toLowerCase() } }">
-                    <h3 class="text-lg font-bold text-center text-white text-wrap hover:underline">{{ club.name }}</h3>
+                    :to="{ name: 'clubs-overview', params: { clubId: club.clubId, clubName: club.clubName.toString().toLowerCase().replace(/\s+/g, '-') } }">
+                    <h3 class="text-lg font-bold text-center text-white text-wrap hover:underline">{{ club.clubName }}</h3>
                 </RouterLink>
                 <RouterLink
-                    :to="{ name: 'clubs-overview', params: { clubId: club.id, clubName: club.name.toString().toLowerCase() } }">
+                    :to="{ name: 'clubs-overview', params: { clubId: club.clubId, clubName: club.clubName.toString().toLowerCase().replace(/\s+/g, '-') } }">
                     <el-icon>
                         <ArrowRightBold class="text-white text-xs hover:cursor-pointer" />
                     </el-icon>
@@ -58,7 +52,7 @@ const TEAM_LOGOS_DIR = apiConfigStore.TEAM_LOGOS_DIR;
                 class="!bg-[#4b1254] text-white rounded-3xl text-xs py-2 px-6 hover:!bg-[#1e0021b9] w-full text-center hover:cursor-pointer">
                 Follow
             </a>
-            <a v-if="club.websiteUrl !== ''" :href="club.websiteUrl" target="_blank"
+            <a v-if="club.clubOfficialWebsite !== ''" :href="club.clubOfficialWebsite" target="_blank"
                 class="!bg-[#4b1254] text-white rounded-3xl text-xs py-2 px-6 hover:!bg-[#1e0021b9] w-full text-center hover:cursor-pointer">
                 Visit website
                 <el-icon>

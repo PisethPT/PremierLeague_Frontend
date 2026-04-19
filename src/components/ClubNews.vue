@@ -12,15 +12,22 @@ const loading = ref(false);
 
 onMounted(async () =>
 {
-    loading.value = true;
-    clubNews.value = await homeStore.getClubNews();
-    loading.value = false;
+    try
+    {
+        loading.value = true;
+        clubNews.value = await homeStore.getClubNews();
+        loading.value = false;
+    } catch (error)
+    {   clubNews.value = [];
+        console.error(error);
+    }
 });
 
 </script>
 
 <template>
-    <div class="sticky top-[60px] z-40 w-full bg-[#1e0021] overflow-hidden pt-4 pb-2">
+    <div v-if="clubNews.length > 0"
+        class="sticky top-[60px] z-40 w-full bg-[#1e0021] overflow-hidden pt-4 pb-2">
         <div class="marquee-track flex items-center gap-4 cursor-pointer overflow-x-scroll scrollbar-none">
             <a v-for="news in clubNews" :key="'orig-' + news.newsId" :href="news.referenceUrl" target="_blank"
                 class="flex items-center gap-2 bg-[#28002b] hover:bg-[#2d0230fa] rounded-md px-2 py-1 shrink-0">

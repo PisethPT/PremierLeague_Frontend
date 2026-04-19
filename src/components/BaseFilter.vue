@@ -46,22 +46,35 @@ const onSearch = (val) =>
 const onFilterClick = (filter) =>
 {
     emits('filter-click', filter);
+    emits('update:activeFilterId', filter.id);
+
+    // // using func
+    // if (typeof filter.func === 'function')
+    // {
+    //     filter.func(filter);
+    // }
 };
 
 const onReset = () =>
 {
     emits('reset');
 };
+
+const openFilterClick = () =>
+{
+    emits('open-filter-panel');
+    emits('update:activeFilterId', null);
+}
 </script>
 
 <template>
-    <div class="flex flex-col items-center w-full mt-6 mb-4 px-3">
+    <div class="flex items-center w-full mt-6 my-4 px-3 gap-4">
         <el-input v-if="isSearch" :model-value="query" @input="onSearch" placeholder="Search"
-            class="search-input text-sm w-full max-w-[500px] mb-3" size="large" :prefix-icon="Search" />
+            class="search-input text-sm w-full max-w-[500px]" size="large" :prefix-icon="Search" :clearable="true" />
 
         <div class="w-full overflow-x-auto scrollbar-hide">
             <div class="flex items-center gap-2 min-w-max">
-                <div @click="$emit('open-filter-panel')"
+                <div @click="openFilterClick"
                     class="flex items-center justify-center text-white text-sm px-3 py-2 rounded-[10px] border border-[#624d64] hover:bg-[#654c6818] cursor-pointer transition whitespace-nowrap">
                     <el-icon>
                         <Operation />
@@ -71,7 +84,7 @@ const onReset = () =>
                 <div v-for="filter in filters" :key="filter.id" @click="onFilterClick(filter)" :class="[
                     'flex items-center gap-1 text-sm px-3 py-[6px] rounded-[10px] border cursor-pointer transition whitespace-nowrap',
                     activeFilterId === filter.id
-                        ? 'bg-[#37003c] text-white border-[#37003c]'
+                        ? 'bg-[#37003c] text-white border-[#624d64]'
                         : 'text-white border-[#624d64] hover:bg-[#654c6818]'
                 ]">
                     {{ filter.label }}

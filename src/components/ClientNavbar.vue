@@ -169,22 +169,23 @@ const logoutGoogleAccount = () =>
 
         <div class="flex items-center gap-2">
             <div class="hidden lg:block text-white">{{ userName }}</div>
-            <div class="bg-[#28002b] w-10 h-10 flex justify-center items-center rounded-full cursor-pointer">
+            <a href="https://copilot.microsoft.com/" target="_blank"
+                class="bg-[#28002b] w-10 h-10 flex justify-center items-center rounded-full cursor-pointer">
                 <img src="/src/assets/copilot-icon.png" alt="Copilot" class="w-5 h-5" />
-            </div>
+            </a>
 
             <div class="bg-[#28002b] w-10 h-10 flex justify-center items-center rounded-full cursor-pointer">
                 <i class="fa-solid fa-magnifying-glass text-white"></i>
             </div>
 
             <div v-if="user">
-                <button @click="logoutGoogleAccount">
+                <button @click="logoutGoogleAccount" class="cursor-pointer">
                     <img :src="user.picture" class="w-8 h-8 rounded-full" />
                 </button>
             </div>
 
             <button v-else @click="login"
-                class="bg-gradient-to-r from-green-500 via-purple-500 to-pink-500 p-[2px] rounded-full">
+                class="bg-gradient-to-r from-green-500 via-purple-500 to-pink-500 p-[2px] rounded-full cursor-pointer">
                 <div class="bg-[#1e0021] px-4 h-9 flex items-center rounded-full">
                     <span class="text-white text-[10px] sm:text-sm md:text-md lg:text-md xl:text-md">Sign in</span>
                 </div>

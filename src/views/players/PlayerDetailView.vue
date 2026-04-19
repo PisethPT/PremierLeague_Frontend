@@ -1,8 +1,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { useApiConfig } from '@/stores/apiConfig';
 import { useRoute } from 'vue-router';
-import { usePlayerStore } from '@/stores';
+import { usePlayerStore, useClubStore } from '@/stores';
 import BaseCurrentlyMatch from '@/components/BaseCurrentlyMatch.vue';
 import BasePlayerDetailCard from '@/components/BasePlayerDetailCard.vue';
 import router from '@/router';
@@ -10,12 +9,12 @@ import nationalityData from '@/assets/nationality.json';
 
 const route = useRoute();
 const playerStore = usePlayerStore();
+const clubStore = useClubStore();
 const playerId = ref(route.params.playerId);
 const playerName = ref(route.params.playerName);
 const player = ref(null);
 const club = ref(null);
 const isFullBio = ref(false);
-const placeholder = ref("/src/assets/resources/placeholder.png");
 const isWatching = ref(false);
 const nextMatch = ref({
     matchId: 1,
@@ -49,7 +48,6 @@ watch(
     () => route.params.playerId,
     (newId, oldId) =>
     {
-        // console.log('parent watching...' + newId);
         playerId.value = newId;
         if (newId !== oldId) loadPlayerData(newId);
         isWatching.value = true;
@@ -63,59 +61,42 @@ onMounted(async () =>
 
 async function loadPlayerData()
 {
-    console.log('reload.');
-    // auto scroll up
     window.scrollTo({ top: 0, behavior: 'auto' });
-
-    router.push({ name: 'player-overview', params: { clubId: playerId.value, playerName: playerName.value } });
-    menuActive.value = 'Overview';
     try
     {
-        const data = await playerStore.getPlayerInfoById(playerId.value);
-        if (data !== null)
-        {
-            player.value = await data.player;
-            club.value = await data.club;
+        await playerStore.getPlayerInfo({ playerId: playerId.value });
+        player.value = playerStore.playerInformation;
 
-            nextMatch.value.homeClub.clubId = club.value.id;
-            nextMatch.value.homeClub.name = club.value.name;
-            nextMatch.value.homeClub.clubCrest = club.value.clubCrest;
-
-        }
-        // console.log('player: ' + player.value.firstName, ' ,club: ' + club.value.name);
+        router.push({ name: 'player-overview', params: { playerId: playerId.value, playerName: playerName.value } });
+        menuActive.value = 'Overview';
+        console.log(player.value);
     } catch (error)
     {
         console.error("Fetching error:", error);
     }
 }
-
-computed(async () =>
-{
-    console.log('computing...');
-
-});
-
 </script>
 
 <template>
     <!-- currently match -->
     <BaseCurrentlyMatch />
+
     <div
         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-[33.33%_1fr] gap-4 py-4 px-3">
-
         <div class="flex flex-wrap gap-4 h-fit">
-
-            <BasePlayerDetailCard :player="player" :club="club" />
-
+            <BasePlayerDetailCard :player="player" />
             <div class="!bg-[#28002b] rounded-2xl h-[180px] w-full p-5 flex flex-col justify-start items-center gap-3">
 
                 <div class="grid grid-cols-3 w-full">
                     <div class="flex flex-col justify-start gap-1">
                         <span class="text-gray-400 text-[12px]">Nationality</span>
                         <div class="flex justify-start w-fit gap-2">
-                            <img :src="(nationalityData?.nationalities || []).find((nation) => nation.nationality === player?.nationality)?.icon || ''"
+                            <img :src="(nationalityData?.nationalities || []).find((nation) => nation.nationality === player?.nationality || nation.name === player?.placeOfBirth)?.icon || ''"
                                 alt="Nationality" class="w-auto h-4 object-contain mx-auto" />
-                            <span class="text-white text-sm font-bold">{{ player?.placeOfBirth }}</span>
+                            <span class="text-white text-sm font-bold">{{nationalityData.nationalities.find((nation) =>
+                                nation.nationality === player?.nationality || nation.name ===
+                                player?.placeOfBirth)?.name
+                            }}</span>
                         </div>
                     </div>
 
@@ -133,16 +114,16 @@ computed(async () =>
                 <div class="grid grid-cols-3 w-full">
                     <div class="flex flex-col justify-start gap-1">
                         <span class="text-gray-400 text-[12px]">Appearances</span>
-                        <span class="text-white text-sm font-bold">29</span>
+                        <span class="text-white text-sm font-bold">{{ player?.appearances }}</span>
                     </div>
 
                     <div class="flex flex-col justify-start gap-1">
                         <span class="text-gray-400 text-[12px]">Goals</span>
-                        <span class="text-white text-sm font-bold">3</span>
+                        <span class="text-white text-sm font-bold">{{ player?.goals }}</span>
                     </div>
                     <div class="flex flex-col justify-start gap-1">
                         <span class="text-gray-400 text-[12px]">Assists</span>
-                        <span class="text-white text-sm font-bold">3</span>
+                        <span class="text-white text-sm font-bold">{{ player?.assists }}</span>
                     </div>
                 </div>
 
@@ -159,7 +140,7 @@ computed(async () =>
                     class="text-white text-sm pb-1 border-b-4 hover:cursor-pointer whitespace-nowrap"
                     :style="menuActive == menu.name ? { borderBottom: '4px solid white', fontWeight: 'bold' } : { borderBottom: '4px solid transparent', fontWeight: 'normal' }">
                     <router-link :to="{ name: menu.route }" @click="menuActive = menu.name">{{ menu.name
-                    }}</router-link>
+                        }}</router-link>
                 </div>
             </div>
             <section>
@@ -170,7 +151,7 @@ computed(async () =>
     </div>
 
     <!-- full bio -->
-    <el-drawer v-model="isFullBio" class="!bg-[#0f0010]" :size="'23%'">
+    <el-drawer v-model="isFullBio" class="!bg-[#1a011d]" :size="'23%'">
         <template #header>
             <div class="flex flex-col gap-5">
                 <h4 class="text-white font-bold text-3xl">Full Bio</h4>
@@ -179,42 +160,42 @@ computed(async () =>
         <template #default>
             <div class="grid grid-cols-2 w-full h-fit gap-2">
 
-                <div v-if="player?.dateOfBirth != 'null'" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
+                <div v-if="player?.dateOfBirth" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
                     <span class="text-gray-400 text-md">Date of Birth</span>
                     <span class="text-white text-lx font-bold">{{ player?.dateOfBirth }}</span>
                 </div>
 
-                <div v-if="player?.position != 'null'" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
+                <div v-if="player?.position" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
                     <span class="text-gray-400 text-md">Position</span>
                     <span class="text-white text-lx font-bold">{{ player?.position }}</span>
                 </div>
 
-                <div v-if="player?.placeOfBirth != 'null'" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
+                <div v-if="player?.placeOfBirth" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
                     <span class="text-gray-400 text-md">Place of Birth</span>
                     <span class="text-white text-lx font-bold">{{ player?.placeOfBirth }}</span>
                 </div>
 
-                <div v-if="player?.nationality != 'null'" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
+                <div v-if="player?.nationality" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
                     <span class="text-gray-400 text-md">Nationality</span>
                     <span class="text-white text-lx font-bold">{{ player?.nationality }}</span>
                 </div>
 
-                <div v-if="player?.height != 'null'" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
+                <div v-if="player?.height" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
                     <span class="text-gray-400 text-md">Height</span>
                     <span class="text-white text-lx font-bold">{{ player?.height }}</span>
                 </div>
 
-                <div v-if="player?.preferredFoot != 'null'" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
+                <div v-if="player?.preferredFoot" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
                     <span class="text-gray-400 text-md">Preferred Foot</span>
                     <span class="text-white text-lx font-bold">{{ player?.preferredFoot }}</span>
                 </div>
 
-                <div v-if="player?.playerNumber != 'null'" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
+                <div v-if="player?.playerNumber" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
                     <span class="text-gray-400 text-md">Shirt Number</span>
                     <span class="text-white text-lx font-bold">{{ player?.playerNumber }}</span>
                 </div>
 
-                <div v-if="player?.joinedClub != 'null'" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
+                <div v-if="player?.joinedClub" class="flex flex-col gap-2 p-4 bg-[#28002b] rounded-2xl">
                     <span class="text-gray-400 text-md">Joined Club</span>
                     <span class="text-white text-lx font-bold">{{ player?.joinedClub }}</span>
                 </div>

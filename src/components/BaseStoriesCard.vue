@@ -3,16 +3,23 @@ import { ref, computed } from 'vue';
 import BaseStoryViewer from './BaseStoryViewer.vue';
 
 const props = defineProps({
-    videoTag: String,
+    videoTag: {
+        type: String,
+        required: false,
+    },
     stories: {
         type: Array,
         default: () => []
+    },
+    isTitle: {
+        type: Boolean,
+        required: false,
+        default: true,
     }
 });
 
 const activeStory = ref(null);
 
-// ✅ FIXED parser
 const getYouTubeId = (url) =>
 {
     if (!url) return null;
@@ -49,8 +56,8 @@ const closeStory = () =>
 </script>
 
 <template>
-    <div class="flex flex-col gap-5 !bg-[#28002b] rounded-2xl p-4 mx-4">
-        <div class="flex justify-between items-center">
+    <div class="flex flex-col gap-5 !bg-[#28002b] rounded-2xl p-4 ">
+        <div v-if="isTitle" class="flex justify-between items-center">
             <span class="text-white text-2xl font-bold">{{ videoTag }}</span>
         </div>
 

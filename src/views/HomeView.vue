@@ -145,7 +145,7 @@ onMounted(async () =>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-        <div class="bg-[#28002b] flex flex-col gap-10 w-full h-full rounded-2xl p-4">
+        <div v-if="miniNews.length > 0" class="bg-[#28002b] flex flex-col gap-10 w-full h-full rounded-2xl p-4">
           <BaseNewsMiniCard v-for="n in miniNews" :key="n.id" :related="n" />
         </div>
 
@@ -201,7 +201,7 @@ onMounted(async () =>
       :viewMoreButtonTitle="'View more'" />
 
     <!-- from the clubs -->
-    <BaseViewMoreNewsCard class="my-4" :title="'From The Clubs'" :news="fromTheClubs" :viewMore="viewMore" />
+    <BaseViewMoreNewsCard :title="'From The Clubs'" :news="fromTheClubs" :viewMore="viewMore" />
 
     <!-- latest videos -->
     <BaseVideosCard v-for="v in latestVideos" :key="v.videoLabel" class="my-4" :title="v.videoLabel" :videos="v.videos"

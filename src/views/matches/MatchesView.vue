@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
-import { useApiConfig } from '@/stores/apiConfig';
 import { useMatchStore } from '@/stores/matchStore';
 import BaseMatchSection from '@/components/BaseMatchSection.vue';
 import
@@ -10,8 +9,10 @@ import
 } from '@element-plus/icons-vue';
 import SponsorBar from '@/components/SponsorBar.vue';
 import BaseFilter from '@/components/BaseFilter.vue';
+import { useRoute } from 'vue-router';
 
 const matchStore = useMatchStore();
+const route = useRoute();
 const title = ref('Matches');
 const sponsorImage = ref('/src/assets/sponsors/unmissable.webp');
 const filters = ref([
@@ -105,7 +106,7 @@ const loadData = async (currentMatchWeek) =>
     </div>
 
     <div class="bg-[#28002b] py-4 mx-3 my-6 rounded-2xl h-fit">
-        <BaseMatchSection v-for="match in matches" :key="match.matchDate" :matchDate="match.matchDate"
+    <BaseMatchSection v-for="match in matches" :key="match.matchDate" :matchDate="match.matchDate"
             :matches="match.matches" />
     </div>
 

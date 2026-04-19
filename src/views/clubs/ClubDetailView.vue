@@ -1,49 +1,19 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useTeamStore, useMatchStore } from '@/stores';
+import { useTeamStore, useClubStore } from '@/stores';
 import BaseClubDetail from '@/components/BaseClubDetail.vue';
 import BaseCurrentlyMatch from '@/components/BaseCurrentlyMatch.vue';
 import router from '@/router';
 import BaseBestNews from '@/components/BaseBestNews.vue';
+import BaseStoriesCard from '@/components/BaseStoriesCard.vue';
 
 const route = useRoute();
 const teamStore = useTeamStore();
+const clubStore = useClubStore();
 const clubId = ref(route.params.clubId);
 const clubName = ref(route.params.clubName);
-const clubDetails = ref(null);
-const bestNews = ref([
-    {
-        id: 1,
-        image: '1.jpg',
-        title: 'Arsenal Best 15 Players',
-    },
-    {
-        id: 2,
-        image: '2.jpg',
-        title: 'Arsenal Best Skills of 24/25',
-    },
-    {
-        id: 3,
-        image: '3.jpg',
-        title: 'Arsenal Best Assists of 24/25',
-    },
-    {
-        id: 4,
-        image: '4.jpg',
-        title: 'Arsenal Best Defending of...',
-    },
-    {
-        id: 5,
-        image: '5.jpg',
-        title: 'Arsenal Best Saves of 24/25',
-    },
-    {
-        id: 6,
-        image: '6.jpg',
-        title: 'Arsenal Best Goals of 24/25',
-    },
-])
+const storyNews = ref([]);
 
 const menuActive = ref('Overview');
 const clubDetailMenu = ref([
@@ -68,8 +38,11 @@ onMounted(async () =>
 
     try
     {
-        const response = await teamStore.getTeamById(clubId.value);
-        clubDetails.value = response;
+        await clubStore.getClubDetail({
+            clubId: clubId.value
+        });
+
+        storyNews.value = JSON.parse(JSON.stringify(clubStore.club.storyNews));
 
     } catch (error)
     {
@@ -85,28 +58,30 @@ onMounted(async () =>
         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-[33.33%_1fr] gap-4 py-4 px-3">
         <div class="flex flex-wrap gap-4 h-fit">
             <!-- team info card -->
-            <BaseClubDetail v-if="clubDetails" :team="clubDetails" />
+            <BaseClubDetail v-if="clubStore.club" :club="clubStore.club.clubDetail"
+                :social-medias="clubStore.club.clubSocialMedias" />
 
             <!-- club info -->
-            <div v-if="clubDetails"
+            <div v-if="clubStore.club"
                 class="!bg-[#28002b] rounded-2xl min-h-[80px] w-full p-5 flex flex-row justify-start items-center gap-20">
                 <div class="flex justify-between flex-col gap-2">
                     <span class="text-xs text-gray-300">Est.</span>
-                    <h3 v-if="clubDetails.founded" class="text-sm font-bold text-white">{{ clubDetails.founded }}</h3>
+                    <h3 v-if="clubStore.club.clubDetail.est" class="text-sm font-bold text-white">{{
+                        clubStore.club.clubDetail.est }}</h3>
                 </div>
                 <div class="flex justify-between flex-col gap-2">
                     <span class="text-xs text-gray-300">Stadium</span>
-                    <h3 v-if="clubDetails.homeStadium" class="text-sm font-bold text-white">{{ clubDetails.homeStadium
+                    <h3 v-if="clubStore.club.clubDetail.clubStadium" class="text-sm font-bold text-white">{{
+                        clubStore.club.clubDetail.clubStadium
                         }}</h3>
                 </div>
             </div>
 
             <!-- best news -->
-            <div class="w-full p-4 bg-[#28002b] rounded-2xl overflow-hidden">
-                <div class="flex gap-2 rounded-tr-lg overflow-x-scroll scrollbar-none">
-                    <BaseBestNews v-for="b in bestNews" :key="b.id" :image="b.image" :title="b.title" />
-                </div>
+            <div class="w-full bg-[#28002b] rounded-2xl overflow-hidden">
+                    <BaseStoriesCard v-if="storyNews.length > 0" :stories="storyNews" :is-title="false" />
             </div>
+
         </div>
 
         <div class="flex flex-1 flex-col gap-4">
@@ -116,7 +91,7 @@ onMounted(async () =>
                     class="text-white text-sm pb-1 border-b-4 hover:cursor-pointer whitespace-nowrap"
                     :style="menuActive == menu.name ? { borderBottom: '4px solid white', fontWeight: 'bold' } : { borderBottom: '4px solid transparent', fontWeight: 'normal' }">
                     <router-link :to="{ name: menu.route }" @click="menuActive = menu.name">{{ menu.name
-                    }}</router-link>
+                        }}</router-link>
                 </div>
             </div>
 

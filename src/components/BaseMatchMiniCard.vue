@@ -40,7 +40,7 @@ const props = defineProps({
                 name: 'matches-detail',
                 params: {
                     matchId: match.matchId,
-                    matchTitle: `${match.homeClubName}-vs-${match.awayClubName}`
+                    matchTitle: `${match.homeClubName.toLowerCase().replace(/\s+/g, '-')}-vs-${match.awayClubName.toLowerCase().replace(/\s+/g, '-')}`
                 },
                 query: { tab: 'recap' }
             }">

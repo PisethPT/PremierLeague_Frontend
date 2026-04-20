@@ -39,7 +39,9 @@ export const useApi = defineStore("useApi", () => {
     GET_MATCHES_ENDPOINT: BASE_URL + API_URL + "/match/get-matches",
     GET_MATCHES_INFO_DETAIL_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-info-detail",
     GET_MATCHES_RECAP_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-recap",
+    GET_MATCHES_RELATED_CONTENT_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-relatedcontent",
     GET_MATCHES_HIGHLIGHT_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-highlight",
+    GET_MATCHES_MATCH_INFO_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-matchinfo",
   };
 
   const TABLE_ENDPOINTS = {

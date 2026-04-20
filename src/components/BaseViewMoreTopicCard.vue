@@ -82,7 +82,7 @@
             </div>
         </div>
 
-        <div v-if="topics.length > 6" class="flex justify-center items-center">
+        <div v-if="topics?.length > 6" class="flex justify-center items-center">
             <button class="text-sm bg-white text-[#37003c] px-4 py-2.5 rounded-3xl cursor-pointer w-fit"
                 @click="props.viewMore">{{ props.viewMoreButtonTitle }}</button>
         </div>

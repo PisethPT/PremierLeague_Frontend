@@ -200,19 +200,28 @@ onMounted(async () =>
                 </button>
             </div>
 
-            <div class="flex flex-1 flex-col gap-4">
-                <div class="pt-2 pe-2 flex gap-4 overflow-x-auto scrollbar-none">
-                    <div v-for="menu in menuItems" :key="menu.name"
-                        class="text-white text-sm pb-1 border-b-4 hover:cursor-pointer whitespace-nowrap"
-                        :style="menuActive == menu.name ? { borderBottom: '4px solid white', fontWeight: 'bold' } : { borderBottom: '4px solid transparent', fontWeight: 'normal' }">
-                        <router-link
-                            :to="{ name: menu.route, params: { matchId: route.params.matchId, matchTitle: route.params.matchTitle }, query: { tab: menu.query } }"
-                            @click="menuActive = menu.name">{{ menu.name
-                            }}</router-link>
+            <div class="flex flex-1 flex-col gap-4 w-full overflow-hidden">
+                <div class="w-full overflow-hidden">
+                    <div class="pt-2 pe-2 flex gap-4 overflow-x-auto scrollbar-none max-w-full">
+                        <div v-for="menu in menuItems" :key="menu.name"
+                            class="text-white text-sm pb-1 border-b-4 whitespace-nowrap flex-none" :style="menuActive == menu.name
+                                ? { borderBottom: '4px solid white', fontWeight: 'bold' }
+                                : { borderBottom: '4px solid transparent' }">
+                            <router-link :to="{
+                                name: menu.route,
+                                params: {
+                                    matchId: route.params.matchId,
+                                    matchTitle: route.params.matchTitle
+                                },
+                                query: { tab: menu.query }
+                            }" @click="menuActive = menu.name">
+                                {{ menu.name }}
+                            </router-link>
+                        </div>
                     </div>
                 </div>
 
-                <section class="flex flex-1 flex-col gap-4 h-auto">
+                <section class="flex flex-1 flex-col gap-4 w-full overflow-hidden">
                     <RouterView />
                 </section>
 

@@ -33,8 +33,8 @@ const props = defineProps({
             </span>
 
             <button
-                class="flex items-center gap-1 text-xs font-bold text-white bg-[#37003c] px-3 py-2 rounded-2xl hover:bg-[#410544] transition cursor-pointer">
-                See all
+                class="flex items-center gap-1 text-xs text-white bg-[#37003c] px-3 py-2 rounded-2xl hover:bg-[#410544] transition cursor-pointer">
+                Live blog
                 <el-icon>
                     <ArrowRightBold class="text-xs" />
                 </el-icon>
@@ -77,9 +77,6 @@ const props = defineProps({
                             <div v-else-if="match.kickoffStatus === 'FT'" class="flex flex-col items-center gap-1">
                                 <span class="bg-[#1e0021] text-white text-lg font-bold px-2 py-[2px] rounded-md">
                                     {{ match.homeClubGoal }} : {{ match.awayClubGoal }}
-                                </span>
-                                <span class="text-white text-xs font-bold">
-                                    {{ match.kickoffStatus }}
                                 </span>
                             </div>
                             <div class="flex justify-start items-center gap-2">

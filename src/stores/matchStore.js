@@ -24,6 +24,7 @@ export const useMatchStore = defineStore("match", {
       matchRecap: null,
       matchRelatedContent: [],
       matchHighlight: null,
+      matchLineup: null,
       matchInfo: null,
       TEAM_LOGOS_DIR: apiConfig.TEAM_LOGOS_DIR,
       PLAYER_PHOTO_DIR: apiConfig.PLAYER_LOGOS_DIR,
@@ -120,6 +121,25 @@ export const useMatchStore = defineStore("match", {
 
       if (!error.value && data.value) {
         this.matchHighlight = JSON.parse(JSON.stringify(data.value.contents));
+      } else {
+        console.error("Fetch Error:", error.value);
+        return error.value;
+      }
+    },
+
+    async getMatchLineup(query) {
+      const { data, error, execute } = useFetch();
+
+      await execute(
+        this.api.ENDPOINTS.MATCH_ENDPOINTS.GET_MATCHES_LINEUP_ENDPOINT,
+        "GET",
+        null,
+        query,
+        { "Content-Type": "application/json" },
+      );
+
+      if (!error.value && data.value) {
+        this.matchLineup = JSON.parse(JSON.stringify(data.value.contents));
       } else {
         console.error("Fetch Error:", error.value);
         return error.value;

@@ -5,15 +5,12 @@ import { useMatchStore } from '@/stores';
 import BaseNewsCard from '@/components/BaseNewsCard.vue';
 import
 {
-    Sort,
     Edit,
 } from '@element-plus/icons-vue';
 
 const matchStore = useMatchStore();
 const route = useRoute();
 const matchId = ref(route.params.matchId);
-const isAtStart = ref(true);
-const isAtEnd = ref(false);
 const relatedContent = ref([]);
 const recapData = ref(null);
 
@@ -68,8 +65,6 @@ function viewMore()
 {
     console.log('View more news clicked!');
 }
-
-
 </script>
 
 <template>
@@ -80,9 +75,7 @@ function viewMore()
                     <h3 class="text-white text-xl font-bold">Report</h3>
                     <button @click="isReportOpen = true"
                         class="bg-[#37003c] hover:bg-[#4a0052] transition-colors flex items-center justify-center rounded-full w-10 h-10 cursor-pointer">
-                        <el-icon>
-                            <Sort class="text-white rotate-45 scale-x-90" />
-                        </el-icon>
+                        <i class="text-white fa-solid fa-arrows-up-down rotate-45 scale-x-90"></i>
                     </button>
                 </div>
                 <span v-if="recapData"
@@ -144,9 +137,9 @@ function viewMore()
             </div>
         </div>
     </div>
-    
+
     <BaseNewsCard :title="'Related Content'" :topics="relatedContent" :isAllButton="true"
-        :isPreviousAndNextButtons="true" @viewAll="viewMore" />
+        :isPreviousAndNextButtons="true" :allButtonTitle="'See All'" @viewAll="viewMore" />
 
     <el-drawer v-model="isReportOpen" class="!bg-[#1a011d] custom-report-drawer" :size="'50%'" direction="rtl">
         <template #header>

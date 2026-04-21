@@ -41,6 +41,7 @@ export const useApi = defineStore("useApi", () => {
     GET_MATCHES_RECAP_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-recap",
     GET_MATCHES_RELATED_CONTENT_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-relatedcontent",
     GET_MATCHES_HIGHLIGHT_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-highlight",
+    GET_MATCHES_LINEUP_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-lineup",
     GET_MATCHES_MATCH_INFO_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-matchinfo",
   };
 

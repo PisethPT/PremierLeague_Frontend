@@ -5,7 +5,8 @@ import BasePrimaryFormationPlayer from './BasePrimaryFormationPlayer.vue';
 const props = defineProps({
   formations: { type: Array, required: true },
   formationId: { type: Number, required: true },
-  players: { type: Array, required: true }
+  players: { type: Array, required: true },
+  layoutMode: { type: String, default: 'default' }
 });
 
 // Helper to parse strings like "4-3-3" into [1, 4, 3, 3]
@@ -13,7 +14,7 @@ const getFormationSchema = (formationString) =>
 {
   if (!formationString) return [1, 4, 4, 2];
   const parts = formationString.split('-').map(Number);
-  return [1, ...parts]; // Always add GK (1)
+  return [1, ...parts]; // GK always first
 };
 
 const activeSchema = computed(() =>
@@ -29,33 +30,63 @@ const sortedStartingXI = computed(() =>
     .sort((a, b) => a.formationSlot - b.formationSlot);
 });
 
-const formationRows = computed(() =>
+const formationGroups = computed(() =>
 {
-  const rows = [];
+  const groups = [];
   let playerIndex = 0;
   const schema = activeSchema.value;
 
   schema.forEach(count =>
   {
-    rows.push(sortedStartingXI.value.slice(playerIndex, playerIndex + count));
+    groups.push(sortedStartingXI.value.slice(playerIndex, playerIndex + count));
     playerIndex += count;
   });
 
-   return rows;
+  return groups;
 });
 </script>
 
 <template>
-  <div class="flex flex-col justify-around items-center w-full h-full py-2">
-    <div v-if="sortedStartingXI.length === 0" class="flex justify-center items-center h-full">
-      <span class="text-white text-center opacity-30 ">No players found for this formation</span>
-    </div>
+  <div class="w-full h-full">
 
-    <div v-for="(rowPlayers, rowIndex) in formationRows" :key="rowIndex"
-      class="flex justify-around items-center w-full">
-      <div v-for="player in rowPlayers" :key="player.playerId">
-        <BasePrimaryFormationPlayer :player="player" />
+    <div v-if="layoutMode === 'default'" class="flex flex-col justify-around items-center w-full h-full py-2">
+
+      <div v-if="sortedStartingXI.length === 0" class="flex justify-center items-center h-full">
+        <span class="text-white text-center opacity-30">No players found</span>
+      </div>
+
+      <div v-for="(rowPlayers, rowIndex) in formationGroups" :key="'row-' + rowIndex"
+        class="flex justify-around items-center w-full">
+        <div v-for="player in rowPlayers" :key="player.playerId">
+          <BasePrimaryFormationPlayer :player="player" />
+        </div>
       </div>
     </div>
+
+    <div v-else class="flex h-full w-full py-2"
+      :class="[$attrs.class?.includes('away-side-layout') ? 'flex-row-reverse' : 'flex-row']">
+
+      <div v-if="sortedStartingXI.length === 0" class="flex justify-center items-center w-full">
+        <span class="text-white opacity-30">No players found</span>
+      </div>
+
+      <div v-for="(colPlayers, colIndex) in formationGroups" :key="'col-' + colIndex"
+        class="flex flex-col justify-around items-center h-full flex-1">
+        <div v-for="player in colPlayers" :key="player.playerId">
+          <BasePrimaryFormationPlayer :player="player" />
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
+
+<style scoped>
+.flex-1 {
+  min-width: 0;
+}
+
+.flex-row-reverse :deep(.flex-col) {
+  direction: ltr;
+}
+</style>

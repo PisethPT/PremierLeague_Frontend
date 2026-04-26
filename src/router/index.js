@@ -4,14 +4,15 @@ import RegisterView from "@/views/users/RegisterView.vue";
 import Empty from "@/components/Empty.vue";
 import GuestLayoutView from "@/views/layouts/GuestLayoutView.vue";
 import AdminLayoutView from "@/views/layouts/AdminLayoutView.vue";
+
 import HomeView from "@/views/HomeView.vue";
-import GuestClubsIndex from "@/views/clubs/ClubView.vue";
-import GuestPlayerIndex from "@/views/players/PlayersView.vue";
-import GuestMatchesIndex from "@/views/matches/MatchesView.vue";
-import GuestTablesIndex from "@/views/tables/TableView.vue";
-import GuestStatisticsIndex from "@/views/statistics/StatisticView.vue";
-import GuestNewsIndex from "@/views/news/NewsView.vue";
-import GuestTransfersIndex from "@/views/transfers/TransferView.vue";
+import ClubView from "@/views/clubs/ClubView.vue";
+import PlayerView from "@/views/players/PlayersView.vue";
+import MatchView from "@/views/matches/MatchesView.vue";
+import TableView from "@/views/tables/TableView.vue";
+import StatisticView from "@/views/statistics/StatisticView.vue";
+import NewView from "@/views/news/NewsView.vue";
+import TransferView from "@/views/transfers/TransferView.vue";
 import VideoView from "@/views/videos/VideoView.vue";
 import VideoSeriesView from "@/views/videos/VideoSeriesView.vue";
 import TheArchiveView from "@/views/videos/TheArchiveView.vue";
@@ -19,6 +20,7 @@ import AllVideosView from "@/views/videos/AllVideosView.vue";
 import VideoViewer from "@/views/videos/VideoViewer.vue";
 import NewsViewer from "@/views/news/NewsViewer.vue";
 import MatchesDetailView from "@/views/matches/MatchesDetailView.vue";
+import RelatedContentView from "@/views/news/RelatedContentView.vue";
 
 // admin pages
 import AdminDashboard from "@/views/admins/DashboardView.vue";
@@ -125,7 +127,7 @@ const router = createRouter({
         {
           path: "/en/clubs/index",
           name: "clubs-index",
-          component: GuestClubsIndex,
+          component: ClubView,
         },
         {
           path: "/en/clubs/:clubId/:clubName/overview",
@@ -182,7 +184,7 @@ const router = createRouter({
         {
           path: "/en/players/index",
           name: "players-index",
-          component: GuestPlayerIndex,
+          component: PlayerView,
         },
         {
           path: "/players/:playerId/:playerName",
@@ -218,7 +220,7 @@ const router = createRouter({
         {
           path: "/en/matches/index",
           name: "matches-index",
-          component: GuestMatchesIndex,
+          component: MatchView,
         },
         {
           path: "/en/match/:matchId/:matchTitle",
@@ -265,12 +267,12 @@ const router = createRouter({
         {
           path: "/en/tables/index",
           name: "tables-index",
-          component: GuestTablesIndex,
+          component: TableView,
         },
         {
           path: "/en/statistics/index",
           name: "statistics-index",
-          component: GuestStatisticsIndex,
+          component: StatisticView,
           children: [
             {
               path: "/en/statistics/stats/dashboard",
@@ -307,8 +309,8 @@ const router = createRouter({
         },
         {
           path: "/en/news/index",
-          name: "statistics-news-index",
-          component: GuestNewsIndex,
+          name: "news-index",
+          component: NewView,
         },
         {
           path: "/en/news/:newsId/:newsTitle",
@@ -318,7 +320,7 @@ const router = createRouter({
         {
           path: "/en/transfers/index",
           name: "statistics-transfers-index",
-          component: GuestTransfersIndex,
+          component: TransferView,
         },
         {
           path: "/en/video",
@@ -356,6 +358,11 @@ const router = createRouter({
           path: "/en/video/all",
           name: "all-videos",
           component: AllVideosView,
+        },
+        {
+          path: "/en/content-listing",
+          name: "content-listing",
+          component: RelatedContentView,
         },
         {
           path: "/en/video/:videoId/:videoTitle",

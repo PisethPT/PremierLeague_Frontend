@@ -35,7 +35,7 @@
 </script>
 
 <template>
-    <div class="flex flex-col !bg-[#28002b] rounded-2xl w-full" :class="classModify">
+    <div v-if="props.topics?.length > 0" class="flex flex-col !bg-[#28002b] rounded-2xl w-full" :class="classModify">
         <span class="text-white text-2xl font-bold">{{ props.title }}</span>
 
         <div class="grid gap-4" :class="cardGrids">
@@ -86,6 +86,9 @@
             <button class="text-sm bg-white text-[#37003c] px-4 py-2.5 rounded-3xl cursor-pointer w-fit"
                 @click="props.viewMore">{{ props.viewMoreButtonTitle }}</button>
         </div>
+    </div>
+    <div v-else class="flex flex-col !bg-[#28002b] rounded-2xl w-full" :class="classModify">
+        <span class="text-white opacity-30 text-center font-normal">No topics available</span>
     </div>
 </template>
 

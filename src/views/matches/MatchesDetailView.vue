@@ -60,6 +60,7 @@ onMounted(async () =>
     try
     {
         await matchStore.getMatchInfoDetail({ matchId: matchId.value });
+        await matchStore.getMatchStory({matchId: matchId.value});
         matchInfo.value = matchStore.matchInfoDetail.matchInfo;
 
     } catch (error)
@@ -115,7 +116,7 @@ onMounted(async () =>
                         </div>
                     </div>
 
-                    <div class="bg-[#28002b] rounded-t-2xl rounded-b-2xl p-4 z-10 relative -mt-3">
+                    <div class="bg-[#28002b] rounded-t-2xl rounded-b-2xl p-4 z-10 relative -mt-3 h-fit">
                         <div class="flex flex-col gap-3 w-full">
                             <!-- goals area -->
                             <div v-if="!matchInfo?.isPreview" class="grid grid-cols-[1fr_50px_1fr] gap-2 w-full">
@@ -180,17 +181,19 @@ onMounted(async () =>
                         </div>
 
                         <!-- center badge / match story 'truncate'-->
-                        <div class="flex flex-col justify-center items-center gap-2 mt-4">
-                            <div
-                                class="bg-[#6b24ad] flex justify-center items-center w-19 h-19 rounded-full overflow-hidden cursor-pointer">
+                        <div v-if="matchStore.stories.length > 0" class="flex justify-center gap-2 h-fit">
+                            <div v-for="story in matchStore.stories" :key="story.videoId" class="flex flex-col justify-center items-start gap-0 mt-4 h-fit">
                                 <div
-                                    class="flex justify-center items-center w-18 h-18 rounded-full border-2 border-black overflow-hidden">
-                                    <img :src="matchStoryCoverUrl" alt="Match story cover"
-                                        class="w-auto h-full object-contain" loading="lazy" />
+                                    class="bg-[#6b24ad] flex justify-center items-center w-24 h-24  rounded-full overflow-hidden cursor-pointer">
+                                    <div
+                                        class="flex justify-center items-center w-[90px] h-[90px] rounded-full border-2 border-black overflow-hidden">
+                                        <img :src="story.thumbnail" alt="Match story cover"
+                                            class="w-auto h-full object-contain" loading="lazy" />
+                                    </div>
                                 </div>
+                                <span class="text-white text-xs lg:text-sm font-bold w-[90px] text-center text-wrap">{{
+                                    story.title }}</span>
                             </div>
-                            <span class="text-white text-xs lg:text-sm font-bold w-20 text-center text-wrap">{{
-                                matchInfo?.matchStory }}</span>
                         </div>
                     </div>
                 </div>

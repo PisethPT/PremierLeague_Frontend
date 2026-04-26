@@ -27,6 +27,8 @@ export const useApi = defineStore("useApi", () => {
     GET_PREMIER_LEAGUE_NEWS:
       BASE_URL + API_URL + "/home/get-home-premierleague-news",
     GET_QUIZZES_NEWS: BASE_URL + API_URL + "/home/get-home-quizzes-news",
+    GET_PREMIER_LEAGUE_GAME_NEWS:
+      BASE_URL + API_URL + "/home/get-home-news-premierleaguegame",
   };
 
   const VIEWER_PAGE_ENDPOINTS = {
@@ -37,12 +39,18 @@ export const useApi = defineStore("useApi", () => {
 
   const MATCH_ENDPOINTS = {
     GET_MATCHES_ENDPOINT: BASE_URL + API_URL + "/match/get-matches",
-    GET_MATCHES_INFO_DETAIL_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-info-detail",
+    GET_MATCHES_INFO_DETAIL_ENDPOINT:
+      BASE_URL + API_URL + "/match/get-matches-info-detail",
+    GET_MATCHES_STORY_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-story",
     GET_MATCHES_RECAP_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-recap",
-    GET_MATCHES_RELATED_CONTENT_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-relatedcontent",
-    GET_MATCHES_HIGHLIGHT_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-highlight",
-    GET_MATCHES_LINEUP_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-lineup",
-    GET_MATCHES_MATCH_INFO_ENDPOINT: BASE_URL + API_URL + "/match/get-matches-matchinfo",
+    GET_MATCHES_RELATED_CONTENT_ENDPOINT:
+      BASE_URL + API_URL + "/match/get-matches-relatedcontent",
+    GET_MATCHES_HIGHLIGHT_ENDPOINT:
+      BASE_URL + API_URL + "/match/get-matches-highlight",
+    GET_MATCHES_LINEUP_ENDPOINT:
+      BASE_URL + API_URL + "/match/get-matches-lineup",
+    GET_MATCHES_MATCH_INFO_ENDPOINT:
+      BASE_URL + API_URL + "/match/get-matches-matchinfo",
   };
 
   const TABLE_ENDPOINTS = {
@@ -79,6 +87,18 @@ export const useApi = defineStore("useApi", () => {
     GET_PLAYER_TEAMMATES: BASE_URL + API_URL + "/player/get-player-teammates",
   };
 
+  const VIDEO_ENDPOINTS = {
+    GET_VIDEOS_LATEST_VIDEO: BASE_URL + API_URL + "/video/get-video-latestvideos",
+    GET_VIDEOS_SERIES: BASE_URL + API_URL + "/video/get-video-series",
+    GET_VIDEOS_THEARCHIVE: BASE_URL + API_URL + "/video/get-video-thearchive",
+    GET_VIDEOS_ALL: BASE_URL + API_URL + "/video/get-video-all",
+    GET_VIDEOS_ALL_COUNT: BASE_URL + API_URL + "/video/get-video-all-count",
+  };
+
+  const NEWS_ENDPOINTS = {
+    GET_NEWS_ALL: BASE_URL + API_URL + "/news/get-news-all",
+  };
+
   const ENDPOINTS = {
     SELECT_LIST_ITEMS_ENDPOINTS,
     HOME_PAGE_ENDPOINTS,
@@ -88,6 +108,8 @@ export const useApi = defineStore("useApi", () => {
     CLUB_ENDPOINTS,
     PLAYER_ENDPOINTS,
     FORMATION_ENDPOINTS,
+    VIDEO_ENDPOINTS,
+    NEWS_ENDPOINTS,
   };
 
   return {

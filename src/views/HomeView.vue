@@ -47,44 +47,7 @@ const newsAndFeatures = ref([]);
 const premierLeagues = ref([]);
 const mostViewedVideos = ref([]);
 const gamesQuizzesAndPolls = ref([]);
-const premierLeaguesGames = ref([
-  {
-    id: 1,
-    title: 'Premier League launches mental health awareness campaign',
-    category: 'More Than A Game',
-    thumbnail: '',
-  },
-  {
-    id: 2,
-    title: 'Community initiatives making a difference off the pitch',
-    category: 'More Than A Game',
-    thumbnail: ''
-  },
-  {
-    id: 3,
-    title: 'Player stories: Using football to inspire change',
-    category: 'More Than A Game',
-    thumbnail: '',
-  },
-  {
-    id: 4,
-    title: 'Clubs unite for social causes in local communities',
-    category: 'More Than A Game',
-    thumbnail: ''
-  },
-  {
-    id: 5,
-    title: 'The impact of football on education and youth development',
-    category: 'More Than A Game',
-    thumbnail: ''
-  },
-  {
-    id: 6,
-    title: 'How football promotes diversity and inclusion',
-    category: 'More Than A Game',
-    thumbnail: ''
-  },
-]);
+const premierLeaguesGames = ref([]);
 
 const allVideos = () => router.push({ name: 'all-videos' });
 
@@ -107,7 +70,7 @@ onMounted(async () =>
     loading.value = true;
     matches.value = await homeStore.getMatches();
     miniNews.value = await homeStore.getNews();
-    storiesNews.value = await homeStore.getStoriesNews(["3", "13"], { pageSize: 20 });
+    storiesNews.value = await homeStore.getStoriesNews(["3", "13"], { pageSize: 30 });
     latestNews.value = await homeStore.getNewsAsTopicByTags(["4"], { pageSize: 5 });
     latestVideos.value = await homeStore.getVideos(["2"]);
     awards.value = await homeStore.getNewsByTags(["7"]);
@@ -118,6 +81,7 @@ onMounted(async () =>
     premierLeagues.value = await homeStore.getPremierLeagueNews({ pageSize: 5 });
     mostViewedVideos.value = await homeStore.getStoriesNews(["15"], { pageSize: 10 });
     gamesQuizzesAndPolls.value = await homeStore.getQuizzesNews({ pageSize: 6 });
+    premierLeaguesGames.value = await homeStore.getPremierLeagueGameNews();
     loading.value = false;
   } catch (error)
   {
@@ -213,8 +177,8 @@ onMounted(async () =>
       :viewMoreButtonTitle="'View more'" />
 
     <!-- games, quizzes and polls -->
-    <BaseNewsCard class="my-4" :title="'Games, Quizzes & Polls'" :topics="gamesQuizzesAndPolls" :isAllButton="true"
-      :allButtonTitle="'More'" :viewMore="viewMore" :is-all-button="true" :is-previous-and-next-buttons="true" />
+    <BaseNewsCard class="my-4" :title="'Games, Quizzes & Polls'" :topics="gamesQuizzesAndPolls" :allButtonTitle="'More'"
+      :viewMore="viewMore" :is-all-button="true" :is-previous-and-next-buttons="true" />
 
     <!-- most viewed videos -->
     <BaseStoriesCard v-for="mostViewedVideo in mostViewedVideos" :key="mostViewedVideo.videoLabel"
@@ -246,8 +210,8 @@ onMounted(async () =>
     <SponsorBar :sponsor-image="sponsorImage3" :sponsor-width="'60rem'" :rounded="true" :is-clickable="false" />
 
     <!-- premier league games -->
-    <BaseVideosCard class="mb-4" :title="'Premier League Games'" :videos="premierLeaguesGames" :all-videos="allVideos"
-      :isAllVideosButton="true" :allVideosButtonTitle="'More'" :isPreviousAndNextButtons="true" />
+    <BaseNewsCard class="my-4" :title="'Premier League Games'" :topics="premierLeaguesGames" :allButtonTitle="'More'"
+      :viewMore="viewMore" :is-all-button="true" :is-previous-and-next-buttons="true" />
 
   </main>
 </template>

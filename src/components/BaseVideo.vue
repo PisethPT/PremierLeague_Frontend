@@ -1,19 +1,21 @@
 <script setup>
 import { defineProps, defineEmits, ref, onMounted, nextTick } from 'vue';
 import { ArrowRight, ArrowLeft, CaretRight } from '@element-plus/icons-vue';
+import router from '@/router';
 
 const emits = defineEmits(['viewAll']);
 
 const props = defineProps({
     title: { type: String, required: true },
-    topics: {
+    videos: {
         type: Array,
         required: true,
         default: () => []
     },
     allButtonTitle: { type: String, default: 'View more' },
+    action: { type: String, default: '' },
     isAllButton: { type: Boolean, default: false },
-    isPreviousAndNextButtons: { type: Boolean, default: false }
+    isPreviousAndNextButtons: { type: Boolean, default: true }
 });
 
 const scrollContainer = ref(null);
@@ -39,8 +41,12 @@ const scroll = (direction) =>
     setTimeout(updateScrollState, 300);
 };
 
-// Standardized slug formatter to match reference component
-const formatSlug = (text) => text?.toString().toLowerCase().replace(/\s+/g, '-') || '';
+const getSlug = (title) =>
+    (title || '')
+        .toString()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
 
 onMounted(async () =>
 {
@@ -55,7 +61,7 @@ onMounted(async () =>
             <span class="text-white text-2xl font-bold">{{ props.title }}</span>
 
             <div class="flex gap-2">
-                <div v-if="props.isPreviousAndNextButtons && props.topics.length > 0" class="flex gap-2">
+                <div v-if="props.isPreviousAndNextButtons && props.videos.length > 0" class="flex gap-2">
                     <button
                         class="flex items-center justify-center rounded-full w-8 h-8 transition disabled:cursor-not-allowed"
                         :class="[isAtStart ? 'bg-[#1d001f] opacity-40' : 'bg-[#3e003f] hover:bg-[#55005a] cursor-pointer']"
@@ -75,7 +81,7 @@ onMounted(async () =>
                     </button>
                 </div>
 
-                <button v-if="props.isAllButton && props.topics.length > 0" @click="emits('viewAll')"
+                <button v-if="props.isAllButton && props.videos.length > 0" @click="router.push({ name: props.action})"
                     class="flex items-center rounded-full bg-[#3e003f] text-xs text-white h-8 px-4 hover:underline cursor-pointer whitespace-nowrap">
                     {{ props.allButtonTitle }}
                     <el-icon class="ml-1">
@@ -85,60 +91,51 @@ onMounted(async () =>
             </div>
         </div>
 
-        <div v-if="props.topics.length > 0" class="w-full rounded-t-2xl relative overflow-hidden">
+        <div v-if="props.videos.length > 0" class="w-full rounded-t-2xl relative overflow-hidden">
             <div ref="scrollContainer" @scroll="updateScrollState"
                 class="flex gap-4 overflow-x-auto scrollbar-none scroll-smooth" style="scroll-snap-type: x mandatory;">
 
-                <div v-for="(item, index) in props.topics" :key="index"
+                <div v-for="video in props.videos" :key="video.videoId"
                     class="flex flex-col gap-2 rounded-2xl flex-none w-[280px] md:w-[300px]"
                     style="scroll-snap-align: start;">
 
-                    <div class="flex bg-[#4b1254] rounded-2xl aspect-video relative overflow-hidden group">
-
-                        <img v-if="item.thumbnail" :src="item.thumbnail"
+                    <div class="relative aspect-video bg-[#4b1254] rounded-2xl overflow-hidden group">
+                        <img :src="video.thumbnail || '/images/placeholder.jpg'"
                             class="absolute inset-0 w-full h-full object-cover" />
 
-                        <template v-if="item.isVideo">
-                            <router-link
-                                :to="{ name: 'news-viewer', params: { newsId: item.topicId, newsTitle: formatSlug(item.title) } }"
-                                class="absolute inset-0 z-10"></router-link>
+                        <a v-if="video.isReference && video.referenceUrl" :href="video.referenceUrl" target="_blank"
+                            class="absolute inset-0 z-10"></a>
 
-                            <div
-                                class="absolute bg-[#28002b] w-7 h-7 rounded-full bottom-2 right-2 flex justify-center items-center z-20 pointer-events-none">
-                                <el-icon>
-                                    <CaretRight class="text-white" />
-                                </el-icon>
-                            </div>
-                        </template>
+                        <router-link v-else :to="{
+                            name: 'video-viewer',
+                            params: {
+                                videoId: String(video.videoId),
+                                videoTitle: getSlug(video.title)
+                            }
+                        }" class="absolute inset-0 z-10"></router-link>
 
-                        <template v-else-if="item.referenceUrl || item.topicUrl">
-                            <a :href="item.referenceUrl || item.topicUrl" target="_blank"
-                                class="absolute inset-0 z-10"></a>
-                            <div class="absolute inset-0 bg-black/10"></div>
-                        </template>
-
-                        <template v-else>
-                            <router-link
-                                :to="{ name: 'news-viewer', params: { newsId: item.topicId, newsTitle: formatSlug(item.title) } }"
-                                class="absolute inset-0 z-10"></router-link>
-                            <div class="absolute inset-0 bg-black/10"></div>
-                        </template>
+                        <div v-if="!video.isReference && !video.referenceUrl"
+                            class="absolute bottom-2 right-2 bg-[#28002b] w-7 h-7 rounded-full flex justify-center items-center z-10">
+                            <el-icon>
+                                <CaretRight class="text-white" />
+                            </el-icon>
+                        </div>
                     </div>
 
                     <div class="flex flex-col gap-1">
                         <span class="text-white text-md font-bold line-clamp-2 leading-snug">
-                            {{ item.title }}
+                            {{ video.title }}
                         </span>
                         <span class="text-white text-xs font-normal opacity-70">
-                            {{ item.topicTag }}
+                            {{ video.videoTag ?? '' }}
                         </span>
                     </div>
                 </div>
-            </div>
+            </div>  
         </div>
 
         <div v-else class="w-full flex justify-center items-center py-10">
-            <span class="text-white opacity-30">Data not available</span>
+            <span class="text-white opacity-30">No videos available</span>
         </div>
     </div>
 </template>
@@ -151,12 +148,5 @@ onMounted(async () =>
 .scrollbar-none {
     -ms-overflow-style: none;
     scrollbar-width: none;
-}
-
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 </style>

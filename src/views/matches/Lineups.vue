@@ -127,14 +127,38 @@ const getCardClass = (type) =>
                                 <span class="text-gray-300 text-xs">{{ player.playerNumber }} Defender</span>
                             </div>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <i v-if="player.goalCount > 0" class="fa-solid fa-futbol text-white text-xs"></i>
-                            <div v-if="player.hasCard" :class="[getCardClass(player.hasCard), 'w-2 h-3 rounded-sm']">
+                        <div class="flex items-center gap-1">
+                            <div v-if="player.isHasGoal"
+                                class="flex items-center gap-1 bg-[#37003c] rounded-full w-fit h-4 px-1">
+                                <i class="fa-solid fa-futbol text-white text-xs"></i>
+                                <span v-if="player.goals > 1" class="text-white text-[10px] font-bold">{{ player.goals
+                                }}</span>
                             </div>
+
+                            <div v-if="player.isHasAssist"
+                                class="bg-[#37003c] rounded-full w-4.5 h-4.5 left-3.5 bottom-1 z-10 flex justify-center items-center gap-1">
+                                <img src="/src/assets/icons/assists_white.png"
+                                    class="w-4 object-contain -rotate-25 scale-x-100" />
+                                <span v-if="player.assists > 1" class="text-white text-[10px] font-bold">{{
+                                    player.assists }}</span>
+                            </div>
+
+                            <div v-if="player.outMinute !== '0'"
+                                class="flex items-center gap-1 bg-[#37003c] rounded-full w-fit h-4 px-1">
+                                <i class="fa-solid fa-reply text-red-500 text-[10px]"></i>
+                                <span class="text-white text-xs font-bold">{{ player.outMinute }}'</span>
+                            </div>
+
                             <div v-if="player.inMinute !== '0'"
                                 class="flex items-center gap-1 bg-[#37003c] rounded-full w-fit h-4 px-1">
                                 <i class="fa-solid fa-reply text-green-500 text-[10px] -rotate-180"></i>
                                 <span class="text-white text-xs font-bold">{{ player.inMinute }}'</span>
+                            </div>
+
+                            <div v-if="player.hasCard"
+                                class="bg-[#37003c] rounded-full w-4 h-4 right-3 bottom-0.5 z-10 flex justify-center items-center">
+                                <div :class="[getCardClass(player.hasCard), 'w-[7px] h-2.5']">
+                                </div>
                             </div>
                         </div>
                     </router-link>
@@ -155,14 +179,38 @@ const getCardClass = (type) =>
                                 <span class="text-gray-300 text-xs">{{ player.playerNumber }} Forward</span>
                             </div>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <i v-if="player.goalCount > 0" class="fa-solid fa-futbol text-white text-xs"></i>
-                            <div v-if="player.hasCard" :class="[getCardClass(player.hasCard), 'w-2 h-3 rounded-sm']">
+                        <div class="flex items-center gap-1">
+                            <div v-if="player.isHasGoal"
+                                class="flex items-center gap-1 bg-[#37003c] rounded-full w-fit h-4 px-1">
+                                <i class="fa-solid fa-futbol text-white text-xs"></i>
+                                <span v-if="player.goals > 1" class="text-white text-[10px] font-bold">{{ player.goals
+                                }}</span>
                             </div>
+
+                            <div v-if="player.isHasAssist"
+                                class="bg-[#37003c] rounded-full w-4.5 h-4.5 left-3.5 bottom-1 z-10 flex justify-center items-center gap-1">
+                                <img src="/src/assets/icons/assists_white.png"
+                                    class="w-4 object-contain -rotate-25 scale-x-100" />
+                                <span v-if="player.assists > 1" class="text-white text-[10px] font-bold">{{
+                                    player.assists }}</span>
+                            </div>
+                            
+                            <div v-if="player.outMinute !== '0'"
+                                class="flex items-center gap-1 bg-[#37003c] rounded-full w-fit h-4 px-1">
+                                <i class="fa-solid fa-reply text-red-500 text-[10px]"></i>
+                                <span class="text-white text-xs font-bold">{{ player.outMinute }}'</span>
+                            </div>
+
                             <div v-if="player.inMinute !== '0'"
                                 class="flex items-center gap-1 bg-[#37003c] rounded-full w-fit h-4 px-1">
                                 <i class="fa-solid fa-reply text-green-500 text-[10px] -rotate-180"></i>
                                 <span class="text-white text-xs font-bold">{{ player.inMinute }}'</span>
+                            </div>
+
+                            <div v-if="player.hasCard"
+                                class="bg-[#37003c] rounded-full w-4 h-4 right-3 bottom-0.5 z-10 flex justify-center items-center">
+                                <div :class="[getCardClass(player.hasCard), 'w-[7px] h-2.5']">
+                                </div>
                             </div>
                         </div>
                     </router-link>

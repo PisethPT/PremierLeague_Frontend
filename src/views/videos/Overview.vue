@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useVideoStore } from '@/stores';
 import SponsorBar from '@/components/SponsorBar.vue';
 import { useRouter } from 'vue-router';
 import
@@ -8,10 +9,19 @@ import
     ArrowRight,
 } from '@element-plus/icons-vue';
 
+import BaseTheArchive from '@/components/BaseTheArchive.vue';
+import BaseVideo from '@/components/BaseVideo.vue';
+import BaseStoriesCard from '@/components/BaseStoriesCard.vue';
+import BaseVideoSeries from '@/components/BaseVideoSeries.vue';
+
 const router = useRouter();
 const sponsorImage = ref('/src/assets/sponsors/07710_PremierLeagueDigitalProducts_MYPL_WebPage_1456x180_AWK-V3a.webp');
 const eightMinuteReplaysUrl = ref('video-the-archive-8-minute-replays');
 const twentyMinuteReplaysUrl = ref('video-the-archive-20-minute-replays');
+
+const videoStore = useVideoStore();
+const theArchive = ref([]);
+
 
 const eightMinuteReplays = ref([
     {
@@ -76,10 +86,25 @@ const twentyMinuteReplays = ref([
 onMounted(async () =>
 {
     window.scrollTo({ top: 0, behavior: 'auto' });
+
+    try
+    {
+        await videoStore.getTheArchiveVideos();
+        theArchive.value = videoStore.theArchive;
+
+        console.log('The Archive videos fetched successfully:', theArchive.value);
+    } catch (error)
+    {
+        console.error('Error fetching The Archive videos:', error);
+    }
 })
 
 const allVideos = () => router.push({ name: 'all-videos' });
 
+const handleViewAll = () =>
+{
+    console.log("Navigate to all videos page");
+};
 </script>
 
 <template>
@@ -104,78 +129,19 @@ const allVideos = () => router.push({ name: 'all-videos' });
 
     <SponsorBar :sponsorImage="sponsorImage" :rounded="true" :sponsorWidth="'60rem'" />
 
-    <section class="flex flex-col gap-4">
-        <h1 class="text-white text-2xl font-bold">Featured Games</h1>
-        <div class="!bg-[#3e003f] flex xl:flex-row flex-col rounded-2xl h-auto gap-4 p-4">
+    <div v-for="data in theArchive" :key="data.videoLabel">
+        <BaseTheArchive v-if="data.isTheArchive" :title="data.videoLabel" :videos="data.videos" />
 
-            <div class="bg-[#28002b] flex flex-col rounded-2xl xl:w-1/2 overflow-hidden">
-                <div class="bg-[#edaef777] w-full h-[500px] rounded-2xl">
+        <BaseVideoSeries v-else-if="data.isVideoSeries" :title="data.videoLabel" :series="data.videos" />
 
-                </div>
-                <div class="flex flex-col gap-4 mx-6 my-6">
-                    <h1 class="text-white text-2xl font-bold">Match: Man City win title with incredible comeback
-                        v Aston Villa</h1>
-                    <span class="text-white text-xs">Classic matches</span>
-                </div>
-            </div>
+        <BaseVideo v-else-if="!data.isStory" :title="data.videoLabel" :videos="data.videos"
+            :isAllButton="data.buttonActionTitle != '' ? true : false"
+            :allButtonTitle="data.buttonActionTitle != '' ? data.buttonActionTitle : ''"
+            :action="data.action != '' ? data.action : 'all-videos'" @viewAll="handleViewAll" />
 
-            <div class="grid grid-cols-2 gap-4 xl:w-1/2">
-                <div v-for="(value, index) in 4" :key="index"
-                    class="bg-[#28002b] flex flex-col gap-2 rounded-2xl h-full">
-                    <div class="flex bg-[#4b1254] rounded-2xl w-full h-[250px] relative overflow-hidden">
-                        <a href="#" class="hover:bg-[#edaef777] flex justify-center items-center w-full h-full"></a>
-                        <div
-                            class="absolute text-center bg-[#28002b] !w-7 !h-7 rounded-full !bottom-2 !right-2 flex justify-center items-center">
-                            <el-icon>
-                                <CaretRight class="text-white" />
-                            </el-icon>
-                        </div>
-                    </div>
-                    <span class="text-white text-md font-bold mx-4 mb-4">Lorem ipsum dolor sit amet, consectetur
-                        adipisicing
-                        elit.
-                        Maxime, inventore.</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- best of 2024/25 -->
-    <div class="flex flex-col gap-5 !bg-[#28002b] rounded-2xl w-full p-4">
-        <div class="flex justify-between items-center">
-            <span class="text-white text-2xl font-bold">Best of 2024/25</span>
-            <div class="flex gap-2">
-                <button @click="allVideos"
-                    class="flex items-center justify-center rounded-full bg-[#3e003f] text-xs text-white w-fit h-8 px-3 hover:underline whitespace-nowrap">
-                    More Videos
-                    <el-icon>
-                        <ArrowRight class="text-white" />
-                    </el-icon>
-                </button>
-            </div>
-        </div>
-        <div ref="awardsContainer">
-            <div class="flex gap-4 rounded-t-2xl overflow-x-auto scrollbar-none">
-                <div v-for="(value, index) in 3" :key="index" class="flex flex-col gap-2 rounded-2xl w-[300px] h-fit">
-                    <div class="flex bg-[#4b1254] rounded-2xl w-[300px] h-[160px] relative overflow-hidden">
-                        <a href="#" class="hover:bg-[#edaef777] flex justify-center items-center w-full h-full"></a>
-                        <div
-                            class="absolute text-center bg-[#28002b] !w-7 !h-7 rounded-full !bottom-2 !right-2 flex justify-center items-center">
-                            <el-icon>
-                                <CaretRight class="text-white" />
-                            </el-icon>
-                        </div>
-                    </div>
-                    <span class="text-white text-md font-bold text-wrap ">Lorem ipsum dolor sit amet,
-                        consectetur
-                        adipisicing
-                        elit.
-                        Maxime, inventore.</span>
-                </div>
-            </div>
-        </div>
+        <BaseStoriesCard v-else-if="data.isStory" :videoTag="data.videoLabel" :stories="data.videos" />
     </div>
-
+    
     <!-- 8 minute replays -->
     <div class="flex flex-col gap-5 !bg-[#28002b] rounded-2xl w-full p-4">
         <div class="flex justify-between items-center">

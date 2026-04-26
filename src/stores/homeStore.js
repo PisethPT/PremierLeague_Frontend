@@ -210,6 +210,25 @@ export const useHomeStore = defineStore("useHomeStore", {
         return error.value;
       }
     },
+
+    async getPremierLeagueGameNews() {
+      const { data, error, execute } = useFetch();
+      await execute(
+        this.apiConfig.ENDPOINTS.HOME_PAGE_ENDPOINTS
+          .GET_PREMIER_LEAGUE_GAME_NEWS,
+        "GET",
+        null,
+        null,
+        { "Content-Type": "application/json" },
+      );
+
+      if (!error.value && data.value) {
+        return JSON.parse(JSON.stringify(data.value.contents));
+      } else {
+        console.error("Fetch Error:", error.value);
+        return error.value;
+      }
+    },
   },
   getters: {},
 });

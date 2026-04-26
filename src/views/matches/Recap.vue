@@ -7,6 +7,7 @@ import
 {
     Edit,
 } from '@element-plus/icons-vue';
+import router from '@/router';
 
 const matchStore = useMatchStore();
 const route = useRoute();
@@ -63,7 +64,7 @@ onMounted(async () =>
 
 function viewMore()
 {
-    console.log('View more news clicked!');
+    router.push({ name: 'content-listing', query: { ref: 'SDP_FOOTBALL_MATCH%3A2562214'} });
 }
 </script>
 

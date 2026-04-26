@@ -6,7 +6,7 @@ import SponsorBar from '@/components/SponsorBar.vue';
 import BaseViewMoreVideosCard from '@/components/BaseViewMoreVideosCard.vue';
 
 const sponsorImage = ref('/src/assets/sponsors/9044630324637544770.png');
-const title = ref('All Videos');
+const title = ref('Related Content');
 const videoStore = useVideoStore();
 
 const allVideos = ref([]);
@@ -21,13 +21,9 @@ const loadVideos = async () =>
     if (isLoading.value) return;
 
     isLoading.value = true;
-
     try
     {
-        const [videoData] = await Promise.all([
-            videoStore.getAllVideos({ page: page.value, pageSize: 25 }),
-            new Promise(resolve => setTimeout(resolve, 1000)) // 1000ms delay
-        ]);
+        await videoStore.getAllVideos({ page: page.value, pageSize: 25 });
 
         if (videoStore.allVideos && videoStore.allVideos.length > 0)
         {
@@ -68,7 +64,11 @@ onMounted(async () =>
 
         <div class="flex flex-1 flex-col gap-12 mt-8 mx-4">
             <BaseViewMoreVideosCard :videos="allVideos" :viewMore="loadVideos" :title="''"
-                :showViewMore="allVideos.length < totalVideos" :isLoading="isLoading" viewMoreButtonTitle="View More" />
+                :showViewMore="!isLoading && allVideos.length < totalVideos" viewMoreButtonTitle="View More" />
+
+            <div v-if="isLoading" class="text-white text-center py-4 italic opacity-80">
+                Loading more videos...
+            </div>
         </div>
     </div>
 </template>

@@ -1,11 +1,15 @@
 import { defineStore } from "pinia";
-import { useApiConfig } from "./apiConfig";
+import { useApi } from "./api";
+import { useFetch } from "@/composables/useFetch";
 import axios from "axios";
+import { useApiConfig } from "./apiConfig";
 
 export const useNewsStore = defineStore("useNewsStore", {
   state: () => {
     const apiConfig = useApiConfig();
+    const api = useApi();
     return {
+      api,
       apiConfig,
       news: [],
       dailyNews: [],
@@ -16,30 +20,26 @@ export const useNewsStore = defineStore("useNewsStore", {
   getters: {},
   actions: {
     async getNews() {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          this.apiConfig.ENDPOINTS.NEWS_ENDPOINTS.GET_NEWS_ENDPOINT,
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        if (response.status === 200) {
-          this.news = [];
-          this.news = response.data.content;
-        }
-      } catch (error) {
-        if (error.response) {
-          console.error("Backend error:", error.response.data);
-        } else {
-          console.error("Request error:", error.message);
-        }
-        return error;
+      const { data, error, execute } = useFetch();
+
+      await execute(
+        this.api.ENDPOINTS.NEWS_ENDPOINTS.GET_NEWS_ALL,
+        "GET",
+        null,
+        null,
+        { "Content-Type": "application/json" },
+      );
+
+      if (!error.value && data.value) {
+        this.news = JSON.parse(JSON.stringify(data.value.contents));
+      } else {
+        console.error("Fetch Error:", error.value);
+        return error.value;
       }
     },
+
+
+  // oldest actions
     async createNews(form, fileList) {
       try {
         const formData = new FormData();

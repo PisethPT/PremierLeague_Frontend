@@ -13,3 +13,4 @@ export * from "./viewerStore";
 export * from "./selectListItemStore";
 export * from "./clubStore";
 export * from "./formationStore";
+export * from "./videoStore";

@@ -20,6 +20,7 @@ export const useMatchStore = defineStore("match", {
       matchTables: [],
       seasonSelectListItem: [],
       matchInfoDetail: null,
+      stories: [],
       matchDetails: null,
       matchRecap: null,
       matchRelatedContent: [],
@@ -64,6 +65,25 @@ export const useMatchStore = defineStore("match", {
 
       if (!error.value && data.value) {
         this.matchInfoDetail = JSON.parse(JSON.stringify(data.value.contents));
+      } else {
+        console.error("Fetch Error:", error.value);
+        return error.value;
+      }
+    },
+
+    async getMatchStory(query) {
+      const { data, error, execute } = useFetch();
+
+      await execute(
+        this.api.ENDPOINTS.MATCH_ENDPOINTS.GET_MATCHES_STORY_ENDPOINT,
+        "GET",
+        null,
+        query,
+        { "Content-Type": "application/json" },
+      );
+
+      if (!error.value && data.value) {
+        this.stories = JSON.parse(JSON.stringify(data.value.contents));
       } else {
         console.error("Fetch Error:", error.value);
         return error.value;

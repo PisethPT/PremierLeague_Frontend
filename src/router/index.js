@@ -6,6 +6,7 @@ import GuestLayoutView from "@/views/layouts/GuestLayoutView.vue";
 import AdminLayoutView from "@/views/layouts/AdminLayoutView.vue";
 
 import HomeView from "@/views/HomeView.vue";
+import UserFavoriteView from "@/views/users/UserFavoriteView.vue";
 import ClubView from "@/views/clubs/ClubView.vue";
 import PlayerView from "@/views/players/PlayersView.vue";
 import MatchView from "@/views/matches/MatchesView.vue";
@@ -368,6 +369,23 @@ const router = createRouter({
           path: "/en/video/:videoId/:videoTitle",
           name: "video-viewer",
           component: VideoViewer,
+        },
+      ],
+    },
+    {
+      path: "/en",
+      name: "user-favorite",
+      component: UserFavoriteView,
+      children: [
+        {
+          path: "/en/",
+          name: "favorite-clubs",
+          component: () => import("@/views/users/FavoriteClubView.vue"),
+        },
+        {
+          path: "/en/",
+          name: "favorite-players",
+          component: () => import("@/views/users/FavoritePlayerView.vue"),
         },
       ],
     },

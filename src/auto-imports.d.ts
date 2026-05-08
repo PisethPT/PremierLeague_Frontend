@@ -97,6 +97,7 @@ declare global {
   const useTableStore: typeof import('./stores/tableStore.js')['useTableStore']
   const useTeamStore: typeof import('./stores/teamStore.js')['useTeamStore']
   const useTemplateRef: typeof import('vue')['useTemplateRef']
+  const useUserStore: typeof import('./stores/userStore.js')['useUserStore']
   const useVideoStore: typeof import('./stores/videoStore.js')['useVideoStore']
   const useViewerStore: typeof import('./stores/viewerStore.js')['useViewerStore']
   const watch: typeof import('vue')['watch']

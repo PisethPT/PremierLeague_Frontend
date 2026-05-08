@@ -68,7 +68,7 @@ onMounted(async () =>
 
         <div class="flex flex-1 flex-col gap-12 mt-8 mx-4">
             <BaseViewMoreVideosCard :videos="allVideos" :viewMore="loadVideos" :title="''"
-                :showViewMore="allVideos.length < totalVideos" :isLoading="isLoading" viewMoreButtonTitle="View More" />
+                :showViewMore="allVideos.length < totalVideos" :isLoading="isLoading" viewMoreButtonTitle="View More" :skeletons="25" />
         </div>
     </div>
 </template>

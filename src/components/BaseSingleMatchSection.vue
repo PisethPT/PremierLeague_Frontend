@@ -40,7 +40,7 @@ const props = defineProps({
                         matchId: match.matchId,
                         matchTitle: `${match.homeClubName}-vs-${match.awayClubName}`
                     },
-                    query: { tab: 'recap' }
+                    // query: { tab: 'recap' }
                 }" class="w-full">
                     <div
                         class="flex flex-col md:flex-row md:items-center md:justify-between p-3 hover:bg-[#37003c] transition gap-2">

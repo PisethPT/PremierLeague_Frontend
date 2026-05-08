@@ -7,7 +7,7 @@ const props = defineProps({
 <template>
     <div class="flex flex-col justify-center items-center gap-1 relative scale-90 sm:scale-100">
         <router-link
-            :to="{ name: 'player-overview', params: { playerId: player.playerId, playerName: player.firstName.toString().toLowerCase() + '_' + player.lastName.toString().toLowerCase() } }"
+            :to="{ name: 'player-overview', params: { playerId: player.playerId, playerName: player.firstName?.toString().toLowerCase() + '_' + player.lastName?.toString().toLowerCase() } }"
             class="absolute rounded-xl w-15 h-19 hover:cursor-pointer hover:bg-[rgba(58,0,64,0.3)] z-[50]">
         </router-link>
 

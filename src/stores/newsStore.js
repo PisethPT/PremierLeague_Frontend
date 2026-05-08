@@ -38,8 +38,26 @@ export const useNewsStore = defineStore("useNewsStore", {
       }
     },
 
+    async getNewsByLabel(query) {
+      const { data, error, execute } = useFetch();
 
-  // oldest actions
+      await execute(
+        this.api.ENDPOINTS.NEWS_ENDPOINTS.GET_NEWS_ALL,
+        "GET",
+        null,
+        query,
+        { "Content-Type": "application/json" },
+      );
+
+      if (!error.value && data.value) {
+        return JSON.parse(JSON.stringify(data.value.contents));
+      } else {
+        console.error("Fetch Error:", error.value);
+        return error.value;
+      }
+    },
+
+    // oldest actions
     async createNews(form, fileList) {
       try {
         const formData = new FormData();
@@ -48,7 +66,7 @@ export const useNewsStore = defineStore("useNewsStore", {
         formData.append("body", form.body);
         formData.append(
           "publishedDate",
-          new Date(form.publishedDate).toISOString()
+          new Date(form.publishedDate).toISOString(),
         );
         formData.append("expireDate", new Date(form.expireDate).toISOString());
         formData.append("isActive", form.isActive);
@@ -74,7 +92,7 @@ export const useNewsStore = defineStore("useNewsStore", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
 
         console.log("Response:", response.status, response.data);
@@ -96,7 +114,7 @@ export const useNewsStore = defineStore("useNewsStore", {
         formData.append("body", form.body);
         formData.append(
           "publishedDate",
-          new Date(form.publishedDate).toISOString()
+          new Date(form.publishedDate).toISOString(),
         );
         formData.append("expireDate", new Date(form.expireDate).toISOString());
         formData.append("isActive", form.isActive);
@@ -119,7 +137,7 @@ export const useNewsStore = defineStore("useNewsStore", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
         return response.status;
       } catch (error) {
@@ -141,7 +159,7 @@ export const useNewsStore = defineStore("useNewsStore", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
         return response.status;
       } catch (error) {
@@ -163,7 +181,7 @@ export const useNewsStore = defineStore("useNewsStore", {
               Authorization: "Bearer " + token,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
         if (response.status === 200) {
           this.dailyNews = [];

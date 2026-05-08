@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted, watch } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter, RouterView } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { useUserStore } from '@/stores';
 import { useFunctionsStore } from '@/stores/function';
 import { googleSdkLoaded, decodeCredential } from 'vue3-google-login';
 import ClubNews from './ClubNews.vue';
@@ -17,18 +18,60 @@ const user = ref(null);
 const userName = ref('');
 const authStore = useAuthStore();
 const functionStore = useFunctionsStore();
+const userStore = useUserStore();
 
 const showMobile = ref(false);
 const activeIndex = ref('');
+const isPLSetting = ref(false);
+
+const info = ref([]);
+const matches = ref([]);
+const followingClubs = ref([]);
+const followingPlayers = ref([]);
 
 onMounted(() =>
 {
-    userName.value = localStorage.getItem('userName') || '';
-    authStore.checkAuth();
+    authStore.checkGoogleAuth();
+    if (authStore.isAuthenticated)
+    {
+        const storedProfile = localStorage.getItem('userProfile');
+        if (storedProfile)
+        {
+            const p = JSON.parse(storedProfile);
+            user.value = { picture: p.photoUrl };
+            userName.value = p.firstName;
+        }
+    }
+
     updateActive();
+
+    // Initialize Google SDK for auto-login/One-Tap
+    googleSdkLoaded(async (google) =>
+    {
+        google.accounts.id.initialize({
+            client_id: CLIENT_ID,
+            callback: handleGoogleResponse,
+            auto_select: true,
+        });
+
+        if (!authStore.isAuthenticated)
+        {
+            google.accounts.id.prompt();
+        }
+
+        try
+        {
+            await checkUserFavorite(localStorage.getItem("userEmail"));
+        } catch (error)
+        {
+            console.error("API returned isSuccess: false", error);
+        }
+    });
 
     document.addEventListener('click', handleClickOutside);
     document.addEventListener('keydown', handleEsc);
+
+    console.log("user from localStorage on mount:", user.value);
 });
 
 onUnmounted(() =>
@@ -39,6 +82,25 @@ onUnmounted(() =>
 
 watch(() => route.fullPath, updateActive);
 
+async function checkUserFavorite(email)
+{
+    if (email)
+    {
+        const response = await userStore.checkUserFavorite(email);
+        if (response)
+        {
+            const res = await userStore.getmyPLSettings(email);
+            info.value = JSON.parse(JSON.stringify(res.info));
+            matches.value = JSON.parse(JSON.stringify(res.matches));
+            followingClubs.value = JSON.parse(JSON.stringify(res.followingClubs));
+            followingPlayers.value = JSON.parse(JSON.stringify(res.followingPlayers));
+        } else
+        {
+            router.push({ name: 'favorite-clubs' }).catch(() => { });
+        }
+    }
+}
+
 function updateActive()
 {
     activeIndex.value = route.name || 'home';
@@ -48,6 +110,51 @@ const handleSelect = (index) =>
 {
     router.push({ name: index }).catch(() => { });
     showMobile.value = false;
+};
+
+const handleGoogleResponse = async (response) =>
+{
+    try
+    {
+        const res = await axios.post(
+            "https://localhost:44363/api/auth/signin-google",
+            { credential: response.credential }
+        );
+        if (res.data && res.data.isSuccess === true)
+        {
+            const data = res.data.contents;
+
+            localStorage.setItem('token', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
+
+            const decoded = decodeCredential(response.credential);
+
+            const profile = {
+                firstName: decoded.given_name,
+                photoUrl: decoded.picture
+            };
+            localStorage.setItem('userProfile', JSON.stringify(profile));
+            localStorage.setItem('userName', decoded.given_name);
+            localStorage.setItem('userEmail', decoded.email);
+
+            user.value = decoded;
+            userName.value = decoded.given_name;
+
+            authStore.checkGoogleAuth();
+
+            axios.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
+
+            await checkUserFavorite(decoded.email);
+
+            console.log("Success! Your account info is now in Local Storage.");
+        } else
+        {
+            console.error("API returned isSuccess: false", res.data.message);
+        }
+    } catch (error)
+    {
+        console.error("Connection error to API:", error);
+    }
 };
 
 const handleClickOutside = (e) =>
@@ -102,18 +209,10 @@ const login = () =>
     {
         google.accounts.id.initialize({
             client_id: CLIENT_ID,
-            callback: async (response) =>
-            {
-                const res = await axios.post(
-                    "https://localhost:44363/api/auth/signin-google",
-                    { credential: response.credential }
-                );
-                if (res.status === 200)
-                {
-                    user.value = decodeCredential(response.credential);
-                }
-            }
+            callback: handleGoogleResponse,
+            auto_select: false
         });
+        google.accounts.id.cancel();
         google.accounts.id.prompt();
     });
 };
@@ -121,7 +220,44 @@ const login = () =>
 const logoutGoogleAccount = () =>
 {
     user.value = null;
+    userName.value = '';
+
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userProfile');
+    localStorage.removeItem('userEmail');
+
+    if (window.google && window.google.accounts)
+    {
+        window.google.accounts.id.disableAutoSelect();
+    }
+
+    window.location.reload();
 };
+
+const getInitials = (name) =>
+{
+    console.log("Getting initials for:", name);
+    if (!name) return "";
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2)
+    {
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return parts[0].substring(0, 2).toUpperCase();
+};
+
+const handleImageError = (event) =>
+{
+    event.target.style.display = 'none';
+};
+
+function viewAllMatches()
+{
+    isPLSetting.value = false;
+    router.push({ name: 'matches-index' });
+}
 </script>
 
 <template>
@@ -168,7 +304,6 @@ const logoutGoogleAccount = () =>
         </div>
 
         <div class="flex items-center gap-2">
-            <div class="hidden lg:block text-white">{{ userName }}</div>
             <a href="https://copilot.microsoft.com/" target="_blank"
                 class="bg-[#28002b] w-10 h-10 flex justify-center items-center rounded-full cursor-pointer">
                 <img src="/src/assets/copilot-icon.png" alt="Copilot" class="w-5 h-5" />
@@ -179,15 +314,23 @@ const logoutGoogleAccount = () =>
             </div>
 
             <div v-if="user">
-                <button @click="logoutGoogleAccount" class="cursor-pointer">
-                    <img :src="user.picture" class="w-8 h-8 rounded-full" />
+                <button @click="isPLSetting = true"
+                    class="w-10 h-10 flex justify-center items-center rounded-full cursor-pointer">
+                    <!-- <img :src="user.picture" class="w-10 h-10 rounded-full" /> -->
+                    <div
+                        class="bg-gradient-to-r from-green-500 via-purple-500 to-pink-500 p-[2px] rounded-full cursor-pointer">
+                        <div class="bg-[#1e0021] w-9 h-9 flex justify-center items-center rounded-full">
+                            <span class="text-white text-sm">{{ userName
+                                ? getInitials(userName) : '' }}</span>
+                        </div>
+                    </div>
                 </button>
             </div>
 
             <button v-else @click="login"
                 class="bg-gradient-to-r from-green-500 via-purple-500 to-pink-500 p-[2px] rounded-full cursor-pointer">
                 <div class="bg-[#1e0021] px-4 h-9 flex items-center rounded-full">
-                    <span class="text-white text-[10px] sm:text-sm md:text-md lg:text-md xl:text-md">Sign in</span>
+                    <span class="text-white text-[10px] sm:text-sm md:text-sm lg:text-sm xl:text-sm">Sign in</span>
                 </div>
             </button>
 
@@ -213,6 +356,123 @@ const logoutGoogleAccount = () =>
     <main class="pt-[70px]">
         <ClubNews />
         <RouterView />
+
+        <el-drawer v-model="isPLSetting" direction="rtl" size="450px" :with-header="false"
+            class="custom-pl-drawer !bg-[#1a011d]">
+            <div
+                class="relative p-6 pt-10 rounded-b-[2rem] bg-gradient-to-br from-[#3d195d0c] via-[#1a011d] to-[#02afb89d]">
+                <button @click="isPLSetting = false"
+                    class="absolute top-4 right-4 text-white/70 hover:text-white cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+                <h2 class="text-white text-4xl font-bold mb-2">{{ info[0].hello }}</h2>
+                <div v-for="(v, i) in info" :key="i" class="flex items-center gap-2 mb-2">
+                    <img :src="v.clubCrest" class="w-5 h-5" alt="" />
+                    <span class="text-white text-sm">{{ v.favoriteClub }}</span>
+                </div>
+
+                <button
+                    class="w-full py-3 px-4 rounded-full bg-white/5 hover:bg-white/10 text-white flex items-center justify-center gap-2 mt-4 transition-all cursor-pointer">
+                    <i class="fa-solid fa-gear"></i>
+                    <span class="text-sm font-semibold">myPL Settings</span>
+                </button>
+            </div>
+
+            <div class="p-4 flex flex-col gap-4 overflow-y-auto">
+                <div v-if="matches.length > 0" class="bg-[#2b0030] rounded-2xl p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-white font-bold text-lg">Matches</h3>
+                        <button @click="viewAllMatches"
+                            class="bg-[#4a0055] text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1 cursor-pointer">
+                            View all <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div v-for="match in matches" ::key="match.matchId" class="flex flex-col gap-0 mb-2">
+                        <div class="grid grid-cols-[1fr_80px_1fr] py-2">
+                            <div class="flex justify-end items-center gap-1">
+                                <span class="text-white font-bold text-sm">{{ match.homeClubName }}</span>
+                                <div class="w-7 h-7 flex items-center justify-center overflow-hidden">
+                                    <img :src="match.homeClubCrest" @error="handleImageError"
+                                        class="w-full h-full object-contain p-0.5">
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <span v-if="match.isGameFinished === 'Ongoing'"
+                                    class="text-white text-center font-bold text-md">
+                                    {{ match.kickoffTime }}
+                                </span>
+
+                                <div v-else-if="match.isGameFinished === 'Finished'"
+                                    class="flex flex-col items-center justify-start gap-2">
+                                    <span
+                                        class="bg-[#1e0021] text-white text-md font-bold px-2 py-[2px] rounded-md text-center">
+                                        {{ match.homeClubGoal }} : {{ match.awayClubGoal }}
+                                    </span>
+                                </div>
+                                <div class="text-white/60 text-[10px] tracking-wider">{{ match.matchDate }}</div>
+                            </div>
+
+                            <div class="flex justify-start items-center gap-1">
+                                <div class="w-7 h-7 flex items-center justify-center overflow-hidden">
+                                    <img :src="match.awayClubCrest" @error="handleImageError"
+                                        class="w-full h-full object-contain p-0.5">
+                                </div>
+                                <span class="text-white font-bold text-sm">{{ match.awayClubName }}</span>
+                            </div>
+                        </div>
+
+                        <div v-if="match.isGameFinished === 'Ongoing'" class="flex justify-center">
+                            <div class="bg-white px-4 py-1 rounded-md text-black font-black text-xs">MAX</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-[#2b0030] rounded-2xl p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-white font-bold text-lg">Following</h3>
+                        <button
+                            class="bg-[#4a0055] text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1 cursor-pointer">
+                            Manage <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col gap-4">
+                        <div v-for="(club, i) in followingClubs" :key="i"
+                            class="flex items-center gap-3 cursor-pointer group">
+                            <div class="w-12 h-12 rounded-[14px] flex items-center justify-center"
+                                :style="{ backgroundColor: club.clubTheme }">
+                                <img :src="club.clubCrest" class="w-auto h-11 p-1 object-contain mx-auto" />
+                            </div>
+                            <div class="flex-1">
+                                <div class="text-white font-bold">{{ club.clubName }}</div>
+                                <div class="text-white/50 text-xs flex items-center gap-1">
+                                    <i class="fa-solid fa-star text-white text-[9px]"></i> Favourite Club
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-white"></i>
+                        </div>
+
+                        <div v-for="(player, i) in followingPlayers" :key="i"
+                            class="flex items-center gap-3 cursor-pointer group">
+                            <div class="w-12 h-12 rounded-[14px] overflow-hidden pt-1.5"
+                                :style="{ backgroundColor: player.clubTheme }">
+                                <img :src="player.photo" class="w-auto h-13 object-contain mx-auto" />
+                            </div>
+                            <div class="flex-1">
+                                <div class="text-white font-bold">{{ player.playerName }}</div>
+                                <div class="text-white/50 text-xs flex items-center gap-1">
+                                    <img :src="player.clubCrest" class="w-3 h-3" /> {{ player.clubName }}
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-white"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </el-drawer>
     </main>
 </template>
 
@@ -250,5 +510,73 @@ const logoutGoogleAccount = () =>
     height: 40px;
     display: flex;
     align-items: center;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+}
+
+.btn-logout {
+    margin-left: 15px;
+    background: #3d195d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.initials-avatar {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 50%;
+    background-color: transparent;
+    position: relative;
+    border: 2px solid transparent;
+    /* background-image: linear-gradient(#1e0021, #1e0021),
+        linear-gradient(to right, #00ffcc, #ff0066, #ffcc00); */
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+}
+
+.custom-pl-drawer {
+    background-color: #1a011d !important;
+}
+
+.custom-pl-drawer .el-drawer__body {
+    padding: 0 !important;
+    background-color: #1a011d;
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-pl-drawer .el-drawer__body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-pl-drawer .el-drawer__body::-webkit-scrollbar-thumb {
+    background: #4a0055;
+    border-radius: 10px;
 }
 </style>

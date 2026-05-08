@@ -88,7 +88,8 @@ export const useApi = defineStore("useApi", () => {
   };
 
   const VIDEO_ENDPOINTS = {
-    GET_VIDEOS_LATEST_VIDEO: BASE_URL + API_URL + "/video/get-video-latestvideos",
+    GET_VIDEOS_LATEST_VIDEO:
+      BASE_URL + API_URL + "/video/get-video-latestvideos",
     GET_VIDEOS_SERIES: BASE_URL + API_URL + "/video/get-video-series",
     GET_VIDEOS_THEARCHIVE: BASE_URL + API_URL + "/video/get-video-thearchive",
     GET_VIDEOS_ALL: BASE_URL + API_URL + "/video/get-video-all",
@@ -99,7 +100,19 @@ export const useApi = defineStore("useApi", () => {
     GET_NEWS_ALL: BASE_URL + API_URL + "/news/get-news-all",
   };
 
+  const USER_ENDPOINTS = {
+    GET_FAVORITE_CLUBS: BASE_URL + "/api/auth/get-fav-clubs",
+    GET_FAVORITE_PLAYERS: BASE_URL + "/api/auth/get-fav-players",
+    GET_FAVORITE_SELECTED_CLUBS: BASE_URL + "/api/auth/get-fav-selectedclub",
+    SAVE_FAVORITE_SELECTED_CLUBS: BASE_URL + "/api/auth/fav-saveselectedclubs",
+    SAVE_FAVORITE_SELECTED_PLAYERS:
+      BASE_URL + "/api/auth/fav-saveselectedplayers",
+    CHECK_USER_FAVORITE: BASE_URL + "/api/auth/fav-checkuserfavorite",
+    GET_myPLSETTINGS: BASE_URL + "/api/auth/get-fav-myPLSettings",
+  };
+
   const ENDPOINTS = {
+    USER_ENDPOINTS,
     SELECT_LIST_ITEMS_ENDPOINTS,
     HOME_PAGE_ENDPOINTS,
     VIEWER_PAGE_ENDPOINTS,

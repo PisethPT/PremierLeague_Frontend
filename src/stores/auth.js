@@ -5,6 +5,7 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { useApiConfig } from "@/stores/apiConfig";
 import { ElMessage } from "element-plus";
+import { decodeCredential } from "vue3-google-login";
 
 export const useAuthStore = defineStore("auth", () => {
   const router = useRouter();
@@ -12,6 +13,61 @@ export const useAuthStore = defineStore("auth", () => {
   const userName = ref("");
   const userId = ref("");
   const isLogin = ref(false);
+
+  const user = ref(null);
+  const token = ref(localStorage.getItem("token") || null);
+  const isAuthenticated = ref(false);
+
+  const checkGoogleAuth = () => {
+    const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("userProfile");
+
+    if (storedToken) {
+      token.value = storedToken;
+      isAuthenticated.value = true;
+
+      if (storedUser) {
+        user.value = JSON.parse(storedUser);
+      }
+    } else {
+      clearAuth();
+    }
+  };
+
+  // Sets the state after a successful API login from SigninGoogle
+
+  const setAuth = (apiResponseContents, googleCredential) => {
+    const decoded = decodeCredential(googleCredential);
+
+    // Map DTO from your C# API and Google Payload
+    const profile = {
+      userId: apiResponseContents.userId,
+      email: decoded.email,
+      firstName: decoded.given_name,
+      lastName: decoded.family_name,
+      photoUrl: decoded.picture,
+    };
+
+    user.value = profile;
+    token.value = apiResponseContents.accessToken;
+    isAuthenticated.value = true;
+
+    // Persistence
+    localStorage.setItem("token", apiResponseContents.accessToken);
+    localStorage.setItem("refreshToken", apiResponseContents.refreshToken);
+    localStorage.setItem("userName", profile.firstName);
+    localStorage.setItem("userProfile", JSON.stringify(profile));
+  };
+
+  const clearAuth = () => {
+    user.value = null;
+    token.value = null;
+    isAuthenticated.value = false;
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userProfile");
+  };
 
   function parseJwt(token) {
     const base64Payload = token.split(".")[1];
@@ -38,7 +94,7 @@ export const useAuthStore = defineStore("auth", () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       const token = response.data.token;
@@ -82,7 +138,7 @@ export const useAuthStore = defineStore("auth", () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       if (response.status === 200) {
@@ -138,5 +194,11 @@ export const useAuthStore = defineStore("auth", () => {
     checkAuth,
     userName,
     isLogin,
+    user,
+    token,
+    isAuthenticated,
+    checkGoogleAuth,
+    setAuth,
+    clearAuth,
   };
 });

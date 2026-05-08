@@ -33,7 +33,7 @@ function onLogin()
             authStore.login(loginForm.value.email, loginForm.value.password);
         } else
         {
-            console.log('❌ Validation failed');
+            console.log('Validation failed');
             return false;
         }
     });

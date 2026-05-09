@@ -3,10 +3,10 @@ import { ref, onMounted } from 'vue';
 import SponsorBar from '@/components/SponsorBar.vue';
 import { useRoute } from 'vue-router';
 import { useViewerStore } from '@/stores';
-
+import sponsorImage from '@/assets/sponsors/14952318241031863229.jpg';
 const route = useRoute();
 const viewerStore = useViewerStore();
-const sponsorImage = ref('/src/assets/sponsors/14952318241031863229.jpg');
+
 const contentId = ref(null);
 const contentTitle = ref(null);
 const contentType = ref('video');

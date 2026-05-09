@@ -8,6 +8,9 @@ import
     Edit,
 } from '@element-plus/icons-vue';
 import router from '@/router';
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 
 const matchStore = useMatchStore();
 const route = useRoute();
@@ -64,12 +67,12 @@ onMounted(async () =>
 
 function viewMore()
 {
-    router.push({ name: 'content-listing', query: { ref: 'SDP_FOOTBALL_MATCH%3A2562214'} });
+    router.push({ name: 'content-listing', query: { ref: 'SDP_FOOTBALL_MATCH%3A2562214' } });
 }
 </script>
 
 <template>
-    <div class="flex flex-col lg:flex-row gap-4">
+    <div v-if="recapData?.content" class="flex flex-col lg:flex-row gap-4">
         <div class="flex flex-col gap-4 lg:w-2/3">
             <div class="bg-[#28002b] flex flex-col rounded-2xl w-full h-60 p-4">
                 <div class="flex justify-between mb-2">
@@ -89,7 +92,8 @@ function viewMore()
                     <div class="flex justify-start items-center gap-3">
                         <div class="flex justify-center items-end rounded-xl w-[40px] h-[40px] p-1 overflow-hidden"
                             :style="{ backgroundColor: recapData?.homeClubTheme || '#37003c' }">
-                            <img :src="recapData?.homeClubCrest" class="w-full h-full object-contain">
+                            <img :src="apiConfig.CLUB_DIR + recapData?.homeClubCrest"
+                                class="w-full h-full object-contain">
                         </div>
                         <span class="font-bold text-md text-white/50">{{ recapData?.homeClubName }}</span>
                     </div>
@@ -106,7 +110,8 @@ function viewMore()
                     <div class="flex justify-start items-center gap-3">
                         <div class="flex justify-center items-end rounded-xl w-[40px] h-[40px] p-1 overflow-hidden"
                             :style="{ backgroundColor: recapData?.awayClubTheme || '#37003c' }">
-                            <img :src="recapData?.awayClubCrest" class="w-full h-full object-contain">
+                            <img :src="apiConfig.CLUB_DIR + recapData?.awayClubCrest"
+                                class="w-full h-full object-contain">
                         </div>
                         <span class="font-bold text-md text-white/50">{{ recapData?.awayClubName }}</span>
                     </div>
@@ -121,6 +126,7 @@ function viewMore()
                 </div>
             </div>
         </div>
+
         <div class="flex flex-col gap-1 rounded-2xl pt-4 px-4 lg:w-1/3 h-80 lg:h-auto overflow-hidden"
             :style="{ backgroundColor: recapData?.isHomeClubPlayerManOfTheMatch ? recapData?.homeClubTheme : recapData?.awayClubTheme }">
             <div class="flex flex-col gap-0">
@@ -134,7 +140,7 @@ function viewMore()
             </div>
             <div class="flex justify-between items-end gap-1 h-full">
                 <span class="text-white text-md font-bold mb-4">Player of the Match</span>
-                <img :src="recapData?.photo" class="w-auto h-56 object-contain cursor-pointer" />
+                <img :src="apiConfig.PLAYER_DIR + recapData?.photo" class="w-auto h-56 object-contain cursor-pointer" />
             </div>
         </div>
     </div>

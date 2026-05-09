@@ -1,5 +1,7 @@
 <script setup>
 import { Refresh } from '@element-plus/icons-vue';
+
+import copilot from '@/assets/copilot-icon.png';
 </script>
 
 <template>
@@ -13,7 +15,7 @@ import { Refresh } from '@element-plus/icons-vue';
             </h1>
 
             <div class="flex items-center gap-2 mt-2">
-                <img src="/src/assets/copilot-icon.png" alt="Copilot" class="w-5 h-5" />
+                <img :src="copilot" alt="Copilot" class="w-5 h-5" />
                 <span class="text-gray-300 text-sm">Powered by Copilot</span>
             </div>
         </div>
@@ -51,7 +53,7 @@ import { Refresh } from '@element-plus/icons-vue';
         <div class="relative max-w-md">
             <input type="text" placeholder="Type your question here"
                 class="w-full text-white border border-white/20 placeholder-gray-400 rounded-xl px-12 py-3 outline-none focus:ring focus:ring-purple-500" />
-            <img src="/src/assets/copilot-icon.png" class="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6" />
+            <img :src="copilot" class="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6" />
         </div>
     </div>
 </template>

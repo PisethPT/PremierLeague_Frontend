@@ -9,7 +9,11 @@ import BaseClubNextMatchCard from '@/components/BaseClubNextMatchCard.vue';
 import BaseTeamForm from '@/components/BaseTeamForm.vue';
 import ClubNewsSection from '@/components/ClubNewsSection.vue';
 import BaseLeagueTable from '@/components/BaseLeagueTable.vue';
+import { useApi } from '@/stores/api';
 
+import sponsorImage from '@/assets/sponsors/PL2526-ClubKits-Referral-Promos-_0000s_0000_ARS.webp';
+
+const apiConfig = useApi();
 const route = useRoute();
 const clubStore = useClubStore();
 const formationStore = useFormation();
@@ -157,7 +161,7 @@ const handleSeeAll = () =>
                 </div>
 
                 <div class="flex flex-row items-center gap-2 w-full justify-start">
-                    <img v-if="clubDetails" :src="clubDetails.clubCrest" class="h-5 w-auto" />
+                    <img v-if="clubDetails" :src="apiConfig.CLUB_DIR + clubDetails.clubCrest" class="h-5 w-auto" />
                     <span class="text-white font-semibold text-xs truncate">
                         {{ clubDetails?.clubName }}
                     </span>
@@ -197,7 +201,7 @@ const handleSeeAll = () =>
                             <div class="flex flex-row items-center w-2/5 justify-end gap-2">
                                 <span class="text-white font-semibold text-xs text-center truncate">{{
                                     lastMatch.homeClubName }}</span>
-                                <img :src="lastMatch.homeClubCrest" class="h-5 w-5" />
+                                <img :src="apiConfig.CLUB_DIR + lastMatch.homeClubCrest" class="h-5 w-5" />
                             </div>
                             <div class="flex flex-col justify-center items-center gap-1 w-1/5">
                                 <div class="bg-[#1e0021] h-6 w-auto flex justify-center items-center px-3 rounded-sm">
@@ -207,7 +211,7 @@ const handleSeeAll = () =>
                                 <span class="text-gray-300 text-xs font-bold">FT</span>
                             </div>
                             <div class="flex flex-row items-center gap-2 w-2/5 justify-start">
-                                <img :src="lastMatch.awayClubCrest" class="h-5 w-auto" />
+                                <img :src="apiConfig.CLUB_DIR + lastMatch.awayClubCrest" class="h-5 w-auto" />
                                 <span class="text-white font-semibold text-xs text-center truncate">{{
                                     lastMatch.awayClubName }}</span>
                             </div>
@@ -215,7 +219,7 @@ const handleSeeAll = () =>
 
                         <div class="flex justify-center items-center w-full max-w-xl mx-auto">
                             <span class="text-gray-400 text-xs">{{ lastMatch.matchweek }} • {{ lastMatch.matchDate
-                            }}</span>
+                                }}</span>
                         </div>
                     </router-link>
 
@@ -288,12 +292,11 @@ const handleSeeAll = () =>
         <div class="flex flex-1 flex-col gap-4">
             <div class="flex gap-4 px-3 mt-4 mb-10">
                 <div class="flex flex-wrap justify-center gap-4 h-[110px] flex-1">
-                    <img class=" rounded-2xl w-full xl:w-[75%]"
-                        src="/src/assets/sponsors/PL2526-ClubKits-Referral-Promos-_0000s_0000_ARS.webp" alt="" />
+                    <img class=" rounded-2xl w-full xl:w-[75%]" :src="sponsorImage" alt="" />
                 </div>
             </div>
 
-            <div class="flex gap-4 px-3 pt-4">
+            <!-- <div class="flex gap-4 px-3 pt-4">
                 <div class="flex flex-wrap gap-4 h-fit flex-1 overflow-hidden">
                     <div class="flex justify-between items-center w-full">
                         <span class="font-bold text-md text-white">Top Performers</span>
@@ -306,6 +309,7 @@ const handleSeeAll = () =>
                         </button>
                     </div>
 
+                    
                     <div class="flex gap-4 w-full h-full overflow-x-auto custom-scrollbar pb-1">
                         <div class="flex flex-col !bg-[#28002b] rounded-2xl h-auto flex-1 min-w-[370px] p-4 gap-3">
                             <span class="font-bold text-md text-white">Top Goal Scorer<el-icon>
@@ -362,8 +366,10 @@ const handleSeeAll = () =>
                             </div>
                         </div>
                     </div>
+
+
                 </div>
-            </div>
+            </div> -->
 
             <div v-if="clubNews.length > 0" class="flex gap-4 px-3 py-4">
                 <ClubNewsSection :club-details="clubDetails" :news-items="clubNews" title="From the Clubs"

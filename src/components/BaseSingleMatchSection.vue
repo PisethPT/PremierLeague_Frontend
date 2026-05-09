@@ -1,6 +1,8 @@
 <script setup>
 import { defineProps } from 'vue';
+import { useApi } from '@/stores/api';
 
+const apiConfig = useApi();
 const props = defineProps({
     matchDate: {
         type: String,
@@ -57,7 +59,7 @@ const props = defineProps({
                                     :title="match.homeClubName">
                                     {{ match.homeClubName }}
                                 </span>
-                                <img :src="match.homeClubCrest" :alt="match.homeClubName"
+                                <img :src="apiConfig.CLUB_DIR + match.homeClubCrest" :alt="match.homeClubName"
                                     class="w-7 h-7 object-contain" />
                             </div>
                             <span v-if="match.kickoffStatus === 'Upcoming'"
@@ -71,7 +73,7 @@ const props = defineProps({
                                 </span>
                             </div>
                             <div class="flex justify-start items-center gap-2">
-                                <img :src="match.awayClubCrest" :alt="match.awayClubName"
+                                <img :src="apiConfig.CLUB_DIR + match.awayClubCrest" :alt="match.awayClubName"
                                     class="w-7 h-7 object-contain" />
                                 <span
                                     class="text-white text-xs xl:text-sm font-bold truncate max-w-[100px] sm:max-w-[140px]"

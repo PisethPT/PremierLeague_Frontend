@@ -6,7 +6,9 @@ import BaseClubNextMatchCard from '@/components/BaseClubNextMatchCard.vue';
 import BaseTeamForm from '@/components/BaseTeamForm.vue';
 import ClubNewsSection from '@/components/ClubNewsSection.vue';
 import { ArrowRightBold, ArrowLeft, ArrowRight } from '@element-plus/icons-vue';
+import { useApi } from '@/stores/api';
 
+const apiConfig = useApi();
 const route = useRoute();
 const playerStore = usePlayerStore();
 const clubStore = useClubStore();
@@ -137,7 +139,7 @@ const checkScroll = () =>
                 </div>
 
                 <div class="flex flex-row items-center gap-2 w-full justify-start">
-                    <img v-if="clubDetails" :src="clubDetails.clubCrest" class="h-5 w-auto" />
+                    <img v-if="clubDetails" :src="apiConfig.CLUB_DIR + clubDetails.clubCrest" class="h-5 w-auto" />
                     <span class="text-white font-semibold text-xs truncate">
                         {{ clubDetails?.clubName }}
                     </span>
@@ -179,7 +181,8 @@ const checkScroll = () =>
                     class="flex gap-2 bg-[#28002b] rounded-2xl p-3 w-[320px] h-18">
                     <div class="rounded-[14px] w-12 h-12 overflow-hidden"
                         :style="{ backgroundColor: player?.clubTheme }">
-                        <img :src="player?.playerPhoto" class="w-auto h-12 object-contain mx-auto pt-1" />
+                        <img :src="apiConfig.PLAYER_DIR + player?.playerPhoto"
+                            class="w-auto h-12 object-contain mx-auto pt-1" />
                     </div>
                     <div class="flex flex-col justify-center items-start gap-1">
                         <RouterLink

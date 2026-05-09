@@ -2,9 +2,11 @@
 import { ref } from 'vue';
 import { User, Lock } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth';
+import logo from '@/assets/pl-main-logo.png';
 
 const authStore = useAuthStore();
 const registerUrl = ref('/register');
+
 
 // Create Element Plus Form Model
 const loginForm = ref({
@@ -44,7 +46,7 @@ function onLogin()
     <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#28002b] to-[#330d36]">
         <div class="bg-white/90 rounded-md shadow-2xl p-8 w-full max-w-md">
             <div class="text-center mb-6">
-                <img src="/src/assets/pl-main-logo.png" alt="EPL Logo" class="mx-auto h-16 mb-4" />
+                <img :src="logo" alt="EPL Logo" class="mx-auto h-16 mb-4" />
                 <h1
                     class="text-3xl font-bold bg-gradient-to-r from-[#37003c] to-[#1e0021] bg-clip-text text-transparent">
                     English Premier League Login

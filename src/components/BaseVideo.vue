@@ -2,6 +2,9 @@
 import { defineProps, defineEmits, ref, onMounted, nextTick } from 'vue';
 import { ArrowRight, ArrowLeft, CaretRight } from '@element-plus/icons-vue';
 import router from '@/router';
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 
 const emits = defineEmits(['viewAll']);
 
@@ -81,7 +84,7 @@ onMounted(async () =>
                     </button>
                 </div>
 
-                <button v-if="props.isAllButton && props.videos.length > 0" @click="router.push({ name: props.action})"
+                <button v-if="props.isAllButton && props.videos.length > 0" @click="router.push({ name: props.action })"
                     class="flex items-center rounded-full bg-[#3e003f] text-xs text-white h-8 px-4 hover:underline cursor-pointer whitespace-nowrap">
                     {{ props.allButtonTitle }}
                     <el-icon class="ml-1">
@@ -131,7 +134,7 @@ onMounted(async () =>
                         </span>
                     </div>
                 </div>
-            </div>  
+            </div>
         </div>
 
         <div v-else class="w-full flex justify-center items-center py-10">

@@ -1,7 +1,9 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue';
 import { Plus } from '@element-plus/icons-vue';
+import { useApi } from '@/stores/api';
 
+const apiConfig = useApi();
 const emits = defineEmits(['viewMore']);
 const props = defineProps({
     title: { type: String, required: false, default: '' },
@@ -10,8 +12,8 @@ const props = defineProps({
         required: true,
         default: () => []
     },
-    isLoading: { type: Boolean, default: false }, // Critical for pagination feedback
-    showViewMore: { type: Boolean, default: false }, // Controls button visibility
+    isLoading: { type: Boolean, default: false },
+    showViewMore: { type: Boolean, default: false },
     viewMore: { type: Function, required: false, default: () => { } },
     viewMoreButtonTitle: { type: String, required: false, default: 'View more' },
     classModify: {
@@ -47,8 +49,8 @@ const handleImageError = (event) =>
                 class="flex flex-col gap-2 rounded-2xl h-full group">
 
                 <div class="relative bg-[#4b1254] rounded-2xl h-[205px] overflow-hidden shimmer-bg">
-                    <img v-if="newsItem.thumbnail" :src="newsItem.thumbnail" @error="handleImageError"
-                        class="absolute inset-0 w-full h-full object-cover z-10" />
+                    <img v-if="newsItem.thumbnail" :src="apiConfig.NEWS_DIR + newsItem.thumbnail"
+                        @error="handleImageError" class="absolute inset-0 w-full h-full object-cover z-10" />
 
                     <router-link
                         :to="{ name: 'news-viewer', params: { newsId: newsItem.newsId, newsTitle: formatSlug(newsItem.title) } }"

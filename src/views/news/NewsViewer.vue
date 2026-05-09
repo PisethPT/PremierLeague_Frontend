@@ -4,6 +4,11 @@ import SponsorBar from '@/components/SponsorBar.vue';
 import { useRoute } from 'vue-router';
 import { useViewerStore } from '@/stores';
 import BaseNewsMiniCard from '@/components/BaseNewsMiniCard.vue';
+import sponsorImage from '@/assets/sponsors/14952318241031863229.jpg';
+
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 
 const route = useRoute();
 const viewerStore = useViewerStore();
@@ -14,7 +19,6 @@ const isPlaying = ref(false);
 const isMuted = ref(true);
 const progress = ref(0);
 
-const sponsorImage = ref('/src/assets/sponsors/14952318241031863229.jpg');
 
 const newsItem = ref({
     title: '',
@@ -184,7 +188,8 @@ onUnmounted(() =>
                             <template v-if="newsItem.isVideo">
 
                                 <div v-if="isVideoLoading" class="absolute inset-0 z-20">
-                                    <img :src="newsItem.thumbnail" class="w-full h-full object-cover" />
+                                    <img :src="apiConfig.NEWS_DIR + newsItem.thumbnail"
+                                        class="w-full h-full object-cover" />
                                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
                                         <div
                                             class="animate-spin rounded-full h-10 w-10 border-4 border-purple-500 border-t-transparent">
@@ -228,7 +233,8 @@ onUnmounted(() =>
                             </template>
 
                             <template v-else>
-                                <img :src="newsItem.thumbnail" class="absolute inset-0 w-full h-full object-cover" />
+                                <img :src="apiConfig.NEWS_DIR + newsItem.thumbnail"
+                                    class="absolute inset-0 w-full h-full object-cover" />
                             </template>
 
                         </div>

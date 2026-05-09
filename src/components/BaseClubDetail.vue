@@ -1,6 +1,9 @@
 <script setup>
 import { defineProps } from 'vue';
 import { Edit } from '@element-plus/icons-vue';
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 
 const props = defineProps({
     club: {
@@ -36,7 +39,7 @@ const props = defineProps({
         :style="{ backgroundColor: club.clubTheme }">
         <div class="flex justify-start flex-col items-start gap-1">
             <div class="w-auto">
-                <img :src="club.clubCrest" class="!w-auto !h-14 mx-auto" />
+                <img :src="apiConfig.CLUB_DIR + club.clubCrest" class="!w-auto !h-14 mx-auto" />
             </div>
             <div class="text-start">
                 <h1 class="md:text-4xl text-2xl font-bold"

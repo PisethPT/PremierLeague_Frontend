@@ -1,11 +1,13 @@
 <script setup>
 import { ref, defineProps } from 'vue';
 import { Edit } from '@element-plus/icons-vue';
+import { useApi } from '@/stores/api';
 
+const apiConfig = useApi();
 const props = defineProps({
     sponsorImage: {
         type: String,
-        default: '/src/assets/sponsors/unmissable.webp'
+        default: '/sponsors/unmissable.webp'
     },
     rounded: {
         type: Boolean,

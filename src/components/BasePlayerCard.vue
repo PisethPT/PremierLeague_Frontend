@@ -4,9 +4,10 @@ import
 {
     ArrowRightBold
 } from '@element-plus/icons-vue'
+import { useApi } from '@/stores/api';
 
-const placeholder = ref("/src/assets/resources/placeholder.png");
-
+import placeholder from '@/assets/resources/placeholder.png';
+const apiConfig = useApi();
 const props = defineProps({
     player: {
         type: Object,
@@ -27,9 +28,8 @@ const props = defineProps({
 
 <template>
     <div class="flex items-center gap-2 w-1/2">
-        <div class="rounded-[14px] min-w-12 min-h-12 overflow-hidden"
-            :style="{ backgroundColor: player.clubTheme }">
-            <img :src="player?.playerPhoto" :alt="player?.playerPhoto" @error="placeholder"
+        <div class="rounded-[14px] min-w-12 min-h-12 overflow-hidden" :style="{ backgroundColor: player.clubTheme }">
+            <img :src="apiConfig.PLAYER_DIR + player?.playerPhoto" :alt="player?.playerPhoto" @error="placeholder"
                 class="w-12 h-12 object-contain mx-auto pt-1" />
         </div>
         <RouterLink class="flex gap-2 items-center w-full"

@@ -1,8 +1,8 @@
 <script setup>
 import { defineProps } from 'vue';
-import { useApiConfig } from '@/stores/apiConfig';
+import { useApi } from '@/stores/api';
 
-const apiConfig = useApiConfig();
+const apiConfig = useApi();
 const props = defineProps({
     matchInfo: {
         type: Object,

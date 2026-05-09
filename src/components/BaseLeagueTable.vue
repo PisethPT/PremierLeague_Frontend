@@ -1,11 +1,11 @@
 <script setup>
 import { computed } from 'vue';
 import
-    {
-        ArrowUp,
-        ArrowDown,
-        Minus,
-    } from '@element-plus/icons-vue';
+{
+    ArrowUp,
+    ArrowDown,
+    Minus,
+} from '@element-plus/icons-vue';
 
 const props = defineProps({
     data: {
@@ -25,6 +25,10 @@ const props = defineProps({
         default: null,
     },
 });
+
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 const statsGridStyle = computed(() =>
 {
     const widths = {
@@ -93,7 +97,7 @@ const isSelected = (id) => Number(id) === Number(props.selectedClubId);
 
                 <div class="sticky left-[90px] z-10 p-3 font-bold flex items-center gap-2 whitespace-nowrap w-fit transition"
                     :class="[isSelected(row.clubId) ? 'bg-[#3a0040]' : 'bg-[#28002b] group-hover:bg-[#3a0040]']">
-                    <img :src="row.clubCrest" class="w-8 h-8 object-contain" alt="crest" />
+                    <img :src="apiConfig.CLUB_DIR + row.clubCrest" class="w-8 h-8 object-contain" alt="crest" />
                     <router-link
                         :to="{ name: 'clubs-overview', params: { clubId: row.clubId, clubName: formatUrl(row.clubName) } }"
                         class="text-[17px] font-bold cursor-pointer hover:underline">{{ row.clubName }}</router-link>
@@ -119,7 +123,8 @@ const isSelected = (id) => Number(id) === Number(props.selectedClubId);
                     <div v-if="showCols.points" class="text-center font-bold text-md">{{ row.points }}</div>
 
                     <div v-if="showCols.next" class="flex items-center justify-center">
-                        <img v-if="row.next" :src="row.next" class="w-8 h-8 object-contain" alt="next match" />
+                        <img v-if="row.next" :src="apiConfig.CLUB_DIR + row.next" class="w-8 h-8 object-contain"
+                            alt="next match" />
                     </div>
                 </div>
 

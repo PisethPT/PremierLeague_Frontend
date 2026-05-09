@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from 'vue';
 import { CaretRight } from '@element-plus/icons-vue';
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 
 const props = defineProps({
     title: { type: String, required: true },

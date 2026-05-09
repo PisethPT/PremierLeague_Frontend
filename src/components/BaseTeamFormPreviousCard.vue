@@ -1,8 +1,8 @@
 <script setup>
 import { ref, defineProps } from 'vue';
-import { useApiConfig } from '@/stores/apiConfig';
+import { useApi } from '@/stores/api';
 
-const apiConfig = useApiConfig();
+const apiConfig = useApi();
 const props = defineProps({
     previous: {
         type: Object,
@@ -27,7 +27,7 @@ const props = defineProps({
 <template>
     <div class="flex justify-center items-center flex-col rounded-sm w-25 gap-1">
         <span class="text-gray-500 font-bold text-[10px] text-center">MW {{ previous.matchWeek }}</span>
-        <img :src="previous.otherClub ? apiConfig.TEAM_LOGOS_DIR + previous.otherClub?.clubCrest : ''"
+        <img :src="previous.otherClub ? apiConfig.CLUB_DIR + previous.otherClub?.clubCrest : ''"
             :alt="previous.otherClub?.name" class="h-10 w-auto" />
         <span class="text-gray-500 font-bold text-[10px]  text-center">{{ previous.otherClub?.shortName }} ({{
             previous.isHomeClub ? 'H' : 'A' }})</span>

@@ -12,7 +12,7 @@ const isMuted = ref(true);
 const isPausedMap = ref({});
 const likedMap = ref({});
 const storyRefs = ref([]);
-const progressMap = ref({}); // Track actual 0-100 progress per story
+const progressMap = ref({});
 let observer = null;
 let progressInterval = null;
 
@@ -36,7 +36,7 @@ const getEmbedUrl = (url) =>
     return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&origin=${window.location.origin}`;
 };
 
-// FIX: Added missing toggleLike function
+
 const toggleLike = (id) =>
 {
     likedMap.value[id] = !likedMap.value[id];
@@ -45,7 +45,6 @@ const toggleLike = (id) =>
 const sendCommand = (iframe, func, args = []) =>
 {
     if (!iframe || !iframe.contentWindow) return;
-    // We wrap in a try-catch to prevent console noise during loads
     try
     {
         iframe.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*");
@@ -78,21 +77,18 @@ const toggleMute = () =>
     });
 };
 
-// TIMELINE LOGIC: Poll the YouTube Player for current time
 const startProgressTracking = () =>
 {
     progressInterval = setInterval(() =>
     {
         document.querySelectorAll("iframe").forEach(iframe =>
         {
-            // Ask the iframe for its info
             iframe.contentWindow.postMessage(JSON.stringify({ event: "listening" }), "*");
             iframe.contentWindow.postMessage(JSON.stringify({ event: "command", func: "getVideoLoadedFraction" }), "*");
         });
     }, 500);
 };
 
-// Listen for messages BACK from YouTube
 const handleYoutubeMessages = (event) =>
 {
     try
@@ -100,7 +96,6 @@ const handleYoutubeMessages = (event) =>
         const data = JSON.parse(event.data);
         const iframes = document.querySelectorAll("iframe");
 
-        // Find which iframe sent this message
         const targetIframe = Array.from(iframes).find(f => f.contentWindow === event.source);
         if (!targetIframe) return;
 
@@ -113,7 +108,6 @@ const handleYoutubeMessages = (event) =>
                 const percent = (data.info.currentTime / data.info.duration) * 100;
                 progressMap.value[storyId] = percent;
             }
-            // Update paused state based on actual player state (2 = paused, 1 = playing, 3 = buffering)
             if (data.info.playerState === 2) isPausedMap.value[storyId] = true;
             if (data.info.playerState === 1) isPausedMap.value[storyId] = false;
         }
@@ -146,7 +140,7 @@ onMounted(async () =>
             const storyId = entry.target.dataset.id;
             if (entry.isIntersecting)
             {
-                setTimeout(() => sendCommand(iframe, "playVideo"), 500); // Small delay to prevent API error
+                setTimeout(() => sendCommand(iframe, "playVideo"), 500);
                 isPausedMap.value[storyId] = false;
             } else
             {

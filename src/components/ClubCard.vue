@@ -7,7 +7,9 @@ import
     Edit,
     Plus,
 } from '@element-plus/icons-vue'
+import { useApi } from '@/stores/api';
 
+const apiConfig = useApi();
 const props = defineProps({
     club: {
         type: Object,
@@ -30,13 +32,14 @@ const props = defineProps({
         <div class="flex items-center gap-4">
             <div class="flex justify-center items-center rounded-[14px] mt-2 px-1 w-14 h-12"
                 :style="{ backgroundColor: club.clubTheme }">
-                <img :src="club.clubCrest" alt="Club Crest"
+                <img :src="apiConfig.CLUB_DIR + club.clubCrest" alt="Club Crest"
                     class="w-auto h-10 object-contain mx-auto" />
             </div>
             <div class="flex justify-between items-center w-full">
                 <RouterLink
                     :to="{ name: 'clubs-overview', params: { clubId: club.clubId, clubName: club.clubName.toString().toLowerCase().replace(/\s+/g, '-') } }">
-                    <h3 class="text-lg font-bold text-center text-white text-wrap hover:underline">{{ club.clubName }}</h3>
+                    <h3 class="text-lg font-bold text-center text-white text-wrap hover:underline">{{ club.clubName }}
+                    </h3>
                 </RouterLink>
                 <RouterLink
                     :to="{ name: 'clubs-overview', params: { clubId: club.clubId, clubName: club.clubName.toString().toLowerCase().replace(/\s+/g, '-') } }">

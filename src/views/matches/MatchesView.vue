@@ -11,10 +11,12 @@ import SponsorBar from '@/components/SponsorBar.vue';
 import BaseFilter from '@/components/BaseFilter.vue';
 import { useRoute } from 'vue-router';
 
+import sponsorImage from '@/assets/sponsors/unmissable.webp';
+import others from '@/assets/others/PUMA-ball-lead-image.webp';
+
 const matchStore = useMatchStore();
 const route = useRoute();
 const title = ref('Matches');
-const sponsorImage = ref('/src/assets/sponsors/unmissable.webp');
 const filters = ref([
     {
         id: 1,
@@ -106,7 +108,7 @@ const loadData = async (currentMatchWeek) =>
     </div>
 
     <div class="bg-[#28002b] py-4 mx-3 my-6 rounded-2xl h-fit">
-    <BaseMatchSection v-for="match in matches" :key="match.matchDate" :matchDate="match.matchDate"
+        <BaseMatchSection v-for="match in matches" :key="match.matchDate" :matchDate="match.matchDate"
             :matches="match.matches" />
     </div>
 
@@ -117,8 +119,7 @@ const loadData = async (currentMatchWeek) =>
                 <p class="text-sm text-gray-400">Fixtures</p>
             </div>
             <a href="#">
-                <img src="/src/assets/others/PUMA-ball-lead-image.webp" alt=""
-                    class="w-[195px] rounded-2xl object-contain" />
+                <img :src="others" alt="" class="w-[195px] rounded-2xl object-contain" />
             </a>
         </div>
     </div>

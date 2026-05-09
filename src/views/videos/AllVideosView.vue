@@ -4,8 +4,8 @@ import { useVideoStore } from '@/stores';
 import PageTitleBase from '@/components/PageTitleBase.vue';
 import SponsorBar from '@/components/SponsorBar.vue';
 import BaseViewMoreVideosCard from '@/components/BaseViewMoreVideosCard.vue';
+import sponsorImage from '@/assets/sponsors/9044630324637544770.png';
 
-const sponsorImage = ref('/src/assets/sponsors/9044630324637544770.png');
 const title = ref('All Videos');
 const videoStore = useVideoStore();
 
@@ -68,7 +68,8 @@ onMounted(async () =>
 
         <div class="flex flex-1 flex-col gap-12 mt-8 mx-4">
             <BaseViewMoreVideosCard :videos="allVideos" :viewMore="loadVideos" :title="''"
-                :showViewMore="allVideos.length < totalVideos" :isLoading="isLoading" viewMoreButtonTitle="View More" :skeletons="25" />
+                :showViewMore="allVideos.length < totalVideos" :isLoading="isLoading" viewMoreButtonTitle="View More"
+                :skeletons="25" />
         </div>
     </div>
 </template>

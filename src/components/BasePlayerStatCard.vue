@@ -1,9 +1,10 @@
 <script setup>
 import { ref, defineProps } from 'vue';
-import { useApiConfig } from '@/stores/apiConfig';
 import nationalityData from '@/assets/nationality.json';
 
-const apiConfig = useApiConfig();
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 const props = defineProps({
     player: {
         type: Object,
@@ -49,7 +50,7 @@ const props = defineProps({
             <span class="text-white font-bold text-md me-2" v-if="isRankVisible">{{ player.rank }}</span>
             <div class="rounded-[14px] min-w-12 min-h-12 overflow-hidden"
                 :style="{ backgroundColor: player.club.clubTheme }">
-                <img :src="apiConfig.PLAYER_LOGOS_DIR + player.info.photo" alt="Club Crest"
+                <img :src="apiConfig.PLAYER_DIR + player.info.photo" alt="Club Crest"
                     class="max-w-12 h-12 object-contain mx-auto pt-1" />
             </div>
             <div class="flex flex-col justify-center">
@@ -57,7 +58,7 @@ const props = defineProps({
                 <div class="flex items-center gap-3">
                     <div class="flex items-center gap-1">
                         <div class="min-w-5 min-h-5 overflow-hidden">
-                            <img :src="apiConfig.TEAM_LOGOS_DIR + player.club.clubCrest" alt="Club Crest"
+                            <img :src="apiConfig.CLUB_DIR + player.club.clubCrest" alt="Club Crest"
                                 class="w-auto h-5 object-contain mx-auto pt-1" />
                         </div>
                         <span class="text-white text-sm">{{ player.club.name }}</span>

@@ -3,14 +3,19 @@ import { ref, onMounted } from 'vue';
 import router from '@/router';
 import { useRoute } from 'vue-router';
 import { useMatchStore } from '@/stores';
-import { useApiConfig } from '@/stores/apiConfig';
+import { useApi } from '@/stores/api';
+
 import
 {
     Plus,
 } from '@element-plus/icons-vue';
+import soccerIcon from '@/assets/resources/soccer_icon.png';
+import refereeWhistleIcon from '@/assets/resources/referee_whistle_icon.png';
+import matchStoryCoverUrl from '@/assets/matches_stories/tot_vs_menu.jpg';
+
 
 const matchStore = useMatchStore();
-const apiConfig = useApiConfig();
+const apiConfig = useApi();
 const route = useRoute();
 const matchId = ref(route.params.matchId);
 const menuActive = ref('Recap');
@@ -18,16 +23,17 @@ const menuItems = ref([
     { name: 'Recap', route: 'match-tab-recap', query: 'recap' },
     { name: 'Highlights', route: 'match-tab-highlights', query: 'highlights' },
     { name: 'Lineups', route: 'match-tab-lineups', query: 'lineups' },
-    { name: 'Stats', route: 'match-tab-stats', query: 'stats' },
+    // { name: 'Stats', route: 'match-tab-stats', query: 'stats' },
     { name: 'Table', route: 'match-tab-table', query: 'table' },
-    { name: 'Commentary', route: 'match-tab-commentary', query: 'commentary' },
+    // { name: 'Commentary', route: 'match-tab-commentary', query: 'commentary' },
     { name: 'Match Info', route: 'match-tab-match-info', query: 'match-info' },
 ]);
-const soccerIcon = ref('/src/assets/resources/soccer_icon.png');
-const refereeWhistleIcon = ref('/src/assets/resources/referee_whistle_icon.png');
-const matchStoryCoverUrl = ref('/src/assets/matches_stories/tot_vs_menu.jpg');
-
 const matchInfo = ref(null);
+
+function viewAllMatches()
+{
+    router.push({ name: 'matches-index' });
+}
 
 
 const homeGoals = ref([
@@ -60,7 +66,7 @@ onMounted(async () =>
     try
     {
         await matchStore.getMatchInfoDetail({ matchId: matchId.value });
-        await matchStore.getMatchStory({matchId: matchId.value});
+        await matchStore.getMatchStory({ matchId: matchId.value });
         matchInfo.value = matchStore.matchInfoDetail.matchInfo;
 
     } catch (error)
@@ -80,16 +86,16 @@ onMounted(async () =>
                     <div class="bg-[#730a7a] grid grid-cols-2 items-center">
                         <div class="flex flex-col justify-center items-center gap-1 p-4"
                             :style="{ backgroundColor: matchInfo?.homeClubTheme || '#730a7a' }">
-                            <img :src="matchInfo?.homeClubCrest" class="w-auto h-14 md:h-16 object-contain"
-                                loading="lazy" />
+                            <img :src="apiConfig.CLUB_DIR + matchInfo?.homeClubCrest"
+                                class="w-auto h-14 md:h-16 object-contain" loading="lazy" />
                             <span class="text-white text-lg font-bold truncate text-center">{{ matchInfo?.homeClubName
                                 }}</span>
                         </div>
 
                         <div class="flex flex-col justify-center items-center gap-1 p-4"
                             :style="{ backgroundColor: matchInfo?.awayClubTheme || '#5b0f5b' }">
-                            <img :src="matchInfo?.awayClubCrest" class="w-auto h-14 md:h-16 object-contain"
-                                loading="lazy" />
+                            <img :src="apiConfig.CLUB_DIR + matchInfo?.awayClubCrest"
+                                class="w-auto h-14 md:h-16 object-contain" loading="lazy" />
                             <span class="text-white text-lg font-bold truncate text-center">{{ matchInfo?.awayClubName
                                 }}</span>
                         </div>
@@ -119,7 +125,7 @@ onMounted(async () =>
                     <div class="bg-[#28002b] rounded-t-2xl rounded-b-2xl p-4 z-10 relative -mt-3 h-fit">
                         <div class="flex flex-col gap-3 w-full">
                             <!-- goals area -->
-                            <div v-if="!matchInfo?.isPreview" class="grid grid-cols-[1fr_50px_1fr] gap-2 w-full">
+                            <!-- <div v-if="!matchInfo?.isPreview" class="grid grid-cols-[1fr_50px_1fr] gap-2 w-full">
                                 <div class="flex flex-col gap-1 items-end">
                                     <span v-for="goal in homeGoals" :key="'h-' + goal.id"
                                         class="text-white text-xs lg:text-sm truncate">
@@ -137,7 +143,7 @@ onMounted(async () =>
                                         {{ goal.playerName }} <span class="text-gray-300">({{ goal.minute }})</span>
                                     </span>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <!-- add button -->
                             <div v-if="matchInfo?.kickoffStatusDisplay === 'FT' || matchInfo?.kickoffStatusDisplay === 'HT'"
@@ -182,7 +188,8 @@ onMounted(async () =>
 
                         <!-- center badge / match story 'truncate'-->
                         <div v-if="matchStore.stories.length > 0" class="flex justify-center gap-2 h-fit">
-                            <div v-for="story in matchStore.stories" :key="story.videoId" class="flex flex-col justify-center items-start gap-0 mt-4 h-fit">
+                            <div v-for="story in matchStore.stories" :key="story.videoId"
+                                class="flex flex-col justify-center items-start gap-0 mt-4 h-fit">
                                 <div
                                     class="bg-[#6b24ad] flex justify-center items-center w-24 h-24  rounded-full overflow-hidden cursor-pointer">
                                     <div
@@ -198,7 +205,8 @@ onMounted(async () =>
                     </div>
                 </div>
 
-                <button class="bg-[#41054b] text-xs text-white rounded-2xl w-full h-8 hover:bg-[#41054ba2]">
+                <button @click="viewAllMatches"
+                    class="bg-[#41054b] text-xs text-white rounded-2xl w-full h-8 hover:bg-[#41054ba2]">
                     All Matches
                 </button>
             </div>

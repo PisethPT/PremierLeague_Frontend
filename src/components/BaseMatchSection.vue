@@ -1,6 +1,9 @@
 <script setup>
 import { ref, defineProps } from 'vue';
 import { ArrowRightBold } from '@element-plus/icons-vue';
+import { useApi } from '@/stores/api';
+import truevisi from '@/assets/others/truevisi.png';
+const apiConfig = useApi();
 
 const props = defineProps({
     matchDate: {
@@ -66,7 +69,7 @@ const props = defineProps({
                                     :title="match.homeClubName">
                                     {{ match.homeClubName }}
                                 </span>
-                                <img :src="match.homeClubCrest" :alt="match.homeClubName"
+                                <img :src="apiConfig.CLUB_DIR + match.homeClubCrest" :alt="match.homeClubName"
                                     class="w-7 h-7 object-contain" />
                             </div>
                             <span v-if="match.kickoffStatus === 'Upcoming'"
@@ -80,7 +83,7 @@ const props = defineProps({
                                 </span>
                             </div>
                             <div class="flex justify-start items-center gap-2">
-                                <img :src="match.awayClubCrest" :alt="match.awayClubName"
+                                <img :src="apiConfig.CLUB_DIR + match.awayClubCrest" :alt="match.awayClubName"
                                     class="w-7 h-7 object-contain" />
                                 <span
                                     class="text-white text-xs xl:text-sm font-bold truncate max-w-[100px] sm:max-w-[140px]"
@@ -93,8 +96,7 @@ const props = defineProps({
                         <div class="flex justify-center md:justify-end items-center">
                             <div
                                 class="bg-white rounded-sm px-2 py-[2px] shadow-sm hover:scale-105 hover:shadow-md transition">
-                                <img src="/src/assets/others/truevisi.png" alt="broadcast"
-                                    class="w-10 object-contain" />
+                                <img :src="truevisi" alt="broadcast" class="w-10 object-contain" />
                             </div>
                         </div>
                     </div>

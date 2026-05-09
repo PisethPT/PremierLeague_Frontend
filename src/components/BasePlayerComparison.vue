@@ -1,11 +1,10 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue';
-import { useApiConfig } from '@/stores/apiConfig';
 import BaseComparisonsFields from './BaseComparisonsFields.vue';
 
-const apiConfig = useApiConfig();
+import { useApi } from '@/stores/api';
 const emit = defineEmits(['viewFullComparison']);
-
+const apiConfig = useApi();
 const props = defineProps({
     comparisons: {
         typeof: Object,
@@ -63,7 +62,7 @@ const props = defineProps({
                     <div class="flex flex-col gap-1">
                         <div class="flex justify-center rounded-2xl h-27 w-full overflow-hidden pt-2"
                             :style="{ backgroundColor: props.comparisons.playerOne.club.clubTheme ?? '' }">
-                            <img :src="props.comparisons.playerOne.info.photo ? apiConfig.PLAYER_LOGOS_DIR + props.comparisons.playerOne.info.photo : ''"
+                            <img :src="props.comparisons.playerOne.info.photo ? apiConfig.PLAYER_DIR + props.comparisons.playerOne.info.photo : ''"
                                 alt="Club Crest" class="w-25 h-25 object-contain mx-auto" />
                         </div>
                         <div class="grid grid-rows-2 gap-3">
@@ -72,13 +71,13 @@ const props = defineProps({
                                     props.comparisons.playerOne.info.name }}</span>
                             <div class=" flex justify-between">
                                 <div class="flex gap-1 items-center">
-                                    <img :src="props.comparisons.playerOne.club.clubCrest ? apiConfig.TEAM_LOGOS_DIR + props.comparisons.playerOne.club.clubCrest : ''"
+                                    <img :src="props.comparisons.playerOne.club.clubCrest ? apiConfig.CLUB_DIR + props.comparisons.playerOne.club.clubCrest : ''"
                                         alt="" class="w-auto h-4 object-contain">
                                     <span class="text-white text-[10px]">{{ props.comparisons.playerOne.club.name
-                                        }}</span>
+                                    }}</span>
                                 </div>
                                 <span class="text-white text-[10px]">{{ props.comparisons.playerOne.info.shortPosition
-                                    }}</span>
+                                }}</span>
                             </div>
                         </div>
                     </div>
@@ -88,7 +87,7 @@ const props = defineProps({
                     <div class="flex flex-col gap-1">
                         <div class="flex justify-center rounded-2xl h-27 w-full overflow-hidden pt-2"
                             :style="{ backgroundColor: props.comparisons.playerTwo.club.clubTheme ?? '' }">
-                            <img :src="props.comparisons.playerTwo.info.photo ? apiConfig.PLAYER_LOGOS_DIR + props.comparisons.playerTwo.info.photo : ''"
+                            <img :src="props.comparisons.playerTwo.info.photo ? apiConfig.PLAYER_DIR + props.comparisons.playerTwo.info.photo : ''"
                                 alt="Club Crest" class="w-25 h-25 object-contain mx-auto" />
                         </div>
                         <div class="grid grid-rows-2 gap-3">
@@ -97,13 +96,13 @@ const props = defineProps({
                                     props.comparisons.playerTwo.info.name }}</span>
                             <div class="flex justify-between">
                                 <div class="flex gap-1 items-center">
-                                    <img :src="props.comparisons.playerTwo.club.clubCrest ? apiConfig.TEAM_LOGOS_DIR + props.comparisons.playerTwo.club.clubCrest : ''"
+                                    <img :src="props.comparisons.playerTwo.club.clubCrest ? apiConfig.CLUB_DIR + props.comparisons.playerTwo.club.clubCrest : ''"
                                         alt="" class="w-auto h-4 object-contain">
                                     <span class="text-white text-[10px]">{{ props.comparisons.playerTwo.club.name
-                                        }}</span>
+                                    }}</span>
                                 </div>
                                 <span class="text-white text-[10px]">{{ props.comparisons.playerTwo.info.shortPosition
-                                    }}</span>
+                                }}</span>
                             </div>
                         </div>
                     </div>

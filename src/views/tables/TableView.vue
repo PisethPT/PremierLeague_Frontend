@@ -6,10 +6,10 @@ import BaseLeagueTable from '@/components/BaseLeagueTable.vue';
 
 import SponsorBar from '@/components/SponsorBar.vue';
 import BaseFilter from '@/components/BaseFilter.vue';
+import sponsorImage from '@/assets/sponsors/9044630324637544770.png';
 
 const tableStore = useTableStore();
 const title = ref('Tables');
-const sponsorImage = ref('/src/assets/sponsors/9044630324637544770.png');
 const filters = ref([
     {
         id: 1,

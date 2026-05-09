@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 import router from '@/router';
 import { useViewerStore } from '@/stores';
 import BaseNewsMiniCard from '@/components/BaseNewsMiniCard.vue';
+import sponsorImage from '@/assets/sponsors/14952318241031863229.jpg';
 
 const route = useRoute();
 const viewerStore = useViewerStore();
@@ -14,8 +15,6 @@ const isLoading = ref(true);
 const isPlaying = ref(false);
 const isMuted = ref(true);
 const progress = ref(0);
-
-const sponsorImage = ref('/src/assets/sponsors/14952318241031863229.jpg');
 
 const videoItem = ref({
     title: '',
@@ -164,7 +163,7 @@ watch(
                     <div class="relative w-full bg-[#28002b] rounded-3xl overflow-hidden shadow-2xl group">
 
                         <div class="relative w-full pb-[56.25%] h-0">
-                            
+
                             <div v-if="isLoading" class="absolute inset-0 z-20">
                                 <img :src="videoItem.thumbnail" class="w-full h-full object-cover" />
                                 <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
@@ -178,7 +177,7 @@ watch(
                                 class="absolute top-0 left-0 w-full h-full pointer-events-none scale-[1.01] z-0"
                                 frameborder="0" allow="autoplay; encrypted-media; allowfullscreen">
                             </iframe>
-                            
+
                             <div
                                 class="absolute inset-0 z-30 pointer-events-none flex flex-col justify-end p-6 bg-gradient-to-t from-[#28002b]/95 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
 
@@ -211,7 +210,7 @@ watch(
 
                         </div>
                     </div>
-                    
+
                     <div class="flex flex-col gap-3 px-2">
                         <span
                             class="flex items-center justify-start rounded-full text-xs text-white w-fit h-8 px-3 border border-white/30 whitespace-nowrap cursor-pointer">
@@ -231,7 +230,7 @@ watch(
                         </span>
                     </div>
                 </div>
-                
+
                 <div class="bg-[#28002b] flex flex-col gap-4 w-full h-fit rounded-2xl px-4 py-6 relative z-10">
                     <div class="text-white text-sm font-bold pb-1 border-b-4 w-fit whitespace-nowrap">
                         Related

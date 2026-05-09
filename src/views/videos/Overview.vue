@@ -13,9 +13,9 @@ import BaseTheArchive from '@/components/BaseTheArchive.vue';
 import BaseVideo from '@/components/BaseVideo.vue';
 import BaseStoriesCard from '@/components/BaseStoriesCard.vue';
 import BaseVideoSeries from '@/components/BaseVideoSeries.vue';
+import sponsorImage from '@/assets/sponsors/07710_PremierLeagueDigitalProducts_MYPL_WebPage_1456x180_AWK-V3a.webp';
 
 const router = useRouter();
-const sponsorImage = ref('/src/assets/sponsors/07710_PremierLeagueDigitalProducts_MYPL_WebPage_1456x180_AWK-V3a.webp');
 const eightMinuteReplaysUrl = ref('video-the-archive-8-minute-replays');
 const twentyMinuteReplaysUrl = ref('video-the-archive-20-minute-replays');
 
@@ -26,25 +26,25 @@ const theArchive = ref([]);
 const eightMinuteReplays = ref([
     {
         title: 'Manchester City v West Bromwich Albion | 2016-17 | 8 Minute Highlights',
-        cover: '/src/assets/matches images/8_minute_replays/mci_wba_16_05_17.webp',
+        cover: '/matches images/8_minute_replays/mci_wba_16_05_17.webp',
         url: '#',
         releaseDate: '28 June',
     },
     {
         title: 'Arsenal v Manchester United | 2016-17 | 8 Minute Highlights',
-        cover: '/src/assets/matches images/8_minute_replays/ars_mun_07_05_17.webp',
+        cover: '/matches images/8_minute_replays/ars_mun_07_05_17.webp',
         url: '#',
         releaseDate: '28 June',
     },
     {
         title: 'Chelsea v Manchester United | 2017-18 | 8 Minute Highlights',
-        cover: '/src/assets/matches images/8_minute_replays/che_mun_05_11_17.webp',
+        cover: '/matches images/8_minute_replays/che_mun_05_11_17.webp',
         url: '',
         releaseDate: '28 June',
     },
     {
         title: 'Crystal Palace v Stoke City | 2017-18 | 8 Minute Highlights',
-        cover: '/src/assets/matches images/8_minute_replays/cry_stk_25_11_17.webp',
+        cover: '/matches images/8_minute_replays/cry_stk_25_11_17.webp',
         url: '',
         releaseDate: '28 June',
     },
@@ -53,31 +53,31 @@ const eightMinuteReplays = ref([
 const twentyMinuteReplays = ref([
     {
         title: 'Stoke City v West Ham | 2015-16 | 20 Minute Highlights',
-        cover: '/src/assets/matches images/20_minute_replays/stk_whu_15_05_16.webp',
+        cover: '/matches images/20_minute_replays/stk_whu_15_05_16.webp',
         url: '#',
         releaseDate: '25 June',
     },
     {
         title: 'Swansea City v Manchester City | 2015-16 | 20 Minute Highlights',
-        cover: '/src/assets/matches images/20_minute_replays/swa_mci_15_05_16.webp',
+        cover: '/matches images/20_minute_replays/swa_mci_15_05_16.webp',
         url: '#',
         releaseDate: '25 June',
     },
     {
         title: 'Manchester United v AFC Bournemouth | 2015-16 | 20 Minute Highlights',
-        cover: '/src/assets/matches images/20_minute_replays/mun_bou_17_05_16.webp',
+        cover: '/matches images/20_minute_replays/mun_bou_17_05_16.webp',
         url: '#',
         releaseDate: '25 June',
     },
     {
         title: 'West Bromwich Albion v Liverpool | 2015-16 | 20 Minute Highlights',
-        cover: '/src/assets/matches images/20_minute_replays/wba_lfc_15_05_16.webp',
+        cover: '/matches images/20_minute_replays/wba_lfc_15_05_16.webp',
         url: '#',
         releaseDate: '25 June',
     },
     {
         title: 'Newcastle v Tottenham Hotspur | 2015-16 | 20 Minute Highlights',
-        cover: '/src/assets/matches images/20_minute_replays/new_tot_15_05_16.webp',
+        cover: '/matches images/20_minute_replays/new_tot_15_05_16.webp',
         url: '#',
         releaseDate: '25 June',
     },
@@ -141,7 +141,7 @@ const handleViewAll = () =>
 
         <BaseStoriesCard v-else-if="data.isStory" :videoTag="data.videoLabel" :stories="data.videos" />
     </div>
-    
+
     <!-- 8 minute replays -->
     <div class="flex flex-col gap-5 !bg-[#28002b] rounded-2xl w-full p-4">
         <div class="flex justify-between items-center">

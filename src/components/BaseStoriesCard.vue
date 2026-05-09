@@ -1,7 +1,9 @@
 <script setup>
 import { ref, computed, defineProps } from 'vue';
 import BaseStoryViewer from './BaseStoryViewer.vue';
+import { useApi } from '@/stores/api';
 
+const apiConfig = useApi();
 const props = defineProps({
     videoTag: {
         type: String,

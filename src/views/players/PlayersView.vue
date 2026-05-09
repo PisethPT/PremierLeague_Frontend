@@ -11,6 +11,10 @@ import
     ArrowLeft,
     ArrowRight
 } from '@element-plus/icons-vue';
+import sponsorImage from '@/assets/sponsors/PL2526-ClubKits-Referral-Promos-_0000s_0000_ARS.webp';
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 
 const title = ref('Players');
 const playersStore = usePlayerStore();
@@ -24,7 +28,7 @@ const maxPage = ref(10);
 const loading = ref(false);
 const drawer = ref(false);
 const drawerTitle = ref('');
-const sponsorImage = ref('/src/assets/sponsors/PL2526-ClubKits-Referral-Promos-_0000s_0000_ARS.webp');
+
 const activeFilterId = ref(null);
 
 const selectedCompetition = ref(1);
@@ -261,7 +265,8 @@ const loadData = async (query) =>
                         <div class="flex justify-evenly w-2/3">
                             <div class="w-1/3 flex gap-2 items-center">
                                 <div class="text-center">
-                                    <img :src="player.clubCrest" alt="" class="w-7 h-7 object-contain mx-auto">
+                                    <img :src="apiConfig.CLUB_DIR + player.clubCrest" alt=""
+                                        class="w-7 h-7 object-contain mx-auto">
                                 </div>
                                 <RouterLink
                                     :to="{ name: 'clubs-overview', params: { clubId: player.clubId, clubName: player.clubName.toLowerCase().replace(/\s+/g, '-') } }">
@@ -278,7 +283,10 @@ const loadData = async (query) =>
                                         :src="nationalityData.nationalities.find((nation) => nation.nationality === player.nationality || nation.name === player.nationality)?.icon"
                                         :alt="player.nationality" class="w-7 h-7 object-contain mx-auto">
                                 </div>
-                                <span class="text-white text-xs text-center">{{ nationalityData.nationalities.find((nation) => nation.nationality === player.nationality || nation.name === player.nationality)?.name }}</span>
+                                <span class="text-white text-xs text-center">{{
+                                    nationalityData.nationalities.find((nation) =>
+                                        nation.nationality === player.nationality || nation.name ===
+                                        player.nationality)?.name}}</span>
                             </div>
                         </div>
                     </div>

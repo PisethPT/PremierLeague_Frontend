@@ -22,10 +22,10 @@ const clubDetailMenu = ref([
     { name: 'Video', route: 'clubs-video' },
     { name: 'Matches', route: 'clubs-matches' },
     { name: 'Squad', route: 'clubs-squad' },
-    { name: 'Stats ', route: 'clubs-stats' },
-    { name: 'Stadium', route: 'clubs-stadium' },
-    { name: 'Tickets', route: 'clubs-tickets' },
-    { name: 'Directory', route: 'clubs-directory' },
+    // { name: 'Stats ', route: 'clubs-stats' },
+    // { name: 'Stadium', route: 'clubs-stadium' },
+    // { name: 'Tickets', route: 'clubs-tickets' },
+    // { name: 'Directory', route: 'clubs-directory' },
 ]);
 
 onMounted(async () =>
@@ -73,13 +73,13 @@ onMounted(async () =>
                     <span class="text-xs text-gray-300">Stadium</span>
                     <h3 v-if="clubStore.club.clubDetail.clubStadium" class="text-sm font-bold text-white">{{
                         clubStore.club.clubDetail.clubStadium
-                        }}</h3>
+                    }}</h3>
                 </div>
             </div>
 
             <!-- best news -->
             <div class="w-full bg-[#28002b] rounded-2xl overflow-hidden">
-                    <BaseStoriesCard v-if="storyNews.length > 0" :stories="storyNews" :is-title="false" />
+                <BaseStoriesCard v-if="storyNews.length > 0" :stories="storyNews" :is-title="false" />
             </div>
 
         </div>
@@ -91,7 +91,7 @@ onMounted(async () =>
                     class="text-white text-sm pb-1 border-b-4 hover:cursor-pointer whitespace-nowrap"
                     :style="menuActive == menu.name ? { borderBottom: '4px solid white', fontWeight: 'bold' } : { borderBottom: '4px solid transparent', fontWeight: 'normal' }">
                     <router-link :to="{ name: menu.route }" @click="menuActive = menu.name">{{ menu.name
-                        }}</router-link>
+                    }}</router-link>
                 </div>
             </div>
 

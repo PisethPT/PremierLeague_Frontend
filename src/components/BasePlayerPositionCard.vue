@@ -1,5 +1,7 @@
 <script setup>
 import { computed } from 'vue';
+import { useApi } from '@/stores/api';
+const apiConfig = useApi();
 
 const props = defineProps({
     positionLabel: {
@@ -40,7 +42,7 @@ const getNation = (nationalityName) =>
             }" class="flex gap-3 hover:bg-white/5 rounded-xl transition-colors">
                 <div class="rounded-[14px] min-w-12 min-h-12 w-12 h-12 overflow-hidden flex-shrink-0"
                     :style="{ backgroundColor: player.clubTheme }">
-                    <img :src="player.playerPhoto" :alt="player.playerName"
+                    <img :src="apiConfig.PLAYER_DIR + player.playerPhoto" :alt="player.playerName"
                         class="w-12 h-12 object-contain mx-auto pt-1" />
                 </div>
 

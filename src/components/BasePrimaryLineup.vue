@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue';
 import BasePrimaryFormationPlayer from './BasePrimaryFormationPlayer.vue';
-
 const props = defineProps({
   formations: { type: Array, required: true },
   formationId: { type: Number, required: true },

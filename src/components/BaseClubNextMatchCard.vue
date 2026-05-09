@@ -1,6 +1,8 @@
 <script setup>
 import { ref, defineProps } from 'vue';
+import { useApi } from '@/stores/api';
 
+const apiConfig = useApi();
 const props = defineProps({
     nextMatch: {
         type: Object,
@@ -36,13 +38,13 @@ const props = defineProps({
                 <div class="flex flex-row items-center w-2/5 justify-end gap-2">
                     <span class="text-white font-semibold text-xs text-center truncate">{{
                         nextMatch.homeClubName }}</span>
-                    <img :src="nextMatch.homeClubCrest" class="h-5 w-auto" />
+                    <img :src="apiConfig.CLUB_DIR + nextMatch.homeClubCrest" class="h-5 w-auto" />
                 </div>
                 <div class="flex flex-col items-center w-1/5">
                     <span class="text-gray-300 text-lg font-bold">{{ nextMatch.kickoffTime }}</span>
                 </div>
                 <div class="flex flex-row items-center gap-2 w-2/5 justify-start">
-                    <img :src="nextMatch.awayClubCrest" class="h-5 w-5" />
+                    <img :src="apiConfig.CLUB_DIR + nextMatch.awayClubCrest" class="h-5 w-5" />
                     <span class="text-white font-semibold text-xs text-center truncate">{{
                         nextMatch.awayClubName }}</span>
                 </div>

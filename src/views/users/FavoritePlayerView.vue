@@ -2,7 +2,11 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useUserStore } from '@/stores';
 import { Search } from '@element-plus/icons-vue';
+import { useApi } from '@/stores/api';
 
+const apiConfig = useApi();
+
+import logo from '@/assets/pl-main-logo.png';
 const userStore = useUserStore();
 const userName = ref('');
 const userEmail = ref('');
@@ -101,7 +105,7 @@ const getInitials = (name) =>
 
 <template>
     <router-link :to="{ name: 'home' }" class="flex items-center cursor-pointer mx-4 mt-4">
-        <img src="/src/assets/pl-main-logo.png" class="h-14" />
+        <img :src="logo" class="h-14" />
         <div class="ml-2 text-white font-bold text-xl leading-none">
             Premier<br />League
         </div>
@@ -129,7 +133,7 @@ const getInitials = (name) =>
                     <div v-for="club in userStore.selectedClubs" :key="club.clubId"
                         class="flex justify-center items-center rounded-[10px] w-8 h-8 shrink-0"
                         :style="{ backgroundColor: club.clubTheme }">
-                        <img :src="club.clubCrest" class="w-auto h-8 p-1 object-contain mx-auto" />
+                        <img :src="apiConfig.CLUB_DIR + club.clubCrest" class="w-auto h-8 p-1 object-contain mx-auto" />
                     </div>
                     <div v-if="userStore.selectedClubs > 3" class="text-white text-[10px] self-center ml-1">
                         +{{ userStore.selectedClubs - 3 }}
@@ -160,14 +164,16 @@ const getInitials = (name) =>
                     <div class="flex justify-start items-center gap-2">
                         <div class="flex justify-center items-center rounded-[14px] w-12 h-12 pt-1.5 shrink-0 overflow-hidden"
                             :style="{ backgroundColor: player.clubTheme }">
-                            <img :src="player.photo" class="w-auto h-13 object-contain mx-auto" />
+                            <img :src="apiConfig.PLAYER_DIR + player.photo"
+                                class="w-auto h-13 object-contain mx-auto" />
                         </div>
                         <div class="flex flex-col justify-center items-start gap-1">
                             <h3 class="text-md font-bold text-white tracking-tight">
                                 {{ player.playerName }}
                             </h3>
                             <div class="flex justify-start items-start gap-1">
-                                <img :src="player.clubCrest" class="w-auto h-4 object-contain mx-auto" />
+                                <img :src="apiConfig.PLAYER_DIR + player.clubCrest"
+                                    class="w-auto h-4 object-contain mx-auto" />
                                 <h3 class="text-xs text-white/50 tracking-tight">
                                     {{ player.clubName }}
                                 </h3>

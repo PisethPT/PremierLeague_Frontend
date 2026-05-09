@@ -18,20 +18,21 @@ import
 } from '@element-plus/icons-vue';
 import BaseMatchMiniCard from '@/components/BaseMatchMiniCard.vue';
 
+import sponsorImage from '@/assets/sponsors/8942442685205285966.gif';
+import sponsorImage1 from '@/assets/sponsors/07710_PremierLeagueDigitalProducts_MYPL_WebPage_1456x180_AWK-V3a.webp';
+import sponsorImage2 from '@/assets/sponsors/we_all_feel_it_gif.webp';
+import sponsorImage3 from '@/assets/sponsors/PL2526-Adobe-Promos-Desktop-2.webp';
+import mainThumbnail from '@/assets/news/Virgil-van-Dijk-Erling-Haaland-both-pictured-unhappy-.webp'
+
 const homeStore = useHomeStore();
 const loading = ref(false);
-
-const sponsorImage = ref('/src/assets/sponsors/8942442685205285966.gif');
-const sponsorImage1 = ref('/src/assets/sponsors/07710_PremierLeagueDigitalProducts_MYPL_WebPage_1456x180_AWK-V3a.webp');
-const sponsorImage2 = ref('/src/assets/sponsors/we_all_feel_it_gif.webp');
-const sponsorImage3 = ref('/src/assets/sponsors/PL2526-Adobe-Promos-Desktop-2.webp');
 
 const mainNews = ref({
   id: 1,
   title: 'Liverpool and Manchester United face off in a thrilling match',
   summary: 'A detailed report on the exciting match between Liverpool and Manchester United.',
   category: 'Match report',
-  thumbnail: '/src/assets/news/Virgil-van-Dijk-Erling-Haaland-both-pictured-unhappy-.webp',
+  thumbnail: mainThumbnail,
 });
 
 const matches = ref([]);

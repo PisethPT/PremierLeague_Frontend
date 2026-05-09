@@ -1,12 +1,13 @@
 <script setup>
 import { ref, defineProps, onMounted } from 'vue';
-import { useApiConfig } from '@/stores/apiConfig';
 import { useRoute } from 'vue-router';
 import { usePlayerStore } from '@/stores';
 import BaseAvailablePrior from '@/components/BaseAvailablePrior.vue';
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 
 const route = useRoute();
-const apiConfig = useApiConfig();
 const playerStore = usePlayerStore();
 const playerId = ref(route.params.playerId);
 const player = ref(null);
@@ -43,7 +44,7 @@ onMounted(async () =>
                 <span class="text-white text-2xl font-bold">2025/2026</span>
                 <div class="flex items-center gap-1">
                     <div class="w-8 h-8 overflow-hidden">
-                        <img :src="apiConfig.TEAM_LOGOS_DIR + club?.clubCrest" alt="Club Crest"
+                        <img :src="apiConfig.CLUB_DIR + club?.clubCrest" alt="Club Crest"
                             class="w-auto h-8 object-contain mx-auto pt-1" />
                     </div>
                     <span class="text-white text-sm">{{ club?.name }}</span>
@@ -70,7 +71,7 @@ onMounted(async () =>
                 <span class="text-white text-2xl font-bold">2024/2025</span>
                 <div class="flex items-center gap-1">
                     <div class="w-8 h-8 overflow-hidden">
-                        <img :src="apiConfig.TEAM_LOGOS_DIR + club?.clubCrest" alt="Club Crest"
+                        <img :src="apiConfig.CLUB_DIR + club?.clubCrest" alt="Club Crest"
                             class="w-auto h-8 object-contain mx-auto pt-1" />
                     </div>
                     <span class="text-white text-sm">{{ club?.name }}</span>

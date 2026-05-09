@@ -1,75 +1,159 @@
 <script setup>
-import { defineProps, defineEmits, ref, onMounted, nextTick } from 'vue';
-import { ArrowRight, ArrowLeft, CaretRight } from '@element-plus/icons-vue';
+import
+{
+    defineProps,
+    defineEmits,
+    ref,
+    onMounted,
+    nextTick
+} from 'vue';
+
+import
+{
+    ArrowRight,
+    ArrowLeft,
+    CaretRight
+} from '@element-plus/icons-vue';
+
+import { useApi } from '@/stores/api';
 
 const emits = defineEmits(['viewAll']);
 
+const apiConfig = useApi();
+
 const props = defineProps({
-    title: { type: String, required: true },
+    title: {
+        type: String,
+        required: true
+    },
+
     topics: {
         type: Array,
         required: true,
         default: () => []
     },
-    isLoading: { type: Boolean, default: false }, 
-    allButtonTitle: { type: String, default: 'View more' },
-    isAllButton: { type: Boolean, default: false },
-    isPreviousAndNextButtons: { type: Boolean, default: false },
+
+    isLoading: {
+        type: Boolean,
+        default: false
+    },
+
+    allButtonTitle: {
+        type: String,
+        default: 'View more'
+    },
+
+    isAllButton: {
+        type: Boolean,
+        default: false
+    },
+
+    isPreviousAndNextButtons: {
+        type: Boolean,
+        default: false
+    },
+
     skeletons: {
         type: Number,
-        default: 5,
+        default: 5
     }
 });
 
 const scrollContainer = ref(null);
+
 const isAtStart = ref(true);
 const isAtEnd = ref(false);
 
 const updateScrollState = () =>
 {
-    if (!scrollContainer.value) return;
-    const { scrollLeft, scrollWidth, clientWidth } = scrollContainer.value;
-    isAtStart.value = scrollLeft <= 5; 
-    isAtEnd.value = Math.ceil(scrollLeft + clientWidth) >= scrollWidth - 5;
+    if (!scrollContainer.value)
+    {
+        return;
+    }
+
+    const {
+        scrollLeft,
+        scrollWidth,
+        clientWidth
+    } = scrollContainer.value;
+
+    isAtStart.value = scrollLeft <= 5;
+
+    isAtEnd.value =
+        Math.ceil(scrollLeft + clientWidth) >= scrollWidth - 5;
 };
 
 const scroll = (direction) =>
 {
-    if (!scrollContainer.value) return;
+    if (!scrollContainer.value)
+    {
+        return;
+    }
+
     const scrollAmount = 320;
+
     scrollContainer.value.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        left: direction === 'left'
+            ? -scrollAmount
+            : scrollAmount,
         behavior: 'smooth'
     });
+
     setTimeout(updateScrollState, 400);
 };
 
-const formatSlug = (text) => text?.toString().toLowerCase().replace(/\s+/g, '-') || '';
+const formatSlug = (text) =>
+{
+    return text
+        ?.toString()
+        .toLowerCase()
+        .replace(/\s+/g, '-') || '';
+};
+
+const getThumbnail = (thumbnail) =>
+{
+    if (!thumbnail)
+    {
+        return '/images/news-placeholder.png';
+    }
+
+    if (thumbnail.startsWith('http'))
+    {
+        return thumbnail;
+    }
+
+    return `${apiConfig.NEWS_DIR}${thumbnail}`;
+};
 
 const handleImageError = (event) =>
 {
-    event.target.style.display = 'none';
+    event.target.src = '/images/news-placeholder.png';
 };
 
 onMounted(async () =>
 {
     await nextTick();
+
     updateScrollState();
 });
 </script>
 
 <template>
     <div class="flex flex-col gap-5 bg-[#28002b] rounded-2xl w-full max-w-full overflow-hidden p-6 shadow-xl">
-
         <div class="flex justify-between items-center">
-            <span class="text-white text-2xl font-bold tracking-tight">{{ props.title }}</span>
+            <span class="text-white text-2xl font-bold tracking-tight">
+                {{ props.title }}
+            </span>
 
             <div class="flex gap-3">
                 <div v-if="props.isPreviousAndNextButtons && props.topics.length > 0" class="flex gap-2">
                     <button
                         class="flex items-center justify-center rounded-full w-8 h-8 transition-all disabled:opacity-30"
-                        :class="[isAtStart ? 'bg-[#1d001f] cursor-default' : 'bg-[#3e003f] hover:bg-[#55005a] cursor-pointer shadow-lg']"
-                        :disabled="isAtStart" @click="scroll('left')">
+                        :class="[
+                            isAtStart
+                                ? 'bg-[#1d001f] cursor-default'
+                                : 'bg-[#3e003f] hover:bg-[#55005a] cursor-pointer shadow-lg'
+                        ]" :disabled="isAtStart" @click="scroll('left')">
                         <el-icon>
                             <ArrowLeft class="text-white" />
                         </el-icon>
@@ -77,8 +161,11 @@ onMounted(async () =>
 
                     <button
                         class="flex items-center justify-center rounded-full w-8 h-8 transition-all disabled:opacity-30"
-                        :class="[isAtEnd ? 'bg-[#1d001f] cursor-default' : 'bg-[#3e003f] hover:bg-[#55005a] cursor-pointer shadow-lg']"
-                        :disabled="isAtEnd" @click="scroll('right')">
+                        :class="[
+                            isAtEnd
+                                ? 'bg-[#1d001f] cursor-default'
+                                : 'bg-[#3e003f] hover:bg-[#55005a] cursor-pointer shadow-lg'
+                        ]" :disabled="isAtEnd" @click="scroll('right')">
                         <el-icon>
                             <ArrowRight class="text-white" />
                         </el-icon>
@@ -89,6 +176,7 @@ onMounted(async () =>
                     @click="emits('viewAll')"
                     class="flex items-center rounded-full bg-[#3e003f] text-[11px] tracking-wider text-white h-8 px-4 hover:bg-[#55005a] transition-colors cursor-pointer whitespace-nowrap">
                     {{ props.allButtonTitle }}
+
                     <el-icon class="ml-1.5">
                         <ArrowRight class="text-white" />
                     </el-icon>
@@ -108,13 +196,19 @@ onMounted(async () =>
 
                         <div
                             class="flex bg-[#4b1254] rounded-2xl aspect-video relative overflow-hidden shimmer-bg shadow-md">
-                            <img v-if="item.thumbnail" :src="item.thumbnail" @error="handleImageError"
-                                class="absolute inset-0 w-full h-full object-cover z-10" />
+                            <img :src="getThumbnail(item.thumbnail)" @error="handleImageError"
+                                class="absolute inset-0 w-full h-full object-cover z-10" loading="lazy"
+                                alt="News Thumbnail" />
 
                             <template v-if="item.isVideo">
-                                <router-link
-                                    :to="{ name: 'news-viewer', params: { newsId: item.topicId, newsTitle: formatSlug(item.title) } }"
-                                    class="absolute inset-0 z-20"></router-link>
+                                <router-link :to="{
+                                    name: 'news-viewer',
+                                    params: {
+                                        newsId: item.topicId,
+                                        newsTitle: formatSlug(item.title)
+                                    }
+                                }" class="absolute inset-0 z-20" />
+
                                 <div
                                     class="absolute bg-[#28002b] w-7 h-7 rounded-full bottom-2 right-2 flex justify-center items-center z-30 pointer-events-none">
                                     <el-icon>
@@ -124,15 +218,21 @@ onMounted(async () =>
                             </template>
 
                             <template v-else-if="item.referenceUrl || item.topicUrl">
-                                <a :href="item.referenceUrl || item.topicUrl" target="_blank"
+                                <a :href="item.referenceUrl || item.topicUrl" target="_blank" rel="noopener noreferrer"
                                     class="absolute inset-0 z-20"></a>
+
                                 <div class="absolute inset-0 bg-black/5 z-10"></div>
                             </template>
 
                             <template v-else>
-                                <router-link
-                                    :to="{ name: 'news-viewer', params: { newsId: item.topicId, newsTitle: formatSlug(item.title) } }"
-                                    class="absolute inset-0 z-20"></router-link>
+                                <router-link :to="{
+                                    name: 'news-viewer',
+                                    params: {
+                                        newsId: item.topicId,
+                                        newsTitle: formatSlug(item.title)
+                                    }
+                                }" class="absolute inset-0 z-20" />
+
                                 <div class="absolute inset-0 bg-black/5 z-10"></div>
                             </template>
                         </div>
@@ -142,6 +242,7 @@ onMounted(async () =>
                                 class="text-white text-[15px] font-bold line-clamp-2 leading-tight group-hover:text-purple-200 transition-colors">
                                 {{ item.title }}
                             </span>
+
                             <span class="text-white text-xs mt-auto opacity-60 tracking-wide">
                                 {{ item.topicTag }}
                             </span>
@@ -150,18 +251,18 @@ onMounted(async () =>
                 </template>
 
                 <template v-if="props.isLoading">
-                    <div v-for="i in skeletons" :key="'skel-' + i"
+                    <div v-for="i in props.skeletons" :key="'skel-' + i"
                         class="flex flex-col gap-2 flex-none w-[280px] md:w-[300px]">
                         <div class="aspect-video rounded-2xl shimmer-bg"></div>
-                        <!-- <div class="h-4 w-full bg-[#4b1254] rounded shimmer-bg mt-1"></div>
-                        <div class="h-3 w-1/3 bg-[#4b1254] rounded shimmer-bg"></div> -->
                     </div>
                 </template>
             </div>
         </div>
 
         <div v-if="props.topics.length === 0 && !props.isLoading" class="w-full flex justify-center items-center py-10">
-            <span class="text-white/20 text-sm italic tracking-widest uppercase">No content available</span>
+            <span class="text-white/20 text-sm italic tracking-widest uppercase">
+                No content available
+            </span>
         </div>
     </div>
 </template>
@@ -182,7 +283,9 @@ onMounted(async () =>
             #4b1254 25%,
             #5d1a67 50%,
             #4b1254 75%);
+
     background-size: 200% 100%;
+
     animation: shimmer 2.5s infinite linear;
 }
 

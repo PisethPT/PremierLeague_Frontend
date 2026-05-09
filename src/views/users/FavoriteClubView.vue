@@ -2,7 +2,11 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores';
+import { useApi } from '@/stores/api';
 
+const apiConfig = useApi();
+
+import logo from '@/assets/pl-main-logo.png';
 const router = useRouter();
 const userStore = useUserStore();
 const userName = ref('');
@@ -93,7 +97,7 @@ const getInitials = (name) =>
 
 <template>
     <router-link :to="{ name: 'home' }" class="flex items-center cursor-pointer mx-4 mt-4">
-        <img src="/src/assets/pl-main-logo.png" class="h-14" />
+        <img :src="logo" class="h-14" />
         <div class="ml-2 text-white font-bold text-xl leading-none">
             Premier<br />League
         </div>
@@ -115,7 +119,7 @@ const getInitials = (name) =>
                     <div v-for="club in selectedClubs.slice(0, 3)" :key="club.clubId"
                         class="flex justify-center items-center rounded-[10px] w-8 h-8 shrink-0"
                         :style="{ backgroundColor: club.clubTheme }">
-                        <img :src="club.clubCrest" class="w-auto h-8 p-1 object-contain mx-auto" />
+                        <img :src="apiConfig.CLUB_DIR + club.clubCrest" class="w-auto h-8 p-1 object-contain mx-auto" />
                     </div>
                     <div v-if="selectedClubs.length > 3" class="text-white text-[10px] self-center ml-1">
                         +{{ selectedClubs.length - 3 }}
@@ -147,7 +151,7 @@ const getInitials = (name) =>
                             <div class="flex items-center gap-3">
                                 <div class="flex justify-center items-center rounded-[14px] w-12 h-12 shrink-0"
                                     :style="{ backgroundColor: club.clubTheme }">
-                                    <img :src="club.clubCrest" alt="Club Crest"
+                                    <img :src="apiConfig.CLUB_DIR + club.clubCrest" alt="Club Crest"
                                         class="w-auto h-11 p-1 object-contain mx-auto" />
                                 </div>
                                 <h3 class="text-md font-bold text-white tracking-tight">

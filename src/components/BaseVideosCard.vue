@@ -1,6 +1,10 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue';
 import { ArrowRight, ArrowLeft, CaretRight } from '@element-plus/icons-vue';
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
+
 
 const emits = defineEmits(['allVideos', 'scrollAwards']);
 

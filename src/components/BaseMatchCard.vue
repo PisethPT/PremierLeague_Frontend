@@ -1,8 +1,7 @@
 <script setup>
 import { defineProps } from 'vue';
-import { useApiConfig } from '@/stores/apiConfig';
-
-const apiConfig = useApiConfig();
+import { useApi } from '@/stores/api';
+const apiConfig = useApi();
 
 const props = defineProps({
     match: {
@@ -24,7 +23,7 @@ const props = defineProps({
             matchTime: null,
         }),
     },
-    borderStyle:{
+    borderStyle: {
         type: String,
         default: 'none'
     }
@@ -52,7 +51,7 @@ const formatTime = (timeString) =>
 </script>
 
 <template>
-    <div class="!bg-[#4b1254] rounded-2xl  p-4 shadow-lg" :style="{border: borderStyle}">
+    <div class="!bg-[#4b1254] rounded-2xl  p-4 shadow-lg" :style="{ border: borderStyle }">
         <div class="flex justify-between items-center mb-4">
             <span class="text-xs text-white">Premier League</span>
             <span v-if="match.kickoffStatus == 2"
@@ -67,7 +66,7 @@ const formatTime = (timeString) =>
             <div class="flex items-center space-x-2">
                 <div class="w-10 h-10  rounded-2xl flex items-center justify-center"
                     :style="{ backgroundColor: match.homeTeamThemeColor }">
-                    <img :src="apiConfig.TEAM_LOGOS_DIR + match.homeTeamClubCrest" :alt="match.homeTeamName"
+                    <img :src="apiConfig.CLUB_DIR + match.homeTeamClubCrest" :alt="match.homeTeamName"
                         class="h-8 w-8 object-contain" />
                 </div>
                 <span class="text-white font-medium">{{ match.homeTeamName }}</span>
@@ -82,7 +81,7 @@ const formatTime = (timeString) =>
             <div class="flex items-center space-x-2">
                 <div class="w-10 h-10 rounded-2xl flex items-center justify-center"
                     :style="{ backgroundColor: match.awayTeamThemeColor }">
-                    <img :src="apiConfig.TEAM_LOGOS_DIR + match.awayTeamClubCrest" :alt="match.awayTeamName"
+                    <img :src="apiConfig.CLUB_DIR + match.awayTeamClubCrest" :alt="match.awayTeamName"
                         class="h-8 w-8 object-contain" />
 
                 </div>

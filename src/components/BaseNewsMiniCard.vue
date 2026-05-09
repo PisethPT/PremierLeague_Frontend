@@ -1,7 +1,9 @@
 <script setup>
 import { defineProps, computed } from 'vue';
 import { CaretRight } from '@element-plus/icons-vue';
-import { sk } from 'element-plus/es/locales.mjs';
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 
 const props = defineProps({
     isVideo: {
@@ -74,7 +76,8 @@ const linkTo = computed(() =>
             <div class="h-3 bg-[#4b1254] rounded w-full mb-2"></div>
             <div class="h-3 bg-[#4b1254] rounded w-3/4"></div>
         </div>
-        <div v-for="skeleton in props.skeleton" :key="'skeleton-' + skeleton" class="bg-[#4b1254] w-[120px] h-[70px] rounded-2xl shrink-0 shimmer-bg"></div>
+        <div v-for="skeleton in props.skeleton" :key="'skeleton-' + skeleton"
+            class="bg-[#4b1254] w-[120px] h-[70px] rounded-2xl shrink-0 shimmer-bg"></div>
     </div>
 
     <div v-else class="flex justify-between gap-4 relative group">
@@ -89,7 +92,9 @@ const linkTo = computed(() =>
         </div>
 
         <div class="relative w-[120px] h-[70px] shrink-0 overflow-hidden rounded-2xl bg-[#37003c] shimmer-bg">
-            <img :src="related.thumbnail" @error="handleImageError" alt=""
+            <img :src="related.thumbnail?.startsWith('http')
+                ? related.thumbnail
+                : apiConfig.NEWS_DIR + related.thumbnail" @error="handleImageError" alt=""
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
 
             <div v-if="related.isVideo || props.isVideo"

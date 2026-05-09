@@ -1,4 +1,7 @@
 <script setup>
+import { useApi } from '@/stores/api';
+import assists from '@/assets/icons/assists_white.png';
+const apiConfig = useApi();
 const props = defineProps({
     player: { type: Object, required: true }
 });
@@ -52,13 +55,13 @@ const props = defineProps({
         <div v-if="player.isHasAssist" class="absolute">
             <div
                 class="absolute bg-[#37003c] rounded-full w-4.5 h-4.5 left-3.5 bottom-1 z-10 flex justify-center items-center gap-1">
-                <img src="/src/assets/icons/assists_white.png" class="w-4 object-contain -rotate-25 scale-x-100" />
+                <img :src="assists" class="w-4 object-contain -rotate-25 scale-x-100" />
                 <span v-if="player.assists > 1" class="text-white text-[10px] font-bold">{{ player.assists }}</span>
             </div>
         </div>
 
         <div class="flex justify-center bg-[#37003c] rounded-[4px] w-12 h-12 overflow-hidden pt-1 relative shadow-md">
-            <img :src="player.playerPhoto" class="w-auto h-fit object-contain" />
+            <img :src="apiConfig.PLAYER_DIR + player.playerPhoto" class="w-auto h-fit object-contain" />
         </div>
 
         <div class="flex flex-row items-center gap-1 leading-none">

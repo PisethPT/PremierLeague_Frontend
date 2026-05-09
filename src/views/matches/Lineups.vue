@@ -3,6 +3,9 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useMatchStore, useFormation } from '@/stores';
 import BasePrimaryLineup from '@/components/BasePrimaryLineup.vue';
+import { useApi } from '@/stores/api';
+import assists from '@/assets/icons/assists_white.png';
+const apiConfig = useApi();
 
 const matchStore = useMatchStore();
 const formationStore = useFormation();
@@ -41,14 +44,14 @@ const getCardClass = (type) =>
 
             <div class="flex justify-between items-center border-b-2 border-[#4b1254] py-4 px-6">
                 <div class="flex items-center gap-3">
-                    <img :src="matchData.homeClubCrest" class="w-8 h-8 object-contain" />
+                    <img :src="apiConfig.CLUB_DIR + matchData.homeClubCrest" class="w-8 h-8 object-contain" />
                     <span class="text-white text-md font-bold">{{ matchData.homeClubShortName }}</span>
                     <span class="text-gray-300 text-sm ml-1">Formation</span>
                     <span class="text-white text-sm font-bold">{{ matchData.homeClubFormation }}</span>
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <img :src="matchData.awayClubCrest" class="w-8 h-8 object-contain" />
+                    <img :src="apiConfig.CLUB_DIR + matchData.awayClubCrest" class="w-8 h-8 object-contain" />
                     <span class="text-white text-md font-bold mr-1">{{ matchData.awayClubShortName }}</span>
                     <span class="text-gray-300 text-sm">Formation</span>
                     <span class="text-white text-sm font-bold">{{ matchData.awayClubFormation }}</span>
@@ -119,7 +122,8 @@ const getCardClass = (type) =>
                         <div class="flex items-center gap-3">
                             <div class="flex justify-center rounded-xl w-12 h-12 overflow-hidden pt-1 relative shadow-md"
                                 :style="{ backgroundColor: matchStore.matchLineup.homeClubTheme }">
-                                <img :src="player.playerPhoto" class="w-auto h-fit object-contain" />
+                                <img :src="apiConfig.PLAYER_DIR + player.playerPhoto"
+                                    class="w-auto h-fit object-contain" />
                             </div>
                             <div class="flex flex-col leading-none">
                                 <span class="text-white font-bold text-sm">{{ player.firstName }} {{ player.lastName
@@ -137,8 +141,7 @@ const getCardClass = (type) =>
 
                             <div v-if="player.isHasAssist"
                                 class="bg-[#37003c] rounded-full w-4.5 h-4.5 left-3.5 bottom-1 z-10 flex justify-center items-center gap-1">
-                                <img src="/src/assets/icons/assists_white.png"
-                                    class="w-4 object-contain -rotate-25 scale-x-100" />
+                                <img :src="assists" class="w-4 object-contain -rotate-25 scale-x-100" />
                                 <span v-if="player.assists > 1" class="text-white text-[10px] font-bold">{{
                                     player.assists }}</span>
                             </div>
@@ -171,7 +174,8 @@ const getCardClass = (type) =>
                         <div class="flex items-center gap-3">
                             <div class="flex justify-center rounded-xl w-12 h-12 overflow-hidden pt-1 relative shadow-md"
                                 :style="{ backgroundColor: matchStore.matchLineup.awayClubTheme }">
-                                <img :src="player.playerPhoto" class="w-auto h-fit object-contain" />
+                                <img :src="apiConfig.PLAYER_DIR + player.playerPhoto"
+                                    class="w-auto h-fit object-contain" />
                             </div>
                             <div class="flex flex-col leading-none">
                                 <span class="text-white font-bold text-sm">{{ player.firstName }} {{ player.lastName
@@ -189,12 +193,11 @@ const getCardClass = (type) =>
 
                             <div v-if="player.isHasAssist"
                                 class="bg-[#37003c] rounded-full w-4.5 h-4.5 left-3.5 bottom-1 z-10 flex justify-center items-center gap-1">
-                                <img src="/src/assets/icons/assists_white.png"
-                                    class="w-4 object-contain -rotate-25 scale-x-100" />
+                                <img :src="assists" class="w-4 object-contain -rotate-25 scale-x-100" />
                                 <span v-if="player.assists > 1" class="text-white text-[10px] font-bold">{{
                                     player.assists }}</span>
                             </div>
-                            
+
                             <div v-if="player.outMinute !== '0'"
                                 class="flex items-center gap-1 bg-[#37003c] rounded-full w-fit h-4 px-1">
                                 <i class="fa-solid fa-reply text-red-500 text-[10px]"></i>

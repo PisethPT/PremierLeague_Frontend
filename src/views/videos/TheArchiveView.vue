@@ -3,6 +3,7 @@ import { ref, onMounted, watch } from 'vue';
 import router from '@/router';
 import { useRoute } from 'vue-router';
 import SponsorBar from '@/components/SponsorBar.vue';
+import sponsorImage from '@/assets/sponsors/14952318241031863229.jpg';
 
 const route = useRoute();
 const title = ref('Video - The Archive');
@@ -12,7 +13,7 @@ const videosMenu = ref([
     { name: '8 Minute Replays', route: 'video-the-archive-8-minute-replays' },
     { name: '20 Minute Replays', route: 'video-the-archive-20-minute-replays' },
 ]);
-const sponsorImage = ref('/src/assets/sponsors/14952318241031863229.jpg');
+
 
 const updateActiveMenu = () =>
 {

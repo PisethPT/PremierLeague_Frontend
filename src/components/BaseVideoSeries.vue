@@ -1,6 +1,9 @@
 <script setup>
 import { defineProps, ref, onMounted, nextTick } from 'vue';
 import { ArrowRight, ArrowLeft } from '@element-plus/icons-vue';
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 
 const props = defineProps({
     title: { type: String, required: true },

@@ -1,8 +1,11 @@
 <script setup>
 import { ref, defineProps } from 'vue';
 import router from '@/router';
+import { useApi } from '@/stores/api';
 
-const base_url = ref('http://localhost:5245/upload/clubs/');
+const apiConfig = useApi();
+
+const base_url = apiConfig.CLUB_DIR;
 const currentMatch = ref({
     matchDate: 'Mon 12 Apr',
 });

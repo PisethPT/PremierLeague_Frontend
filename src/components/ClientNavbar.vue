@@ -10,6 +10,13 @@ import ClubNews from './ClubNews.vue';
 
 import { ArrowDown } from '@element-plus/icons-vue';
 
+import logo from '@/assets/pl-main-logo.png';
+import copilot from '@/assets/copilot-icon.png';
+
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
+
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const router = useRouter();
 const route = useRoute();
@@ -181,19 +188,19 @@ const handleEsc = (e) =>
 const menus = [
     { index: 'matches-index', label: 'Matches' },
     { index: 'tables-index', label: 'Table' },
-    { index: 'statistics-index', label: 'Statistics' },
+    // { index: 'statistics-index', label: 'Statistics' },
     { index: 'news-index', label: 'News' },
-    { index: 'transfers-index', label: 'Transfers' },
+    // { index: 'transfers-index', label: 'Transfers' },
     { index: 'players-index', label: 'Players' },
     { index: 'clubs-index', label: 'Clubs' },
     { index: 'video', label: 'Videos' },
 ];
 
-const fantasyMenus = [
-    { index: 'fantasyPremierLeague-index', label: 'Fantasy Premier League' },
-    { index: 'fantasyDraft-index', label: 'Fantasy Draft' },
-    { index: 'fantasyChallenge-index', label: 'Fantasy Challenge' },
-];
+// const fantasyMenus = [
+//     { index: 'fantasyPremierLeague-index', label: 'Fantasy Premier League' },
+//     { index: 'fantasyDraft-index', label: 'Fantasy Draft' },
+//     { index: 'fantasyChallenge-index', label: 'Fantasy Challenge' },
+// ];
 
 const menuClass = (index) =>
 {
@@ -270,7 +277,7 @@ function viewAllMatches()
             </div>
 
             <RouterLink :to="{ name: 'home' }" class="flex items-center cursor-pointer mr-3">
-                <img src="/src/assets/pl-main-logo.png" class="h-12" />
+                <img :src="logo" class="h-12" />
                 <div class="ml-2 text-white font-bold text-xl leading-none">
                     Premier<br />League
                 </div>
@@ -282,7 +289,7 @@ function viewAllMatches()
                     :class="menuClass(item.index)">
                     <span class="menu-title">{{ item.label }}</span>
                 </div>
-
+                <!-- 
                 <div class="relative group">
                     <div class="cursor-pointer px-2 py-1">
                         <span class="menu-title flex text-center items-center justify-center">Fantasy <el-icon
@@ -298,7 +305,7 @@ function viewAllMatches()
                             {{ sub.label }}
                         </div>
                     </div>
-                </div>
+                </div> -->
 
             </div>
         </div>
@@ -306,7 +313,7 @@ function viewAllMatches()
         <div class="flex items-center gap-2">
             <a href="https://copilot.microsoft.com/" target="_blank"
                 class="bg-[#28002b] w-10 h-10 flex justify-center items-center rounded-full cursor-pointer">
-                <img src="/src/assets/copilot-icon.png" alt="Copilot" class="w-5 h-5" />
+                <img :src="copilot" alt="Copilot" class="w-5 h-5" />
             </a>
 
             <div class="bg-[#28002b] w-10 h-10 flex justify-center items-center rounded-full cursor-pointer">
@@ -368,7 +375,7 @@ function viewAllMatches()
 
                 <h2 class="text-white text-4xl font-bold mb-2">{{ info[0].hello }}</h2>
                 <div v-for="(v, i) in info" :key="i" class="flex items-center gap-2 mb-2">
-                    <img :src="v.clubCrest" class="w-5 h-5" alt="" />
+                    <img :src="apiConfig.CLUB_DIR + v.clubCrest" class="w-5 h-5" alt="" />
                     <span class="text-white text-sm">{{ v.favoriteClub }}</span>
                 </div>
 
@@ -393,7 +400,7 @@ function viewAllMatches()
                             <div class="flex justify-end items-center gap-1">
                                 <span class="text-white font-bold text-sm">{{ match.homeClubName }}</span>
                                 <div class="w-7 h-7 flex items-center justify-center overflow-hidden">
-                                    <img :src="match.homeClubCrest" @error="handleImageError"
+                                    <img :src="apiConfig.CLUB_DIR + match.homeClubCrest" @error="handleImageError"
                                         class="w-full h-full object-contain p-0.5">
                                 </div>
                             </div>
@@ -416,7 +423,7 @@ function viewAllMatches()
 
                             <div class="flex justify-start items-center gap-1">
                                 <div class="w-7 h-7 flex items-center justify-center overflow-hidden">
-                                    <img :src="match.awayClubCrest" @error="handleImageError"
+                                    <img :src="apiConfig.CLUB_DIR + match.awayClubCrest" @error="handleImageError"
                                         class="w-full h-full object-contain p-0.5">
                                 </div>
                                 <span class="text-white font-bold text-sm">{{ match.awayClubName }}</span>
@@ -443,7 +450,8 @@ function viewAllMatches()
                             class="flex items-center gap-3 cursor-pointer group">
                             <div class="w-12 h-12 rounded-[14px] flex items-center justify-center"
                                 :style="{ backgroundColor: club.clubTheme }">
-                                <img :src="club.clubCrest" class="w-auto h-11 p-1 object-contain mx-auto" />
+                                <img :src="apiConfig.CLUB_DIR + club.clubCrest"
+                                    class="w-auto h-11 p-1 object-contain mx-auto" />
                             </div>
                             <div class="flex-1">
                                 <div class="text-white font-bold">{{ club.clubName }}</div>
@@ -458,12 +466,14 @@ function viewAllMatches()
                             class="flex items-center gap-3 cursor-pointer group">
                             <div class="w-12 h-12 rounded-[14px] overflow-hidden pt-1.5"
                                 :style="{ backgroundColor: player.clubTheme }">
-                                <img :src="player.photo" class="w-auto h-13 object-contain mx-auto" />
+                                <img :src="apiConfig.PLAYER_DIR + player.photo"
+                                    class="w-auto h-13 object-contain mx-auto" />
                             </div>
                             <div class="flex-1">
                                 <div class="text-white font-bold">{{ player.playerName }}</div>
                                 <div class="text-white/50 text-xs flex items-center gap-1">
-                                    <img :src="player.clubCrest" class="w-3 h-3" /> {{ player.clubName }}
+                                    <img :src="apiConfig.CLUB_DIR + player.clubCrest" class="w-3 h-3" /> {{
+                                        player.clubName }}
                                 </div>
                             </div>
                             <i class="fa-solid fa-chevron-right text-white"></i>

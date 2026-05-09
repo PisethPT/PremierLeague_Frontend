@@ -1,9 +1,8 @@
 <script setup>
 import { defineProps, isShallow } from 'vue';
-import { useApiConfig } from '@/stores/apiConfig';
+import { useApi } from '@/stores/api';
 
-const apiConfig = useApiConfig();
-
+const apiConfig = useApi();
 const props = defineProps({
     news: {
         type: Object,
@@ -34,8 +33,9 @@ const formatDate = (dateString) =>
 
 <template>
     <div class="bg-[#28002b] w-fit h-auto shadow-sm rounded-xl">
-        <div class="text-white text-xs px-2 py-1 bg-[#37003c75] rounded-br-2xl w-fit absolute">{{ formatDate(news.publishedDate) }}</div>
-        <img :src="news.image ? apiConfig.NEWS_IMAGE_DIR + news.image : ''" :alt="news.title"
+        <div class="text-white text-xs px-2 py-1 bg-[#37003c75] rounded-br-2xl w-fit absolute">{{
+            formatDate(news.publishedDate) }}</div>
+        <img :src="news.image ? apiConfig.NEWS_DIR + news.image : ''" :alt="news.title"
             class="w-full h-auto rounded-xl">
         <div class="px-4 py-4">
             <h1 class="font-bold mt-2 text-[1.2rem] text-white mb-4">{{ news.title }}</h1>

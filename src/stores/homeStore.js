@@ -179,7 +179,8 @@ export const useHomeStore = defineStore("useHomeStore", {
         this.apiConfig.ENDPOINTS.HOME_PAGE_ENDPOINTS.GET_PREMIER_LEAGUE_NEWS +
           "?pageSize=" +
           query.pageSize,
-        "POST",
+        "GET",
+        null,
         null,
         { "Content-Type": "application/json" },
       );
@@ -198,7 +199,8 @@ export const useHomeStore = defineStore("useHomeStore", {
         this.apiConfig.ENDPOINTS.HOME_PAGE_ENDPOINTS.GET_QUIZZES_NEWS +
           "?pageSize=" +
           query.pageSize,
-        "POST",
+        "GET",
+        null,
         null,
         { "Content-Type": "application/json" },
       );

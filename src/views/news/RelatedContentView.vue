@@ -4,8 +4,8 @@ import { useVideoStore } from '@/stores';
 import PageTitleBase from '@/components/PageTitleBase.vue';
 import SponsorBar from '@/components/SponsorBar.vue';
 import BaseViewMoreVideosCard from '@/components/BaseViewMoreVideosCard.vue';
+import sponsorImage from '@/assets/sponsors/9044630324637544770.png';
 
-const sponsorImage = ref('/src/assets/sponsors/9044630324637544770.png');
 const title = ref('Related Content');
 const videoStore = useVideoStore();
 

@@ -1,4 +1,6 @@
 <script setup>
+import { useApi } from '@/stores/api';
+const apiConfig = useApi();
 const props = defineProps({
     data: Array,
     isPrevious: Boolean
@@ -30,7 +32,7 @@ const getBadgeClass = (match) =>
                     {{ match.matchweek }}
                 </span>
 
-                <img :src="match.otherClubCrest" class="h-10 w-10 object-contain" />
+                <img :src="apiConfig.CLUB_DIR + match.otherClubCrest" class="h-10 w-10 object-contain" />
 
                 <span class="text-gray-300 font-medium text-[10px] text-center">
                     {{ match.otherClubName }} ({{ match.isHomeClub }})

@@ -1,6 +1,8 @@
 <script setup>
 import { ref, defineProps, watch } from 'vue';
+import { useApi } from '@/stores/api';
 
+const apiConfig = useApi();
 const props = defineProps({
     modelValue: Object,
     options: Array,
@@ -32,7 +34,7 @@ watch(internalValue, (val) =>
             <template #prefix>
                 <div v-if="internalValue" class="w-full grid grid-cols-3 gap-4 items-center">
                     <div class="flex items-center gap-2">
-                        <img :src="internalValue.homeTeam.logo" :width="width" :height="height"
+                        <img :src="apiConfig.CLUB_DIR + internalValue.homeTeam.logo" :width="width" :height="height"
                             class="object-cover shrink-0" />
                         <span class="text-sm text-gray-600 truncate">{{ internalValue.homeTeam.name }}</span>
                     </div>
@@ -43,7 +45,7 @@ watch(internalValue, (val) =>
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <img :src="internalValue.awayTeam.logo" :width="width" :height="height"
+                        <img :src="apiConfig.CLUB_DIR + internalValue.awayTeam.logo" :width="width" :height="height"
                             class="object-cover shrink-0" />
                         <span class="text-sm text-gray-600 truncate">{{ internalValue.awayTeam.name }}</span>
                     </div>
@@ -54,7 +56,8 @@ watch(internalValue, (val) =>
                 <div class="w-full px-2 py-1">
                     <div class="grid grid-cols-3 gap-2 items-center">
                         <div class="flex items-center justify-center gap-2">
-                            <img :src="item.homeTeam.logo" :width="width" :height="height" class="object-cover" />
+                            <img :src="apiConfig.CLUB_DIR + item.homeTeam.logo" :width="width" :height="height"
+                                class="object-cover" />
                             <span class="text-sm block w-full">{{ item.homeTeam.name }}</span>
                         </div>
 
@@ -63,7 +66,8 @@ watch(internalValue, (val) =>
                         </div>
 
                         <div class="flex items-center justify-center gap-2">
-                            <img :src="item.awayTeam.logo" :width="width" :height="height" class="object-cover" />
+                            <img :src="apiConfig.CLUB_DIR + item.awayTeam.logo" :width="width" :height="height"
+                                class="object-cover" />
                             <span class="text-sm block w-full">{{ item.awayTeam.name }}</span>
                         </div>
                     </div>
@@ -72,5 +76,3 @@ watch(internalValue, (val) =>
         </el-select>
     </el-form-item>
 </template>
-
-

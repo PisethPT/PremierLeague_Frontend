@@ -4,6 +4,10 @@ import
 {
     ArrowRightBold,
 } from "@element-plus/icons-vue";
+
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 const props = defineProps({
     clubDetails: {
         type: Object,
@@ -37,7 +41,8 @@ const formatSlug = (title) =>
                 <div class="flex justify-start items-center gap-2">
                     <div class="flex justify-center items-end rounded-xl w-[40px] h-[40px] p-1 overflow-hidden"
                         :style="{ backgroundColor: clubDetails?.clubTheme || '#37003c' }">
-                        <img :src="clubDetails?.clubCrest" alt="Club Logo" class="w-full h-full object-contain">
+                        <img :src="apiConfig.CLUB_DIR + clubDetails?.clubCrest" alt="Club Logo"
+                            class="w-full h-full object-contain">
                     </div>
                     <span class="font-bold text-md text-white">{{ title }}</span>
                 </div>
@@ -52,12 +57,11 @@ const formatSlug = (title) =>
             </div>
 
             <div class="grid grid-cols-3 gap-4">
-                <div v-for="(newsItem, index) in newsItems" :key="index"
-                    class="flex flex-col gap-2 rounded-2xl h-full">
+                <div v-for="(newsItem, index) in newsItems" :key="index" class="flex flex-col gap-2 rounded-2xl h-full">
 
                     <div class="relative bg-[#4b1254] rounded-2xl h-[205px] overflow-hidden">
 
-                        <img v-if="newsItem.thumbnail" :src="newsItem.thumbnail"
+                        <img v-if="newsItem.thumbnail" :src="apiConfig.NEWS_DIR + newsItem.thumbnail"
                             class="absolute inset-0 w-full h-full object-cover" />
 
                         <router-link

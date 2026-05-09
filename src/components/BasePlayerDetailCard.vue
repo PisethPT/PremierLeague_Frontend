@@ -1,5 +1,8 @@
 <script setup>
 import { defineProps } from 'vue';
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 
 const props = defineProps({
     player: {
@@ -15,7 +18,7 @@ const props = defineProps({
         :style="{ backgroundColor: player?.clubTheme }">
         <div class="flex justify-start items-start gap-4">
             <div class="w-fit">
-                <img :src="player?.photo" class="w-auto h-42 mx-auto mt-4 ms-3" />
+                <img :src="apiConfig.PLAYER_DIR + player?.photo" class="w-auto h-42 mx-auto mt-4 ms-3" />
             </div>
 
             <div class="flex justify-end flex-col h-full text-start pb-4">
@@ -27,7 +30,8 @@ const props = defineProps({
                 <div class="mt-2 flex items-center gap-2 flex-wrap">
                     <div class="flex items-center gap-1">
                         <div class="min-w-5 min-h-5 overflow-hidden">
-                            <img :src="player?.clubCrest" class="w-auto h-5 object-contain mx-auto pt-1" />
+                            <img :src="apiConfig.CLUB_DIR + player?.clubCrest"
+                                class="w-auto h-5 object-contain mx-auto pt-1" />
                         </div>
                         <router-link class="md:text-sm text-xs hover:underline"
                             :style="{ color: player?.clubTheme == '#ffffff' ? '#000' : '#ffffff' }"

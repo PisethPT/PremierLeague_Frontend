@@ -11,13 +11,16 @@ import
 } from '@element-plus/icons-vue'
 import SponsorBar from '@/components/SponsorBar.vue';
 import BaseFilter from '@/components/BaseFilter.vue';
+import sponsorImage from '@/assets/sponsors/9044630324637544770.png';
+import { useApi } from '@/stores/api';
 
+const apiConfig = useApi();
 const title = ref('Clubs');
 const clubStore = useClubStore();
 const TEAM_LOGO_DIR = ref('');
 const query = ref('');
 const loading = ref(false);
-const sponsorImage = ref('/src/assets/sponsors/9044630324637544770.png');
+
 const filters = ref([
     {
         id: 1,
@@ -86,7 +89,7 @@ onMounted(async () =>
                     <div class="flex items-center gap-2 w-1/3">
                         <div class="flex justify-center items-center rounded-[14px] px-[2px] w-14 h-12"
                             :style="{ backgroundColor: club.clubTheme }">
-                            <img :src="club.clubCrest" alt="Club Crest"
+                            <img :src="apiConfig.CLUB_DIR + club.clubCrest" alt="Club Crest"
                                 class="w-auto h-11 p-1 object-contain mx-auto" />
                         </div>
                         <router-link class="flex gap-2 items-center w-full"
@@ -129,9 +132,11 @@ html,
 body {
     background: #1e0021 !important;
 }
+
 .custom-card :deep(.el-card__header) {
     border-bottom: none !important;
 }
+
 .custom-card :deep(.el-card__body) {
     padding-top: 0 !important;
 }

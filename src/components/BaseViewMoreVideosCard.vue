@@ -1,7 +1,9 @@
 <script setup>
 import { defineProps } from 'vue';
 import { CaretRight, Plus } from '@element-plus/icons-vue';
+import { useApi } from '@/stores/api';
 
+const apiConfig = useApi();
 const props = defineProps({
     title: String,
     videos: { type: Array, required: true, default: () => [] },
@@ -19,32 +21,32 @@ const props = defineProps({
 
 const formatSlug = (text) => text?.toString().toLowerCase().replace(/\s+/g, '-');
 
-const handleImageError = (event) => {
+const handleImageError = (event) =>
+{
     event.target.style.display = 'none';
 };
 </script>
 
 <template>
-    <div v-if="props.videos?.length > 0 || props.isLoading" 
-         class="flex flex-col !bg-[#28002b] rounded-2xl w-full" 
-         :class="classModify">
-        
+    <div v-if="props.videos?.length > 0 || props.isLoading" class="flex flex-col !bg-[#28002b] rounded-2xl w-full"
+        :class="classModify">
+
         <span v-if="props.title" class="text-white text-2xl font-bold mb-4">{{ props.title }}</span>
 
         <div class="grid gap-4" :class="cardGrids">
-            <div v-for="(video, index) in props.videos" :key="'vid-' + index" class="flex flex-col gap-2 rounded-2xl h-full group">
+            <div v-for="(video, index) in props.videos" :key="'vid-' + index"
+                class="flex flex-col gap-2 rounded-2xl h-full group">
                 <div class="flex bg-[#4b1254] rounded-2xl h-[205px] relative overflow-hidden shimmer-bg">
-                    
-                    <img v-if="video.thumbnail" 
-                         :src="video.thumbnail"
-                         @error="handleImageError"
-                         class="absolute inset-0 w-full h-full object-cover z-10" />
-                    
+
+                    <img v-if="video.thumbnail" :src="video.thumbnail" @error="handleImageError"
+                        class="absolute inset-0 w-full h-full object-cover z-10" />
+
                     <router-link
                         :to="{ name: 'video-viewer', params: { videoId: video.videoId, videoTitle: formatSlug(video.title) } }"
                         class="absolute inset-0 z-20"></router-link>
-                    
-                    <div class="absolute bg-[#28002b] w-8 h-8 rounded-full bottom-3 right-3 flex justify-center items-center z-30 pointer-events-none group-hover:scale-110 transition-transform">
+
+                    <div
+                        class="absolute bg-[#28002b] w-8 h-8 rounded-full bottom-3 right-3 flex justify-center items-center z-30 pointer-events-none group-hover:scale-110 transition-transform">
                         <el-icon>
                             <CaretRight class="text-white" />
                         </el-icon>
@@ -80,17 +82,20 @@ const handleImageError = (event) => {
 
 <style scoped>
 @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
 }
 
 .shimmer-bg {
-    background: linear-gradient(
-        90deg, 
-        #4b1254 25%, 
-        #5d1a67 50%, 
-        #4b1254 75%
-    );
+    background: linear-gradient(90deg,
+            #4b1254 25%,
+            #5d1a67 50%,
+            #4b1254 75%);
     background-size: 200% 100%;
     animation: shimmer 2.5s infinite linear;
 }

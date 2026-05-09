@@ -10,7 +10,11 @@ import
     Link,
     ArrowRightBold,
     Edit,
-} from '@element-plus/icons-vue'
+} from '@element-plus/icons-vue';
+
+import { useApi } from '@/stores/api';
+
+const apiConfig = useApi();
 
 const props = defineProps({
     tableData: {
@@ -177,9 +181,10 @@ const filteredDataTable = computed(() =>
         <el-table-column prop="headCoach" label="Head Coach" width="200" sortable />
         <el-table-column prop="websiteUrl" label="Official Website" width="200" align="center" sortable>
             <template #default="{ row }">
-                <el-link v-if="row.websiteUrl" :underline="false" :href="row.websiteUrl" target="_blank" rel="noopener noreferrer"
-                    class="text-blue-500 ">
-                    <div class="bg-white text-xs rounded-2xl shadow-md hover:shadow-md transition-shadow px-3 py-2 mb-2">
+                <el-link v-if="row.websiteUrl" :underline="false" :href="row.websiteUrl" target="_blank"
+                    rel="noopener noreferrer" class="text-blue-500 ">
+                    <div
+                        class="bg-white text-xs rounded-2xl shadow-md hover:shadow-md transition-shadow px-3 py-2 mb-2">
                         Visit Website
                         <el-icon class="ml-1">
                             <Edit />

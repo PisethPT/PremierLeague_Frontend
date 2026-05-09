@@ -36,6 +36,8 @@ const matches = ref([]);
 const followingClubs = ref([]);
 const followingPlayers = ref([]);
 
+let isGoogleInitialized = false;
+
 onMounted(() =>
 {
     authStore.checkGoogleAuth();
@@ -52,14 +54,18 @@ onMounted(() =>
 
     updateActive();
 
-    // Initialize Google SDK for auto-login/One-Tap
     googleSdkLoaded(async (google) =>
     {
-        google.accounts.id.initialize({
-            client_id: CLIENT_ID,
-            callback: handleGoogleResponse,
-            auto_select: true,
-        });
+        if (!isGoogleInitialized)
+        {
+            google.accounts.id.initialize({
+                client_id: CLIENT_ID,
+                callback: handleGoogleResponse,
+                auto_select: true,
+            });
+
+            isGoogleInitialized = true;
+        }
 
         if (!authStore.isAuthenticated)
         {
@@ -68,7 +74,11 @@ onMounted(() =>
 
         try
         {
-            await checkUserFavorite(localStorage.getItem("userEmail"));
+            const email = localStorage.getItem("userEmail");
+            if (email)
+            {
+                await checkUserFavorite(email);
+            }
         } catch (error)
         {
             console.error("API returned isSuccess: false", error);
@@ -103,7 +113,10 @@ async function checkUserFavorite(email)
             followingPlayers.value = JSON.parse(JSON.stringify(res.followingPlayers));
         } else
         {
-            router.push({ name: 'favorite-clubs' }).catch(() => { });
+            if (route.name !== 'favorite-clubs')
+            {
+                router.push({ name: 'favorite-clubs' }).catch(() => { });
+            }
         }
     }
 }
@@ -123,8 +136,7 @@ const handleGoogleResponse = async (response) =>
 {
     try
     {
-        const res = await axios.post(
-            "https://localhost:44363/api/auth/signin-google",
+        const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/signin-google`,
             { credential: response.credential }
         );
         if (res.data && res.data.isSuccess === true)
@@ -188,19 +200,11 @@ const handleEsc = (e) =>
 const menus = [
     { index: 'matches-index', label: 'Matches' },
     { index: 'tables-index', label: 'Table' },
-    // { index: 'statistics-index', label: 'Statistics' },
     { index: 'news-index', label: 'News' },
-    // { index: 'transfers-index', label: 'Transfers' },
     { index: 'players-index', label: 'Players' },
     { index: 'clubs-index', label: 'Clubs' },
     { index: 'video', label: 'Videos' },
 ];
-
-// const fantasyMenus = [
-//     { index: 'fantasyPremierLeague-index', label: 'Fantasy Premier League' },
-//     { index: 'fantasyDraft-index', label: 'Fantasy Draft' },
-//     { index: 'fantasyChallenge-index', label: 'Fantasy Challenge' },
-// ];
 
 const menuClass = (index) =>
 {
@@ -214,11 +218,6 @@ const login = () =>
 {
     googleSdkLoaded((google) =>
     {
-        google.accounts.id.initialize({
-            client_id: CLIENT_ID,
-            callback: handleGoogleResponse,
-            auto_select: false
-        });
         google.accounts.id.cancel();
         google.accounts.id.prompt();
     });
@@ -245,7 +244,6 @@ const logoutGoogleAccount = () =>
 
 const getInitials = (name) =>
 {
-    console.log("Getting initials for:", name);
     if (!name) return "";
     const parts = name.trim().split(' ');
     if (parts.length >= 2)

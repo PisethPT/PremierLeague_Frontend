@@ -1,26 +1,26 @@
 {
-    "welcome": "សូមស្វាគមន៍",
+    "welcome": "欢迎",
     "about": {
-        "title": "អំពីយើង"
+        "title": "关于我们"
     },
     "homeMenu": {
-        "premier": "ព្រីមៀរ",
-        "league": "លីគ",
-        "home": "ព្រីមៀរ លីគ",
-        "matches": "ការប្រកួត",
-        "table": "តារាង",
-        "statistics": "ស្ថិតិ",
-        "transfers": "ការផ្លាស់ប្ដូរ",
-        "players": "កីឡាករ",
-        "clubs": "ក្រុម",
-        "videos": "វីដេអូ",
-        "news": "ព័ត៌មាន",
-        "fantasy": "ហ្សាន្តូ"
+        "premier": "超级",
+        "league": "联赛",
+        "home": "英超联赛",
+        "matches": "比赛",
+        "table": "积分榜",
+        "statistics": "数据统计",
+        "transfers": "转会",
+        "players": "球员",
+        "clubs": "球队",
+        "videos": "视频",
+        "news": "新闻",
+        "fantasy": "梦幻阵容"
     },
-    "fantasyMenu": "ហ្សាន្តូ",
+    "fantasyMenu": "梦幻阵容",
     "fantasySubMenu": {
-        "fantasyPremierLeague": "ហ្សាន្តូ ព្រីមៀរ លីគ",
-        "fantasyDraft": "ហ្សាន្តូ ដ្រាប",
-        "fantasyChallenge": "ហ្សាន្តូ បញ្ចេញ"
+        "fantasyPremierLeague": "英超梦幻足球",
+        "fantasyDraft": "梦幻选秀",
+        "fantasyChallenge": "梦幻挑战赛"
     }
 }

@@ -22,10 +22,10 @@ const clubDetailMenu = ref([
     { name: 'Video', route: 'clubs-video' },
     { name: 'Matches', route: 'clubs-matches' },
     { name: 'Squad', route: 'clubs-squad' },
-    // { name: 'Stats ', route: 'clubs-stats' },
-    // { name: 'Stadium', route: 'clubs-stadium' },
-    // { name: 'Tickets', route: 'clubs-tickets' },
-    // { name: 'Directory', route: 'clubs-directory' },
+    { name: 'Stats ', route: 'clubs-stats' },
+    { name: 'Stadium', route: 'clubs-stadium' },
+    { name: 'Tickets', route: 'clubs-tickets' },
+    { name: 'Directory', route: 'clubs-directory' },
 ]);
 
 onMounted(async () =>

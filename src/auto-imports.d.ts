@@ -71,6 +71,7 @@ declare global {
   const toValue: typeof import('vue')['toValue']
   const triggerRef: typeof import('vue')['triggerRef']
   const unref: typeof import('vue')['unref']
+  const useAIAgentStore: typeof import('./stores/aiAgentStore.js')['useAIAgentStore']
   const useApi: typeof import('./stores/api.js')['useApi']
   const useApiConfig: typeof import('./stores/apiConfig.js')['useApiConfig']
   const useAssistStore: typeof import('./stores/assistStore.js')['useAssistStore']

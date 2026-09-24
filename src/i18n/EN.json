@@ -1,0 +1,26 @@
+{
+  "welcome": "Welcome to our website!",
+  "about": {
+    "title": "About Us"
+  },
+  "homeMenu": {
+    "premier": "Premier",
+    "league": "League",
+    "home": "Premier League",
+    "matches": "Matches",
+    "table": "Table",
+    "statistics": "Statistics",
+    "transfers": "Transfers",
+    "players": "Players",
+    "clubs": "Clubs",
+    "videos": "Videos",
+    "news": "News",
+    "fantasy": "Fantasy"
+  },
+  "fantasyMenu": "Fantasy",
+  "fantasySubMenu": {
+    "fantasyPremierLeague": "Fantasy Premier League",
+    "fantasyDraft": "Fantasy Draft",
+    "fantasyChallenge": "Fantasy Challenge"
+  }
+}

@@ -1,13 +1,13 @@
 /* @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap"); */
 @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Luckiest+Guy&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Tagesschrift&display=swap');
 @import "tailwindcss";
-* {
-  /* font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-  font-family: "Quicksand", sans-serif; */
 
+/* Fallback/Default font (Everything EXCEPT Font Awesome icons) */
+.font-lang-default *:not([class*="fa-"]) {
   font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: auto;
-  font-style: normal;
 }
 
+/* Khmer font override (Everything EXCEPT Font Awesome icons) */
+.font-lang-kh *:not([class*="fa-"]) {
+  font-family: "Kh Battambang", "Siemreap", "Montserrat";
+}

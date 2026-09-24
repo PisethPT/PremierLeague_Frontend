@@ -1,0 +1,26 @@
+{
+    "welcome": "សូមស្វាគមន៍",
+    "about": {
+        "title": "អំពីយើង"
+    },
+    "homeMenu": {
+        "premier": "ព្រីមៀរ",
+        "league": "លីគ",
+        "home": "ព្រីមៀរ លីគ",
+        "matches": "ការប្រកួត",
+        "table": "តារាង",
+        "statistics": "ស្ថិតិ",
+        "transfers": "ការផ្លាស់ប្ដូរ",
+        "players": "កីឡាករ",
+        "clubs": "ក្រុម",
+        "videos": "វីដេអូ",
+        "news": "ព័ត៌មាន",
+        "fantasy": "ហ្សាន្តូ"
+    },
+    "fantasyMenu": "ហ្សាន្តូ",
+    "fantasySubMenu": {
+        "fantasyPremierLeague": "ហ្សាន្តូ ព្រីមៀរ លីគ",
+        "fantasyDraft": "ហ្សាន្តូ ដ្រាប",
+        "fantasyChallenge": "ហ្សាន្តូ បញ្ចេញ"
+    }
+}

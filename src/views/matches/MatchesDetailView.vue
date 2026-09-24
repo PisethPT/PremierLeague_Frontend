@@ -23,9 +23,9 @@ const menuItems = ref([
     { name: 'Recap', route: 'match-tab-recap', query: 'recap' },
     { name: 'Highlights', route: 'match-tab-highlights', query: 'highlights' },
     { name: 'Lineups', route: 'match-tab-lineups', query: 'lineups' },
-    // { name: 'Stats', route: 'match-tab-stats', query: 'stats' },
+    { name: 'Stats', route: 'match-tab-stats', query: 'stats' },
     { name: 'Table', route: 'match-tab-table', query: 'table' },
-    // { name: 'Commentary', route: 'match-tab-commentary', query: 'commentary' },
+    { name: 'Commentary', route: 'match-tab-commentary', query: 'commentary' },
     { name: 'Match Info', route: 'match-tab-match-info', query: 'match-info' },
 ]);
 const matchInfo = ref(null);
@@ -89,7 +89,7 @@ onMounted(async () =>
                             <img :src="apiConfig.CLUB_DIR + matchInfo?.homeClubCrest"
                                 class="w-auto h-14 md:h-16 object-contain" loading="lazy" />
                             <span class="text-white text-lg font-bold truncate text-center">{{ matchInfo?.homeClubName
-                                }}</span>
+                            }}</span>
                         </div>
 
                         <div class="flex flex-col justify-center items-center gap-1 p-4"
@@ -97,7 +97,7 @@ onMounted(async () =>
                             <img :src="apiConfig.CLUB_DIR + matchInfo?.awayClubCrest"
                                 class="w-auto h-14 md:h-16 object-contain" loading="lazy" />
                             <span class="text-white text-lg font-bold truncate text-center">{{ matchInfo?.awayClubName
-                                }}</span>
+                            }}</span>
                         </div>
 
                         <div v-if="matchInfo?.kickoffStatusDisplay === 'FT'"
@@ -163,10 +163,10 @@ onMounted(async () =>
                                     <div class="flex flex-col items-center">
                                         <div class="flex gap-2 items-center">
                                             <span class="text-white/60 text-xs lg:text-sm">{{ matchInfo?.competition
-                                            }}</span>
+                                                }}</span>
                                             <span class="text-white/60 text-2xl font-bold"> • </span>
                                             <span class="text-white/60 text-xs lg:text-sm"> {{ matchInfo?.matchweek
-                                            }}</span>
+                                                }}</span>
                                         </div>
                                         <div
                                             class="text-white/60 text-xs lg:text-sm text-wrap whitespace-nowrap text-center flex items-center h-auto gap-2">
@@ -180,7 +180,7 @@ onMounted(async () =>
                                             <span class="mr-2">{{ matchInfo?.referee }}</span>
                                         </div>
                                         <span class="text-white/60 text-xs text-center w-full"> {{ matchInfo?.matchInfo
-                                        }}</span>
+                                            }}</span>
                                     </div>
                                 </div>
                             </div>

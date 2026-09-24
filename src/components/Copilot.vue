@@ -1,7 +1,24 @@
 <script setup>
+import { ref } from 'vue';
+import { useAIAgentStore } from '@/stores';
 import { Refresh } from '@element-plus/icons-vue';
-
 import copilot from '@/assets/copilot-icon.png';
+
+const AIAgentStore = useAIAgentStore();
+const localInputPrompt = ref("");
+
+const handleSend = async (promptText) =>
+{
+    console.log("prompt: " + promptText)
+    if (AIAgentStore.isAiAgentProcessing || !promptText || !promptText.trim()) return;
+
+    AIAgentStore.isPanelVisible = true;
+    await nextTick();
+
+    AIAgentStore.activeDashboardPrompt = promptText.trim();
+
+    localInputPrompt.value = "";
+};
 </script>
 
 <template>
@@ -21,28 +38,30 @@ import copilot from '@/assets/copilot-icon.png';
         </div>
 
         <div class="flex flex-wrap gap-3">
-            <button
-                class="px-4 py-2 rounded-full border border-white/20 text-white hover:text-black hover:bg-white transition cursor-pointer">
+            <button @click="handleSend('What have I missed?')" :disabled="AIAgentStore.isAiAgentProcessing"
+                class="px-4 py-2 rounded-full border border-white/20 text-white hover:text-black hover:bg-white transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer text-sm">
                 What have I missed?
             </button>
 
-            <button
-                class="px-4 py-2 rounded-full border border-white/20 text-white hover:text-black hover:bg-white transition cursor-pointer">
+            <button @click="handleSend(`Preview Manchester United's next match`)"
+                :disabled="AIAgentStore.isAiAgentProcessing"
+                class="px-4 py-2 rounded-full border border-white/20 text-white hover:text-black hover:bg-white transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer text-sm">
                 Preview Manchester United's next match
             </button>
 
-            <button
-                class="px-4 py-2 rounded-full border border-white/20 text-white hover:text-black hover:bg-white transition cursor-pointer">
+            <button @click="handleSend('Surprise me!')" :disabled="AIAgentStore.isAiAgentProcessing"
+                class="px-4 py-2 rounded-full border border-white/20 text-white hover:text-black hover:bg-white transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer text-sm">
                 Surprise me!
             </button>
 
-            <button
-                class="px-4 py-2 rounded-full border border-white/20 text-white hover:text-black hover:bg-white transition cursor-pointer">
+            <button @click="handleSend('How can I follow the Premier League?')"
+                :disabled="AIAgentStore.isAiAgentProcessing"
+                class="px-4 py-2 rounded-full border border-white/20 text-white hover:text-black hover:bg-white transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer text-sm">
                 How can I follow the Premier League?
             </button>
 
-            <button
-                class="px-4 py-2 bg-[#37003c] rounded-full border border-white/20 text-white flex items-center gap-2 hover:bg-[#410544] transition cursor-pointer">
+            <button :disabled="AIAgentStore.isAiAgentProcessing"
+                class="px-4 py-2 bg-[#37003c] rounded-full border border-white/20 text-white flex items-center gap-2 hover:bg-[#410544] transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer text-sm">
                 <el-icon>
                     <Refresh class="text-white" />
                 </el-icon>
@@ -51,9 +70,10 @@ import copilot from '@/assets/copilot-icon.png';
         </div>
 
         <div class="relative max-w-md">
-            <input type="text" placeholder="Type your question here"
-                class="w-full text-white border border-white/20 placeholder-gray-400 rounded-xl px-12 py-3 outline-none focus:ring focus:ring-purple-500" />
-            <img :src="copilot" class="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6" />
+            <input v-model="localInputPrompt" @keyup.enter="handleSend(localInputPrompt)"
+                :disabled="AIAgentStore.isAiAgentProcessing" type="text" placeholder="Type your question here..."
+                class="w-full text-white bg-[#1a001e]/40 border border-white/20 placeholder-gray-400 rounded-xl pl-12 pr-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all disabled:opacity-40 disabled:cursor-not-allowed text-sm" />
+            <img :src="copilot" class="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 object-contain" />
         </div>
     </div>
 </template>

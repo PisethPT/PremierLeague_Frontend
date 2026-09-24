@@ -61,7 +61,7 @@ const handleImageError = (event) =>
 
                 <button v-if="props.isAllVideosButton && (props.videos.length > 0 || props.isLoading)"
                     @click="emits('allVideos')"
-                    class="flex items-center rounded-full bg-[#3e003f] text-[11px] font-bold uppercase tracking-widest text-white h-8 px-4 hover:bg-[#55005a] transition-all cursor-pointer whitespace-nowrap">
+                    class="flex items-center rounded-full bg-[#3e003f] text-[11px] tracking-wider text-white h-8 px-4 hover:bg-[#55005a] transition-colors cursor-pointer whitespace-nowrap">
                     {{ props.allVideosButtonTitle }}
                     <el-icon class="ml-1.5">
                         <ArrowRight class="text-white" />

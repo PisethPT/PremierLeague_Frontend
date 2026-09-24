@@ -111,6 +111,10 @@ export const useApi = defineStore("useApi", () => {
     GET_myPLSETTINGS: BASE_URL + "/api/auth/get-fav-myPLSettings",
   };
 
+  const AI_AGENT_ENDPOINTS = {
+    ASK_AI: BASE_URL + "/api/premierleague/ai/ask",
+  };
+
   const ENDPOINTS = {
     USER_ENDPOINTS,
     SELECT_LIST_ITEMS_ENDPOINTS,
@@ -123,6 +127,7 @@ export const useApi = defineStore("useApi", () => {
     FORMATION_ENDPOINTS,
     VIDEO_ENDPOINTS,
     NEWS_ENDPOINTS,
+    AI_AGENT_ENDPOINTS,
   };
 
   return {

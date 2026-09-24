@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import router from '@/router';
-import { useHomeStore } from '@/stores';
+import { useHomeStore, useAIAgentStore } from '@/stores';
 import { partners } from '@/stores/partner';
 import { ElMessage } from 'element-plus';
 import SponsorBar from '@/components/SponsorBar.vue';
@@ -12,6 +12,7 @@ import BaseNewsMiniCard from '@/components/BaseNewsMiniCard.vue';
 import BaseViewMoreNewsCard from '@/components/BaseViewMoreNewsCard.vue';
 import BaseViewMoreTopicCard from '@/components/BaseViewMoreTopicCard.vue';
 import Copilot from '@/components/Copilot.vue';
+import BaseAIAgentPanel from '@/components/BaseAIAgentPanel.vue';
 import
 {
   ArrowRight,
@@ -23,9 +24,13 @@ import sponsorImage1 from '@/assets/sponsors/07710_PremierLeagueDigitalProducts_
 import sponsorImage2 from '@/assets/sponsors/we_all_feel_it_gif.webp';
 import sponsorImage3 from '@/assets/sponsors/PL2526-Adobe-Promos-Desktop-2.webp';
 import mainThumbnail from '@/assets/news/Virgil-van-Dijk-Erling-Haaland-both-pictured-unhappy-.webp'
+import { useI18n } from 'vue-i18n';
 
 const homeStore = useHomeStore();
 const loading = ref(false);
+const AIAgentStore = useAIAgentStore();
+const isAIPanelOpen = ref(false);
+const { t } = useI18n();
 
 const mainNews = ref({
   id: 1,
@@ -95,6 +100,8 @@ onMounted(async () =>
 <template>
   <main class="px-3 min-h-screen flex flex-col gap-4">
     <SponsorBar :sponsor-image="sponsorImage" :rounded="false" :is-clickable="false" />
+
+    <h1 class="text-white">{{ t('welcome') }}</h1>
 
     <div
       class="bg-[#37003c] grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-4 w-full h-fit lg:h-fit rounded-2xl p-4">
@@ -190,6 +197,9 @@ onMounted(async () =>
 
     <!-- copilot ai -->
     <Copilot class="my-4" />
+
+    <BaseAIAgentPanel :visible="isAIPanelOpen || AIAgentStore.isPanelVisible"
+      @close="isAIPanelOpen = false; AIAgentStore.isPanelVisible = false;" />
 
     <SponsorBar class="!mb-3" :sponsor-image="sponsorImage1" :sponsor-width="'60rem'" :rounded="true"
       :is-clickable="false" />

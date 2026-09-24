@@ -1,19 +1,19 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter, RouterView } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useUserStore } from '@/stores';
-import { useFunctionsStore } from '@/stores/function';
 import { googleSdkLoaded, decodeCredential } from 'vue3-google-login';
 import ClubNews from './ClubNews.vue';
-
+import BaseAIAgentPanel from './BaseAIAgentPanel.vue';
 import { ArrowDown } from '@element-plus/icons-vue';
 
 import logo from '@/assets/pl-main-logo.png';
 import copilot from '@/assets/copilot-icon.png';
 
 import { useApi } from '@/stores/api';
+import { useI18n } from 'vue-i18n';
 
 const apiConfig = useApi();
 
@@ -24,28 +24,27 @@ const route = useRoute();
 const user = ref(null);
 const userName = ref('');
 const authStore = useAuthStore();
-const functionStore = useFunctionsStore();
 const userStore = useUserStore();
 
 const showMobile = ref(false);
 const activeIndex = ref('');
 const isPLSetting = ref(false);
+const isAIPanelOpen = ref(false);
 
 const info = ref([]);
 const matches = ref([]);
 const followingClubs = ref([]);
 const followingPlayers = ref([]);
 
+const { t, locale, availableLocales } = useI18n();
+
 let isGoogleInitialized = false;
 
-onMounted(() =>
-{
+onMounted(() => {
     authStore.checkGoogleAuth();
-    if (authStore.isAuthenticated)
-    {
+    if (authStore.isAuthenticated) {
         const storedProfile = localStorage.getItem('userProfile');
-        if (storedProfile)
-        {
+        if (storedProfile) {
             const p = JSON.parse(storedProfile);
             user.value = { picture: p.photoUrl };
             userName.value = p.firstName;
@@ -54,10 +53,8 @@ onMounted(() =>
 
     updateActive();
 
-    googleSdkLoaded(async (google) =>
-    {
-        if (!isGoogleInitialized)
-        {
+    googleSdkLoaded(async (google) => {
+        if (!isGoogleInitialized) {
             google.accounts.id.initialize({
                 client_id: CLIENT_ID,
                 callback: handleGoogleResponse,
@@ -67,20 +64,16 @@ onMounted(() =>
             isGoogleInitialized = true;
         }
 
-        if (!authStore.isAuthenticated)
-        {
+        if (!authStore.isAuthenticated) {
             google.accounts.id.prompt();
         }
 
-        try
-        {
+        try {
             const email = localStorage.getItem("userEmail");
-            if (email)
-            {
+            if (email) {
                 await checkUserFavorite(email);
             }
-        } catch (error)
-        {
+        } catch (error) {
             console.error("API returned isSuccess: false", error);
         }
     });
@@ -91,56 +84,45 @@ onMounted(() =>
     console.log("user from localStorage on mount:", user.value);
 });
 
-onUnmounted(() =>
-{
+onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside);
     document.removeEventListener('keydown', handleEsc);
 });
 
 watch(() => route.fullPath, updateActive);
 
-async function checkUserFavorite(email)
-{
-    if (email)
-    {
+async function checkUserFavorite(email) {
+    if (email) {
         const response = await userStore.checkUserFavorite(email);
-        if (response)
-        {
+        if (response) {
             const res = await userStore.getmyPLSettings(email);
             info.value = JSON.parse(JSON.stringify(res.info));
             matches.value = JSON.parse(JSON.stringify(res.matches));
             followingClubs.value = JSON.parse(JSON.stringify(res.followingClubs));
             followingPlayers.value = JSON.parse(JSON.stringify(res.followingPlayers));
-        } else
-        {
-            if (route.name !== 'favorite-clubs')
-            {
+        } else {
+            if (route.name !== 'favorite-clubs') {
                 router.push({ name: 'favorite-clubs' }).catch(() => { });
             }
         }
     }
 }
 
-function updateActive()
-{
+function updateActive() {
     activeIndex.value = route.name || 'home';
 }
 
-const handleSelect = (index) =>
-{
+const handleSelect = (index) => {
     router.push({ name: index }).catch(() => { });
     showMobile.value = false;
 };
 
-const handleGoogleResponse = async (response) =>
-{
-    try
-    {
+const handleGoogleResponse = async (response) => {
+    try {
         const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/signin-google`,
             { credential: response.credential }
         );
-        if (res.data && res.data.isSuccess === true)
-        {
+        if (res.data && res.data.isSuccess === true) {
             const data = res.data.contents;
 
             localStorage.setItem('token', data.accessToken);
@@ -166,65 +148,63 @@ const handleGoogleResponse = async (response) =>
             await checkUserFavorite(decoded.email);
 
             console.log("Success! Your account info is now in Local Storage.");
-        } else
-        {
+        } else {
             console.error("API returned isSuccess: false", res.data.message);
         }
-    } catch (error)
-    {
+    } catch (error) {
         console.error("Connection error to API:", error);
     }
 };
 
-const handleClickOutside = (e) =>
-{
+const handleClickOutside = (e) => {
     const menu = document.querySelector('.mobile-menu');
     const button = document.querySelector('.mobile-toggle');
 
     if (!menu || !button) return;
 
-    if (!menu.contains(e.target) && !button.contains(e.target))
-    {
+    if (!menu.contains(e.target) && !button.contains(e.target)) {
         showMobile.value = false;
     }
 };
 
-const handleEsc = (e) =>
-{
-    if (e.key === 'Escape')
-    {
+const handleEsc = (e) => {
+    if (e.key === 'Escape') {
         showMobile.value = false;
     }
 };
 
-const menus = [
-    { index: 'matches-index', label: 'Matches' },
-    { index: 'tables-index', label: 'Table' },
-    { index: 'news-index', label: 'News' },
-    { index: 'players-index', label: 'Players' },
-    { index: 'clubs-index', label: 'Clubs' },
-    { index: 'video', label: 'Videos' },
-];
+const menus = computed(() => [
+    { index: 'matches-index', label: t('homeMenu.matches') },
+    { index: 'tables-index', label: t('homeMenu.table') },
+    { index: 'statistics-index', label: t('homeMenu.statistics') },
+    { index: 'news-index', label: t('homeMenu.news') },
+    { index: 'transfers-index', label: t('homeMenu.transfers') },
+    { index: 'players-index', label: t('homeMenu.players') },
+    { index: 'clubs-index', label: t('homeMenu.clubs') },
+    { index: 'video', label: t('homeMenu.videos') },
+]);
 
-const menuClass = (index) =>
-{
+const fantasyMenus = computed(() => [
+    { index: 'fantasyPremierLeague-index', label: t('fantasySubMenu.fantasyPremierLeague') },
+    { index: 'fantasyDraft-index', label: t('fantasySubMenu.fantasyDraft') },
+    { index: 'fantasyChallenge-index', label: t('fantasySubMenu.fantasyChallenge') },
+]);
+
+const menuClass = (index) => {
     return [
         'cursor-pointer px-2 py-1 flex items-center',
         activeIndex.value === index ? 'is-active' : ''
     ];
 };
 
-const login = () =>
-{
-    googleSdkLoaded((google) =>
-    {
+const login = () => {
+    googleSdkLoaded((google) => {
         google.accounts.id.cancel();
         google.accounts.id.prompt();
     });
 };
 
-const logoutGoogleAccount = () =>
-{
+const logoutGoogleAccount = () => {
     user.value = null;
     userName.value = '';
 
@@ -234,32 +214,27 @@ const logoutGoogleAccount = () =>
     localStorage.removeItem('userProfile');
     localStorage.removeItem('userEmail');
 
-    if (window.google && window.google.accounts)
-    {
+    if (window.google && window.google.accounts) {
         window.google.accounts.id.disableAutoSelect();
     }
 
     window.location.reload();
 };
 
-const getInitials = (name) =>
-{
+const getInitials = (name) => {
     if (!name) return "";
     const parts = name.trim().split(' ');
-    if (parts.length >= 2)
-    {
+    if (parts.length >= 2) {
         return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     }
     return parts[0].substring(0, 2).toUpperCase();
 };
 
-const handleImageError = (event) =>
-{
+const handleImageError = (event) => {
     event.target.style.display = 'none';
 };
 
-function viewAllMatches()
-{
+function viewAllMatches() {
     isPLSetting.value = false;
     router.push({ name: 'matches-index' });
 }
@@ -276,8 +251,9 @@ function viewAllMatches()
 
             <RouterLink :to="{ name: 'home' }" class="flex items-center cursor-pointer mr-3">
                 <img :src="logo" class="h-12" />
-                <div class="ml-2 text-white font-bold text-xl leading-none">
-                    Premier<br />League
+                <div class="ml-2 text-white font-bold text-xl leading-none"
+                    :style="{ lineHeight: availableLocales.find((t) => t.indexOf('KH') !== -1) ? 'unset' : '' }">
+                    {{ t('homeMenu.premier') }}<br />{{ t('homeMenu.league') }}
                 </div>
             </RouterLink>
 
@@ -287,11 +263,11 @@ function viewAllMatches()
                     :class="menuClass(item.index)">
                     <span class="menu-title">{{ item.label }}</span>
                 </div>
-                <!-- 
+
                 <div class="relative group">
                     <div class="cursor-pointer px-2 py-1">
-                        <span class="menu-title flex text-center items-center justify-center">Fantasy <el-icon
-                                class="ml-1">
+                        <span class="menu-title flex text-center items-center justify-center">{{ t('fantasyMenu')
+                        }}<el-icon class="ml-1">
                                 <ArrowDown class="text-white" />
                             </el-icon></span>
                     </div>
@@ -303,16 +279,23 @@ function viewAllMatches()
                             {{ sub.label }}
                         </div>
                     </div>
-                </div> -->
+                </div>
 
             </div>
         </div>
 
         <div class="flex items-center gap-2">
-            <a href="https://copilot.microsoft.com/" target="_blank"
+            <div class="locale-changer">
+                <select class="bg-[#28002b] text-white cursor-pointer" v-model="locale">
+                    <option v-for="lang in availableLocales" :key="`locale-${lang}`" :value="lang">
+                        {{ lang }}
+                    </option>
+                </select>
+            </div>
+            <button @click="isAIPanelOpen = !isAIPanelOpen"
                 class="bg-[#28002b] w-10 h-10 flex justify-center items-center rounded-full cursor-pointer">
                 <img :src="copilot" alt="Copilot" class="w-5 h-5" />
-            </a>
+            </button>
 
             <div class="bg-[#28002b] w-10 h-10 flex justify-center items-center rounded-full cursor-pointer">
                 <i class="fa-solid fa-magnifying-glass text-white"></i>
@@ -343,13 +326,19 @@ function viewAllMatches()
     </nav>
 
     <div v-if="showMobile" class="fixed top-[70px] left-0 right-0 bg-[#1e0021] z-40 p-4 lg:hidden mobile-menu">
-
+        <div class="locale-changer">
+            <select class="bg-[#28002b] text-white cursor-pointer" v-model="locale">
+                <option v-for="lang in availableLocales" :key="`locale-${lang}`" :value="lang">
+                    {{ lang }}
+                </option>
+            </select>
+        </div>
         <div v-for="item in menus" :key="item.index" @click="handleSelect(item.index)"
             class="text-white py-3 border-b border-white/10">
             {{ item.label }}
         </div>
 
-        <div class="mt-3 text-white font-bold">Fantasy</div>
+        <div class="mt-3 text-white font-bold">{{ t('fantasyMenu') }}</div>
 
         <div v-for="sub in fantasyMenus" :key="sub.index" @click="handleSelect(sub.index)"
             class="text-gray-300 py-2 pl-3">
@@ -361,6 +350,13 @@ function viewAllMatches()
     <main class="pt-[70px]">
         <ClubNews />
         <RouterView />
+
+        <!-- <button @click="isAIPanelOpen = !isAIPanelOpen"
+            class="fixed bottom-6 right-6 z-40 bg-[#3d195d] hover:bg-[#4a0055] text-white py-4 px-3.5 rounded-full shadow-lg flex items-center justify-center transition-all group border border-white/10 cursor-pointer">
+            <i class="fa-solid fa-robot text-lg group-hover:scale-110 transition-transform"></i>
+        </button> -->
+
+        <BaseAIAgentPanel :visible="isAIPanelOpen" @close="isAIPanelOpen = false" />
 
         <el-drawer v-model="isPLSetting" direction="rtl" size="450px" :with-header="false"
             class="custom-pl-drawer !bg-[#1a011d]">
